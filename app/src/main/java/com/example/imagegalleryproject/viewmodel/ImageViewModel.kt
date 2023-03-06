@@ -1,6 +1,5 @@
 package com.example.imagegalleryproject.viewmodel
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.os.Environment
@@ -8,17 +7,18 @@ import androidx.lifecycle.MutableLiveData
 import com.example.imagegalleryproject.model.Image
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import com.example.imagegalleryproject.db.ImageDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ImageViewModel(application: Application): AndroidViewModel(application) {
+class ImageViewModel(application: Application, val imageDao: ImageDao): AndroidViewModel(application) {
     var imagePathData = MutableLiveData<List<Image>>()
     private val context = getApplication<Application>().applicationContext
+
+    val images = imageDao.getImages()
 
     init {
         imagePathData.value = ArrayList()
@@ -56,12 +56,19 @@ class ImageViewModel(application: Application): AndroidViewModel(application) {
                         cursor.moveToPosition(i)
                         val dataColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA)
                         val dateTaken = cursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED)
-                        listImages.add(Image(cursor.getString(dataColumnIndex), cursor.getString(dateTaken)))
+                        var imageId = cursor.getColumnIndex(MediaStore.Images.Media._ID)
+                        listImages.add(Image(cursor.getInt(imageId),cursor.getString(dataColumnIndex), cursor.getString(dateTaken)))
+
                     }
                     cursor.close()
                 }
                 imagePathData.value = listImages
             }
         }
+    }
+
+    fun addImage(image: Image) = viewModelScope.launch {
+        Log.i("My TAG", "Inserting Images into favorites from RecyclerView")
+        imageDao.addImage(image)
     }
 }

@@ -17,8 +17,11 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.imagegalleryproject.adapter.RecyclerAdapter
 import com.example.imagegalleryproject.databinding.FragmentGalleryBinding
+import com.example.imagegalleryproject.db.DatabaseInstance
+import com.example.imagegalleryproject.db.ImageDao
 import com.example.imagegalleryproject.model.Image
 import com.example.imagegalleryproject.viewmodel.ImageViewModel
+import com.example.imagegalleryproject.viewmodel.ImageViewModelFactory
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -26,6 +29,9 @@ class GalleryFragment: Fragment() {
     private lateinit var binding: FragmentGalleryBinding
     private lateinit var recyclerAdapter: RecyclerAdapter
     private lateinit var viewModel: ImageViewModel
+    private lateinit var factory: ImageViewModelFactory
+    private lateinit var imageDao: ImageDao
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +43,12 @@ class GalleryFragment: Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentGalleryBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this).get(ImageViewModel::class.java)
+
+        imageDao = DatabaseInstance.getInstance(requireActivity()).imageDao()
+
+        factory = ImageViewModelFactory(activity?.application!!, imageDao)
+
+        viewModel = ViewModelProvider(this, factory).get(ImageViewModel::class.java)
 
         if (checkPermission()) {
             Toast.makeText(requireContext(), "Permissions granted..", Toast.LENGTH_SHORT).show();
@@ -63,6 +74,7 @@ class GalleryFragment: Fragment() {
 
     private fun checkPermission(): Boolean {
         val readImagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) android.Manifest.permission.READ_MEDIA_IMAGES else android.Manifest.permission.READ_EXTERNAL_STORAGE
+
         return ContextCompat.checkSelfPermission(
             requireActivity(),
             readImagePermission

@@ -16,13 +16,18 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.imagegalleryproject.adapter.RecyclerAdapter
 import com.example.imagegalleryproject.databinding.ActivityMainBinding
+import com.example.imagegalleryproject.db.DatabaseInstance
+import com.example.imagegalleryproject.db.ImageDao
 import com.example.imagegalleryproject.model.Image
 import com.example.imagegalleryproject.viewmodel.ImageViewModel
+import com.example.imagegalleryproject.viewmodel.ImageViewModelFactory
 import kotlin.coroutines.coroutineContext
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
    lateinit var viewModel: ImageViewModel
+    private lateinit var factory: ImageViewModelFactory
+    private lateinit var imageDao: ImageDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +42,11 @@ class MainActivity : AppCompatActivity() {
 
         binding.toolbar.setupWithNavController(navController, config)
 
-        viewModel = ViewModelProvider(this).get(ImageViewModel::class.java)
+        imageDao = DatabaseInstance.getInstance(this).imageDao()
+
+        factory = ImageViewModelFactory(application, imageDao)
+
+        viewModel = ViewModelProvider(this, factory).get(ImageViewModel::class.java)
 
     }
 }
