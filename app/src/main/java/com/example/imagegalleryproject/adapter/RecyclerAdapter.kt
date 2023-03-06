@@ -17,7 +17,7 @@ import com.example.imagegalleryproject.model.Image
 import com.squareup.picasso.Picasso
 import java.io.File
 
-class RecyclerAdapter(val context: Context) :
+class RecyclerAdapter(val context: Context, private val clickListener: (Image) -> Unit) :
     RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder>() {
 
     private val differCallback = object : DiffUtil.ItemCallback<Image>() {
@@ -43,9 +43,7 @@ class RecyclerAdapter(val context: Context) :
                     .placeholder(R.drawable.ic_launcher_background).into(binding.rvIv)
 
                 binding.root.setOnClickListener {
-                    val bundle = bundleOf("img_path" to image.path)
-                    binding.root.findNavController()
-                        .navigate(R.id.action_galleryFragment_to_imageFragment, bundle)
+                    clickListener(image)
                 }
             }
         }
@@ -66,7 +64,4 @@ class RecyclerAdapter(val context: Context) :
         holder.bind(image)
     }
 
-    interface ItemClickListener {
-        public fun onItemClickListener()
-    }
 }

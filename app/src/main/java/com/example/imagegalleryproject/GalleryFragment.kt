@@ -61,7 +61,9 @@ class GalleryFragment: Fragment() {
         return binding.root
     }
     fun getImagePath() {
-        recyclerAdapter = RecyclerAdapter(requireContext())
+        recyclerAdapter = RecyclerAdapter(requireContext()) {
+                selectedItem: Image -> listItemClicked(selectedItem)
+        }
         binding.rv.layoutManager = GridLayoutManager(activity, 4)
         binding.rv.setHasFixedSize(true)
         binding.rv.adapter = recyclerAdapter
@@ -108,5 +110,11 @@ class GalleryFragment: Fragment() {
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    private fun listItemClicked(image: Image) {
+        val bundle = bundleOf("img_path" to image.path)
+        binding.root.findNavController()
+            .navigate(R.id.action_galleryFragment_to_imageFragment, bundle)
     }
 }
