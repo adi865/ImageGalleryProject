@@ -1,73 +1,147 @@
 package com.example.imagegalleryproject
 
+import android.app.ActionBar
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
+import android.view.*
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
+import androidx.core.view.get
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.imagegalleryproject.adapter.RecyclerAdapter
 import com.example.imagegalleryproject.databinding.FragmentGalleryBinding
 import com.example.imagegalleryproject.db.DatabaseInstance
+import com.example.imagegalleryproject.db.FavoriteDao
+import com.example.imagegalleryproject.db.FavoriteDatabaseInstance
 import com.example.imagegalleryproject.db.ImageDao
+import com.example.imagegalleryproject.model.FavoriteImage
 import com.example.imagegalleryproject.model.Image
+import com.example.imagegalleryproject.viewmodel.FavoriteViewModel
+import com.example.imagegalleryproject.viewmodel.FavoriteViewModelFactory
 import com.example.imagegalleryproject.viewmodel.ImageViewModel
 import com.example.imagegalleryproject.viewmodel.ImageViewModelFactory
+import com.google.firebase.auth.FirebaseAuth
 import java.util.*
-import kotlin.collections.ArrayList
 
-class GalleryFragment: Fragment() {
-    private lateinit var binding: FragmentGalleryBinding
+class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
+    private var binding: FragmentGalleryBinding? = null
     private lateinit var recyclerAdapter: RecyclerAdapter
     private lateinit var viewModel: ImageViewModel
+    private lateinit var favoriteViewModel: FavoriteViewModel
     private lateinit var factory: ImageViewModelFactory
+    private lateinit var favoriteFactory: FavoriteViewModelFactory
     private lateinit var imageDao: ImageDao
+    private lateinit var favoriteDao: FavoriteDao
 
+
+    private val binding1 get() = binding!!
+
+    private lateinit var mAuth: FirebaseAuth
+
+    private var actMode: ActionMode? = null
+
+    private lateinit var imagePathList: ArrayList<String>
+
+    var isInActionMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        println("Coming from main fragment after drawer layout")
+
         // Inflate the layout for this fragment
         binding = FragmentGalleryBinding.inflate(inflater, container, false)
 
+
         imageDao = DatabaseInstance.getInstance(requireActivity()).imageDao()
+
+        favoriteDao = FavoriteDatabaseInstance.getInstance(requireActivity()).imageDao()
 
         factory = ImageViewModelFactory(activity?.application!!, imageDao)
 
+        favoriteFactory = FavoriteViewModelFactory(activity?.application!!, favoriteDao)
+
         viewModel = ViewModelProvider(this, factory).get(ImageViewModel::class.java)
 
+        favoriteViewModel = ViewModelProvider(this, favoriteFactory).get(FavoriteViewModel::class.java)
+
+        imagePathList = ArrayList<String>()
+
+        mAuth = FirebaseAuth.getInstance()
+
         if (checkPermission()) {
-            Toast.makeText(requireContext(), "Permissions granted..", Toast.LENGTH_SHORT).show();
-            viewModel.getImages()
+//            viewModel.getImages()
             getImagePath()
+            binding!!.tvDefault.visibility = View.GONE
         } else {
             requestPermission()
+            binding!!.tvDefault.visibility = View.VISIBLE
+            binding!!.progressBar.visibility = View.GONE
         }
 
-        return binding.root
+        return binding1.root
     }
-    fun getImagePath() {
-        recyclerAdapter = RecyclerAdapter(requireContext()) {
-                selectedItem: Image -> listItemClicked(selectedItem)
+
+    private val actionModeCallback: ActionMode.Callback = object: ActionMode.Callback {
+        override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            mode!!.menuInflater.inflate(R.menu.custom_menu, menu)
+            return true
         }
-        binding.rv.layoutManager = GridLayoutManager(activity, 4)
-        binding.rv.setHasFixedSize(true)
-        binding.rv.adapter = recyclerAdapter
-        viewModel.imagePathData.observe(viewLifecycleOwner, {
+
+        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+           return false
+        }
+
+        override fun onActionItemClicked(mode: ActionMode?, menu: MenuItem?): Boolean {
+            when(menu!!.itemId) {
+                R.id.signOut -> {
+                if(mAuth.currentUser != null) {
+                    mAuth.signOut()
+                    val intent = Intent(requireActivity(), SignInActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+                R.id.addFav -> {
+                    imagePathList.forEach {
+                        favoriteViewModel.addFavorites(FavoriteImage(it))
+                    }
+                  mode?.finish()
+                    (activity as AppCompatActivity).supportActionBar?.show()
+            }
+                R.id.cancel -> {
+                    mode?.finish()
+                    (activity as AppCompatActivity).supportActionBar?.show()
+                }
+                else -> {
+                    return false
+                }
+            }
+            return true
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode?) {
+           actMode = null
+        }
+    }
+
+    fun getImagePath() {
+        recyclerAdapter = RecyclerAdapter(requireContext(), this)
+        binding1.rv.layoutManager = GridLayoutManager(activity, 4)
+        binding1.rv.setHasFixedSize(true)
+        binding1.rv.adapter = recyclerAdapter
+        viewModel.populatedImages.observe(viewLifecycleOwner, {
             recyclerAdapter.differ.submitList(it)
 //            recyclerAdapter.notifyDataSetChanged() //is an expensive process, as it recreates (refereshes all rows) ViewHolder recycled by the RecyclerView
         })
@@ -75,7 +149,8 @@ class GalleryFragment: Fragment() {
 
 
     private fun checkPermission(): Boolean {
-        val readImagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) android.Manifest.permission.READ_MEDIA_IMAGES else android.Manifest.permission.READ_EXTERNAL_STORAGE
+        val readImagePermission =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) android.Manifest.permission.READ_MEDIA_IMAGES else android.Manifest.permission.READ_EXTERNAL_STORAGE
 
         return ContextCompat.checkSelfPermission(
             requireActivity(),
@@ -85,10 +160,15 @@ class GalleryFragment: Fragment() {
 
     private fun requestPermission() {
         requestPermissions(
-            arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.READ_MEDIA_IMAGES, android.Manifest.permission.READ_MEDIA_VIDEO),
+            arrayOf(
+                android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                android.Manifest.permission.READ_MEDIA_IMAGES,
+                android.Manifest.permission.READ_MEDIA_VIDEO
+            ),
             200
         )
     }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -103,8 +183,11 @@ class GalleryFragment: Fragment() {
                         Toast.makeText(context, "Permissions Granted..", Toast.LENGTH_SHORT).show();
                         viewModel.getImages()
                         getImagePath()
+                        binding!!.progressBar.visibility = View.GONE
+                        binding!!.tvDefault.visibility = View.GONE
                     } else {
                         Toast.makeText(context, "Permissions Denied..", Toast.LENGTH_SHORT).show();
+                        binding!!.progressBar.visibility = View.GONE
                     }
                 }
             }
@@ -112,9 +195,31 @@ class GalleryFragment: Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    private fun listItemClicked(image: Image) {
-        val bundle = bundleOf("img_path" to image.path)
-        binding.root.findNavController()
-            .navigate(R.id.action_galleryFragment_to_imageFragment, bundle)
+    override fun removeOnItemLongClickListener(imagePath: String) {
+//        viewModel.removeImage(Image(imagePath))
+    }
+
+    override fun itemClickListener(paths: ArrayList<String>) {
+        imagePathList.addAll(paths)
+    }
+
+    override fun itemLongClickListener(): Boolean {
+        if(actMode != null) {
+            return false
+        } else {
+            isInActionMode = true
+            setMenuVisibility(false)
+            (activity as AppCompatActivity).supportActionBar?.hide()
+            actMode = requireActivity().startActionMode(actionModeCallback)
+            return true
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+        if(actMode != null) {
+            actMode!!.finish()
+        }
     }
 }

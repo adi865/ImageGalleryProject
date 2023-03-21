@@ -1,29 +1,33 @@
 package com.example.imagegalleryproject.viewmodel
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.os.Environment
-import androidx.lifecycle.MutableLiveData
 import com.example.imagegalleryproject.model.Image
 import android.provider.MediaStore
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.imagegalleryproject.db.ImageDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ImageViewModel(application: Application, val imageDao: ImageDao): AndroidViewModel(application) {
-    var imagePathData = MutableLiveData<List<Image>>()
+    var imagePathData = MediatorLiveData<List<Image>>()
     private val context = getApplication<Application>().applicationContext
+    val populatedImages = imageDao.getImages()
 
-    val images = imageDao.getImages()
+
+
 
     init {
         imagePathData.value = ArrayList()
+
     }
 
+
+    @SuppressLint("SuspiciousIndentation")
     fun getImages() {
         viewModelScope.launch {
             val isSDPresent = Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
@@ -55,20 +59,29 @@ class ImageViewModel(application: Application, val imageDao: ImageDao): AndroidV
                     for (i in 0 until count) {
                         cursor.moveToPosition(i)
                         val dataColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA)
-                        val dateTaken = cursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED)
-                        var imageId = cursor.getColumnIndex(MediaStore.Images.Media._ID)
-                        listImages.add(Image(cursor.getInt(imageId),cursor.getString(dataColumnIndex), cursor.getString(dateTaken)))
-
+                        listImages.add(Image(cursor.getString(dataColumnIndex)))
                     }
                     cursor.close()
+                    listImages.forEach {
+                        addImage(it)
+                    }
                 }
-                imagePathData.value = listImages
             }
         }
     }
 
+
     fun addImage(image: Image) = viewModelScope.launch {
         Log.i("My TAG", "Inserting Images into favorites from RecyclerView")
         imageDao.addImage(image)
+    }
+
+    fun fetchFavImages() = viewModelScope.launch {
+        imageDao.getImages()
+    }
+
+    fun removeImage(image: Image) = viewModelScope.launch {
+        Log.i("My TAG", "Deleting the image on long click listener from favorites")
+        imageDao.deleteImage(image)
     }
 }

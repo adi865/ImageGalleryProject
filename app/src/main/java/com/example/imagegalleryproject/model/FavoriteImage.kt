@@ -4,8 +4,10 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "imageTable")
-data class Image(
+
+@Entity(tableName = "favorites")
+data class FavoriteImage(
     @PrimaryKey
-    @ColumnInfo(name = "path")
-    var path: String, )
+    @ColumnInfo(name = "favoriteImage")
+    val favorite: String) {
+}
