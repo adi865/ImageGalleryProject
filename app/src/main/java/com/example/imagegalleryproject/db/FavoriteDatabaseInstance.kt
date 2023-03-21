@@ -4,26 +4,24 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.imagegalleryproject.model.Search
+import com.example.imagegalleryproject.model.FavoriteImage
 
+@Database(entities = [FavoriteImage::class], version = 1, exportSchema = false)
+abstract class FavoriteDatabaseInstance: RoomDatabase() {
+    abstract fun imageDao(): FavoriteDao
 
-@Database(entities = [Search::class], version = 1, exportSchema = false)
-abstract class DatabaseInstance: RoomDatabase() {
-
-    abstract fun imageDao(): ImageDao
-
-    companion object {
+    companion object{
         @Volatile
-        private var INSTANCE: DatabaseInstance? = null
+        private var INSTANCE: FavoriteDatabaseInstance? = null
 
-        fun getInstance(context: Context): DatabaseInstance {
+        fun getInstance(context: Context): FavoriteDatabaseInstance {
             synchronized(this) {
                 var instance = INSTANCE
                 if (instance == null) {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
-                        DatabaseInstance::class.java,
-                        "imageTable"
+                        FavoriteDatabaseInstance::class.java,
+                        "favorites"
                     ).build()
                 }
                 return instance

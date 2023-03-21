@@ -1,22 +1,19 @@
 package com.example.imagegalleryproject.db
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import com.example.imagegalleryproject.model.Image
+import androidx.room.*
+import com.example.imagegalleryproject.model.Search
 
 
 @Dao
 interface ImageDao {
 
-    @Insert
-    suspend fun addImage(image: Image)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addImage(search: Search)
 
     @Delete
-    suspend fun deleteImage(image: Image)
+    suspend fun deleteImage(Search: Search)
 
     @Query("SELECT * from imageTable")
-    fun getImages(): LiveData<List<Image>>
+    fun getImages(): LiveData<List<Search>>
 }
