@@ -19,7 +19,7 @@ import retrofit2.Response
 import java.io.IOException
 
 class ImageViewModel(application: Application, val repository: PosterRepository, val searchParameter: String): AndroidViewModel(application) {
-    var imagePathData = MediatorLiveData<Resource<Movies>>()
+    var imagePathData = MutableLiveData<Resource<Movies>>()
     private val context = getApplication<Application>().applicationContext
     private val imageDao = DatabaseInstance.getInstance(context).imageDao()
     var postersFromDB = getImagesFromDB()
@@ -30,13 +30,12 @@ class ImageViewModel(application: Application, val repository: PosterRepository,
         } else {
             getPostersFromDB()
         }
-
     }
-
 
     @SuppressLint("SuspiciousIndentation")
     fun getImages(searchParamter: String) {
         viewModelScope.launch {
+            removeImage()
             imagePathData.postValue(Resource.Loading())
             val response = try {
               repository.getPosters(searchParamter.replace("\\s+","+"))
@@ -49,7 +48,8 @@ class ImageViewModel(application: Application, val repository: PosterRepository,
                 Toast.makeText(context, "API didn't return a valid response", Toast.LENGTH_SHORT).show()
                return@launch
             }
-            if(response.code() == 200) {
+
+            if(response.body()!!.Search == null) {
                 Toast.makeText(context, "The title you entered not found", Toast.LENGTH_SHORT).show()
                 return@launch
             } else {
@@ -85,7 +85,7 @@ class ImageViewModel(application: Application, val repository: PosterRepository,
 
     suspend fun insertMovie(search: Search) = imageDao.addImage(search)
 
-    suspend fun removeImage(search:Search) = imageDao.deleteImage(search)
+    suspend fun removeImage() = imageDao.deleteImage()
 
 
     fun getImagesFromDB() = imageDao.getImages()

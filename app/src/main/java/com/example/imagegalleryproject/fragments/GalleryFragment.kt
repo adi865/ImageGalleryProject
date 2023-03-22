@@ -73,7 +73,6 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
         binding!!.submitBtn.setOnClickListener {
             inputParamter = binding!!.inputParameter.text.toString()
             if(inputParamter != null) {
-                //reminder: what happens when the entered text doesn't match any movie!!!!
                 viewModel = ImageViewModel(requireActivity().application, posterRepository, inputParamter)
                 viewModel.getImages(inputParamter)
                 getImagePath()

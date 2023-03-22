@@ -2,6 +2,7 @@ package com.example.imagegalleryproject.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -42,14 +43,23 @@ class MainFragment : Fragment() {
 
 
         binding1.galleryBtn.setOnClickListener {
-                navController.navigate(R.id.action_mainFragment_to_galleryFragment)
+            navController.navigate(R.id.action_mainFragment_to_galleryFragment)
         }
 
 
         binding1.favBtn.setOnClickListener {
-            binding1.root.findNavController().navigate(R.id.action_mainFragment_to_imageFragment)
+            navController.navigate(R.id.action_mainFragment_to_imageFragment)
         }
 
+        binding1.bottomNavigationView.setOnItemSelectedListener{ item: MenuItem ->
+            val itemId = item.itemId
+            if (itemId == R.id.gallery) {
+                navController.navigate(R.id.action_mainFragment_to_galleryFragment)
+            } else if (itemId == R.id.fav) {
+                navController.navigate(R.id.action_mainFragment_to_imageFragment)
+            }
+            true
+        }
         return binding1.root
     }
 

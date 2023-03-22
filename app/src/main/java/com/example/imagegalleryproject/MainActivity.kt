@@ -116,24 +116,6 @@ class MainActivity : AppCompatActivity() {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
-
-        binding.appBarMain.flContent.bottomNavigationView.setOnItemSelectedListener{ item: MenuItem ->
-
-            var selectedFragment: Fragment? = null
-            val itemId = item.itemId
-            if (itemId == R.id.gallery) {
-                selectedFragment = GalleryFragment()
-            } else if (itemId == R.id.fav) {
-                selectedFragment = ImageFragment()
-            }
-            // It will help to replace the
-            // one fragment to other.
-            if (selectedFragment != null) {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.flContent, selectedFragment).commit()
-            }
-            true
-        }
     }
 
     override fun onBackPressed() {
