@@ -30,9 +30,7 @@ class ImageViewModel(application: Application, val repository: PosterRepository,
         } else {
             getPostersFromDB()
         }
-
     }
-
 
     @SuppressLint("SuspiciousIndentation")
     fun getImages(searchParamter: String) {
@@ -49,7 +47,8 @@ class ImageViewModel(application: Application, val repository: PosterRepository,
                 Toast.makeText(context, "API didn't return a valid response", Toast.LENGTH_SHORT).show()
                return@launch
             }
-            if(response.code() == 200) {
+
+            if(response.body()!!.Search == null) {
                 Toast.makeText(context, "The title you entered not found", Toast.LENGTH_SHORT).show()
                 return@launch
             } else {
