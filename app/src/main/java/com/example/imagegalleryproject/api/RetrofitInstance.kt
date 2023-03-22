@@ -18,6 +18,7 @@ class RetrofitInstance {
                 .addInterceptor(loggingInterceptor)
                 .build()
 
+
             Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())

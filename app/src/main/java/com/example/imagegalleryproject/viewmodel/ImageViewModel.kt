@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.*
 import com.example.imagegalleryproject.db.DatabaseInstance
 import com.example.imagegalleryproject.db.ImageDao
@@ -12,7 +14,9 @@ import com.example.imagegalleryproject.model.Movies
 import com.example.imagegalleryproject.model.Search
 import com.example.imagegalleryproject.util.Resource
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import retrofit2.Response
+import java.io.IOException
 
 class ImageViewModel(application: Application, val repository: PosterRepository, val searchParameter: String): AndroidViewModel(application) {
     var imagePathData = MediatorLiveData<Resource<Movies>>()
@@ -34,8 +38,23 @@ class ImageViewModel(application: Application, val repository: PosterRepository,
     fun getImages(searchParamter: String) {
         viewModelScope.launch {
             imagePathData.postValue(Resource.Loading())
-            val response = repository.getPosters(searchParamter.replace("\\s+","+"))
+            val response = try {
+              repository.getPosters(searchParamter.replace("\\s+","+"))
+            } catch(e: IOException) {
+                Log.e("My TAG", "No Internet Connection Available ")
+               Toast.makeText(context," Can't do search Internet not connected", Toast.LENGTH_SHORT).show()
+               return@launch
+            } catch(e: HttpException) {
+                Log.e("MY TAG", "No valid HTTP response received")
+                Toast.makeText(context, "API didn't return a valid response", Toast.LENGTH_SHORT).show()
+               return@launch
+            }
+            if(response.code() == 200) {
+                Toast.makeText(context, "The title you entered not found", Toast.LENGTH_SHORT).show()
+                return@launch
+            } else {
                 imagePathData.postValue(handleResponse(response))
+            }
         }
     }
 
@@ -44,13 +63,17 @@ class ImageViewModel(application: Application, val repository: PosterRepository,
     }
 
     private suspend fun handleResponse(response: Response<Movies>): Resource<Movies> {
-        if(response.isSuccessful) {
+        if(response.isSuccessful && response.body()!= null) {
             response.body()?.let {resultResponse ->
                 for (search in resultResponse.Search) {
                     insertMovie(search)
                 }
                 return Resource.Success(resultResponse)
             }
+        }
+        else {
+            Toast.makeText(context, "Failed fetch movie posters because of the error: ${response.message()} or ${response.errorBody()}", Toast.LENGTH_LONG).show()
+            return Resource.Error(response.message())
         }
         return Resource.Error(response.message())
     }
