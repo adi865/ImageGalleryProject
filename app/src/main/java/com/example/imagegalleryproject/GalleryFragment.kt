@@ -3,6 +3,7 @@ package com.example.imagegalleryproject
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -79,10 +80,15 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
 
         binding!!.submitBtn.setOnClickListener {
             inputParamter = binding!!.inputParameter.text.toString()
-            factory = ImageViewModelFactory(activity?.application!!, posterRepository, inputParamter)
-            viewModel = ViewModelProvider(this, factory).get(ImageViewModel::class.java)
-            viewModel.getImages(inputParamter)
-            getImagePath()
+            if(inputParamter != null) {
+                factory = ImageViewModelFactory(activity?.application!!, posterRepository, inputParamter)
+                viewModel = ViewModelProvider(this, factory).get(ImageViewModel::class.java)
+                viewModel.getImages(inputParamter)
+                getImagePath()
+            } else {
+                Toast.makeText(requireActivity(), "Please enter input", Toast.LENGTH_SHORT).show()
+            }
+
         }
 
         return binding!!.root
