@@ -28,7 +28,7 @@ import com.squareup.picasso.Picasso
 import java.io.File
 
 class ImageFragment: Fragment() {
-    private lateinit var scaleGestureDetector: ScaleGestureDetector //for zooming on the image passed from the recyclerview
+    private lateinit var scaleGestureDetector: ScaleGestureDetector //for zooming on the image passed from the recyclerview //to be done in the fragment that shows selected image
     private var binding: FragmentImageBinding? = null
     private lateinit var adapter: FavRecyclerAdapter
     private lateinit var viewModel: ImageViewModel
@@ -57,14 +57,15 @@ class ImageFragment: Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentImageBinding.inflate(inflater, container, false)
-//        imgPath = requireArguments().getString("img_path")!!
+//        imgPath = requireArguments().getString("img_path")!! //to be done in a fragment that shows selected image
 
 
         favoriteDao = FavoriteDatabaseInstance.getInstance(requireActivity()).imageDao()
 
-        favoriteFactory= FavoriteViewModelFactory(activity?.application!!, favoriteDao)
+        favoriteFactory = FavoriteViewModelFactory(activity?.application!!, favoriteDao)
 
-        favoriteViewModel = ViewModelProvider(this, favoriteFactory).get(FavoriteViewModel::class.java)
+        favoriteViewModel =
+            ViewModelProvider(this, favoriteFactory).get(FavoriteViewModel::class.java)
 
         binding1.favRv.layoutManager = GridLayoutManager(requireContext(), 4)
         binding1.favRv.setHasFixedSize(true)
@@ -74,14 +75,9 @@ class ImageFragment: Fragment() {
             adapter.differ.submitList(it)
         })
 
-
         val thisContext = container!!.context
         scaleGestureDetector = ScaleGestureDetector(thisContext, ScaleListener())
 
-
-//        val imgFile: File = File(imgPath)
-//        if (imgFile.exists()) {
-//        }
         return binding1.root
     }
 
@@ -106,5 +102,4 @@ class ImageFragment: Fragment() {
         super.onDestroy()
         binding = null
     }
-
 }

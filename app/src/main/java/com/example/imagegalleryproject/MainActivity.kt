@@ -53,10 +53,6 @@ class MainActivity : AppCompatActivity() {
 
         imageDao = DatabaseInstance.getInstance(this).imageDao()
 
-//        factory = ImageViewModelFactory(application, posterRepository)
-//
-//        viewModel = ViewModelProvider(this, factory)[ImageViewModel::class.java]
-
         mAuth = FirebaseAuth.getInstance()
 
         setSupportActionBar(binding.appBarMain.toolbar)

@@ -54,10 +54,6 @@ class RecyclerAdapter(val context: Context, private val recyclerItemClickListene
 //                    binding.iButton.visibility = View.GONE
 //                }
 
-                binding.rvIv.setOnClickListener {
-//                    recyclerItemClickListener.itemClickListener(image.path)
-                }
-
 
                 binding.root.setOnLongClickListener {
                     binding.checkbox.visibility = View.VISIBLE

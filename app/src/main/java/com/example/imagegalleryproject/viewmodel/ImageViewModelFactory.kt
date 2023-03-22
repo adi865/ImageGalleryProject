@@ -1,10 +1,8 @@
 package com.example.imagegalleryproject.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.imagegalleryproject.db.ImageDao
 import com.example.imagegalleryproject.db.PosterRepository
 
 class ImageViewModelFactory(val application: Application, val posterRepostory:PosterRepository, val searchParameter: String): ViewModelProvider.Factory {

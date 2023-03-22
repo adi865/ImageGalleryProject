@@ -106,6 +106,7 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
             when(menu!!.itemId) {
                 R.id.signOut -> {
                 if(mAuth.currentUser != null) {
+                    //reminder session not being managed manually, using firebase exclusively
                     mAuth.signOut()
                     val intent = Intent(requireActivity(), SignInActivity::class.java)
                     startActivity(intent)

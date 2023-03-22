@@ -7,7 +7,6 @@ import android.net.ConnectivityManager
 import androidx.lifecycle.*
 import com.example.imagegalleryproject.db.PosterRepository
 import com.example.imagegalleryproject.model.Movies
-import com.example.imagegalleryproject.model.Search
 import com.example.imagegalleryproject.util.Resource
 import kotlinx.coroutines.launch
 import retrofit2.Response

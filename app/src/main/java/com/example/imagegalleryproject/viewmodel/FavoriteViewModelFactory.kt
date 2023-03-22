@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.imagegalleryproject.db.FavoriteDao
-import com.example.imagegalleryproject.db.ImageDao
 
 class FavoriteViewModelFactory(val application: Application, val favoriteDao: FavoriteDao): ViewModelProvider.Factory {
     override fun <T: ViewModel> create(modelClass: Class<T>): T {
