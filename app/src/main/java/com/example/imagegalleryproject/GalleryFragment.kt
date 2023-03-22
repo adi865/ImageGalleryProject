@@ -1,15 +1,9 @@
 package com.example.imagegalleryproject
 
-import android.app.ActionBar
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -17,7 +11,6 @@ import com.example.imagegalleryproject.adapter.RecyclerAdapter
 import com.example.imagegalleryproject.databinding.FragmentGalleryBinding
 import com.example.imagegalleryproject.db.*
 import com.example.imagegalleryproject.model.FavoriteImage
-import com.example.imagegalleryproject.model.Image
 import com.example.imagegalleryproject.viewmodel.FavoriteViewModel
 import com.example.imagegalleryproject.viewmodel.FavoriteViewModelFactory
 import com.example.imagegalleryproject.viewmodel.ImageViewModel
