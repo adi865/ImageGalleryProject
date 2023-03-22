@@ -1,4 +1,4 @@
-package com.example.imagegalleryproject
+package com.example.imagegalleryproject.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.imagegalleryproject.R
+import com.example.imagegalleryproject.SignInActivity
 import com.example.imagegalleryproject.adapter.RecyclerAdapter
 import com.example.imagegalleryproject.databinding.FragmentGalleryBinding
 import com.example.imagegalleryproject.db.*
@@ -17,7 +19,7 @@ import com.example.imagegalleryproject.viewmodel.FavoriteViewModelFactory
 import com.example.imagegalleryproject.viewmodel.ImageViewModel
 import com.example.imagegalleryproject.viewmodel.ImageViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
-import java.util.*
+import java.util.ArrayList
 
 class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
     private var binding: FragmentGalleryBinding? = null
@@ -79,8 +81,9 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
         binding!!.submitBtn.setOnClickListener {
             inputParamter = binding!!.inputParameter.text.toString()
             if(inputParamter != null) {
-                //reminder: what happens the when entered text doesn't match any movie!!!!
-                factory = ImageViewModelFactory(activity?.application!!, posterRepository, inputParamter)
+                //reminder: what happens when the entered text doesn't match any movie!!!!
+                factory =
+                    ImageViewModelFactory(activity?.application!!, posterRepository, inputParamter)
                 viewModel = ViewModelProvider(this, factory).get(ImageViewModel::class.java)
                 viewModel.getImages(inputParamter)
                 getImagePath()

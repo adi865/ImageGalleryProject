@@ -1,21 +1,18 @@
-package com.example.imagegalleryproject
+package com.example.imagegalleryproject.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.ScaleGestureDetector
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.imagegalleryproject.MainActivity
 import com.example.imagegalleryproject.adapter.FavRecyclerAdapter
 import com.example.imagegalleryproject.databinding.FragmentImageBinding
-import com.example.imagegalleryproject.db.DatabaseInstance
 import com.example.imagegalleryproject.db.FavoriteDao
 import com.example.imagegalleryproject.db.FavoriteDatabaseInstance
 import com.example.imagegalleryproject.db.ImageDao
@@ -23,9 +20,6 @@ import com.example.imagegalleryproject.viewmodel.FavoriteViewModel
 import com.example.imagegalleryproject.viewmodel.FavoriteViewModelFactory
 import com.example.imagegalleryproject.viewmodel.ImageViewModel
 import com.example.imagegalleryproject.viewmodel.ImageViewModelFactory
-import com.google.android.material.navigation.NavigationView
-import com.squareup.picasso.Picasso
-import java.io.File
 
 class ImageFragment: Fragment() {
     private lateinit var scaleGestureDetector: ScaleGestureDetector //for zooming on the image passed from the recyclerview //to be done in the fragment that shows selected image

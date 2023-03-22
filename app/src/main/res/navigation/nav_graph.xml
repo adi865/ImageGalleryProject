@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/galleryFragment"
-        android:name="com.example.imagegalleryproject.GalleryFragment"
+        android:name="com.example.imagegalleryproject.fragments.GalleryFragment"
         android:label="fragment_gallery"
         tools:layout="@layout/fragment_gallery" >
         <action
@@ -16,12 +16,12 @@
     </fragment>
     <fragment
         android:id="@+id/imageFragment"
-        android:name="com.example.imagegalleryproject.ImageFragment"
+        android:name="com.example.imagegalleryproject.fragments.ImageFragment"
         android:label="fragment_image"
         tools:layout="@layout/fragment_image" />
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.imagegalleryproject.MainFragment"
+        android:name="com.example.imagegalleryproject.fragments.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" >
         <action

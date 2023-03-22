@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -20,13 +19,13 @@ import com.example.imagegalleryproject.databinding.ActivityMainBinding
 import com.example.imagegalleryproject.db.DatabaseInstance
 import com.example.imagegalleryproject.db.ImageDao
 import com.example.imagegalleryproject.db.PosterRepository
+import com.example.imagegalleryproject.fragments.GalleryFragment
+import com.example.imagegalleryproject.fragments.ImageFragment
+import com.example.imagegalleryproject.fragments.MainFragment
 import com.example.imagegalleryproject.viewmodel.ImageViewModel
 import com.example.imagegalleryproject.viewmodel.ImageViewModelFactory
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 
 class MainActivity : AppCompatActivity() {
