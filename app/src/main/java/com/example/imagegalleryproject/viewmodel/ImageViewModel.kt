@@ -32,7 +32,7 @@ class ImageViewModel(application: Application, val repository: PosterRepository,
         viewModelScope.launch {
             imagePathData.postValue(Resource.Loading())
             val response = repository.getPosters(searchParamter.replace("\\s+","+"))
-            imagePathData.postValue(handleResponse(response))
+                imagePathData.postValue(handleResponse(response))
         }
     }
 
