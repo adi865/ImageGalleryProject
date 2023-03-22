@@ -15,22 +15,13 @@ import com.example.imagegalleryproject.adapter.FavRecyclerAdapter
 import com.example.imagegalleryproject.databinding.FragmentImageBinding
 import com.example.imagegalleryproject.db.FavoriteDao
 import com.example.imagegalleryproject.db.FavoriteDatabaseInstance
-import com.example.imagegalleryproject.db.ImageDao
 import com.example.imagegalleryproject.viewmodel.FavoriteViewModel
-import com.example.imagegalleryproject.viewmodel.FavoriteViewModelFactory
-import com.example.imagegalleryproject.viewmodel.ImageViewModel
-import com.example.imagegalleryproject.viewmodel.ImageViewModelFactory
 
 class ImageFragment: Fragment() {
     private lateinit var scaleGestureDetector: ScaleGestureDetector //for zooming on the image passed from the recyclerview //to be done in the fragment that shows selected image
     private var binding: FragmentImageBinding? = null
     private lateinit var adapter: FavRecyclerAdapter
-    private lateinit var viewModel: ImageViewModel
-    private lateinit var factory: ImageViewModelFactory
-    private lateinit var imageDao: ImageDao
-
     private lateinit var favoriteViewModel: FavoriteViewModel
-    private lateinit var favoriteFactory: FavoriteViewModelFactory
     private lateinit var favoriteDao: FavoriteDao
 
     private val binding1 get() = binding!!
@@ -56,10 +47,8 @@ class ImageFragment: Fragment() {
 
         favoriteDao = FavoriteDatabaseInstance.getInstance(requireActivity()).imageDao()
 
-        favoriteFactory = FavoriteViewModelFactory(activity?.application!!, favoriteDao)
-
         favoriteViewModel =
-            ViewModelProvider(this, favoriteFactory).get(FavoriteViewModel::class.java)
+            ViewModelProvider(requireActivity()).get(FavoriteViewModel::class.java)
 
         binding1.favRv.layoutManager = GridLayoutManager(requireContext(), 4)
         binding1.favRv.setHasFixedSize(true)

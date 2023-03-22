@@ -5,16 +5,18 @@ import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import androidx.lifecycle.*
+import com.example.imagegalleryproject.db.ImageDao
 import com.example.imagegalleryproject.db.PosterRepository
 import com.example.imagegalleryproject.model.Movies
+import com.example.imagegalleryproject.model.Search
 import com.example.imagegalleryproject.util.Resource
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class ImageViewModel(application: Application, val repository: PosterRepository, val searchParameter: String): AndroidViewModel(application) {
+class ImageViewModel(application: Application, val repository: PosterRepository, val imageDao: ImageDao, val searchParameter: String): AndroidViewModel(application) {
     var imagePathData = MediatorLiveData<Resource<Movies>>()
     private val context = getApplication<Application>().applicationContext
-    var postersFromDB = repository.getImagesFromDB()
+    var postersFromDB = getImagesFromDB()
 
     init {
         if(isConnectionAvailable(context)) {
@@ -36,14 +38,14 @@ class ImageViewModel(application: Application, val repository: PosterRepository,
     }
 
     fun getPostersFromDB() {
-        postersFromDB = repository.getImagesFromDB()
+        postersFromDB = getImagesFromDB()
     }
 
     private suspend fun handleResponse(response: Response<Movies>): Resource<Movies> {
         if(response.isSuccessful) {
             response.body()?.let {resultResponse ->
                 for (search in resultResponse.Search) {
-                    repository.insertMovie(search)
+                    insertMovie(search)
                 }
                 return Resource.Success(resultResponse)
             }
@@ -55,4 +57,11 @@ class ImageViewModel(application: Application, val repository: PosterRepository,
         val connectivityManager: ConnectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo()!!.isConnected
     }
+
+    suspend fun insertMovie(search: Search) = imageDao.addImage(search)
+
+    suspend fun removeImage(search:Search) = imageDao.deleteImage(search)
+
+
+    fun getImagesFromDB() = imageDao.getImages()
 }

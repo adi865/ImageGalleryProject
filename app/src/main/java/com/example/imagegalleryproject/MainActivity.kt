@@ -23,18 +23,12 @@ import com.example.imagegalleryproject.fragments.GalleryFragment
 import com.example.imagegalleryproject.fragments.ImageFragment
 import com.example.imagegalleryproject.fragments.MainFragment
 import com.example.imagegalleryproject.viewmodel.ImageViewModel
-import com.example.imagegalleryproject.viewmodel.ImageViewModelFactory
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    lateinit var viewModel: ImageViewModel
-    private lateinit var factory: ImageViewModelFactory
-    private lateinit var imageDao: ImageDao
-
-    private lateinit var posterRepository: PosterRepository
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navController: NavController
@@ -47,10 +41,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val db = DatabaseInstance.getInstance(this)
-        posterRepository = PosterRepository(db)
-
-        imageDao = DatabaseInstance.getInstance(this).imageDao()
 
         mAuth = FirebaseAuth.getInstance()
 

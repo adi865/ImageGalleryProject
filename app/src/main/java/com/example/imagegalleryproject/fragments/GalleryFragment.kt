@@ -6,6 +6,7 @@ import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.imagegalleryproject.R
@@ -15,9 +16,7 @@ import com.example.imagegalleryproject.databinding.FragmentGalleryBinding
 import com.example.imagegalleryproject.db.*
 import com.example.imagegalleryproject.model.FavoriteImage
 import com.example.imagegalleryproject.viewmodel.FavoriteViewModel
-import com.example.imagegalleryproject.viewmodel.FavoriteViewModelFactory
 import com.example.imagegalleryproject.viewmodel.ImageViewModel
-import com.example.imagegalleryproject.viewmodel.ImageViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
 import java.util.ArrayList
 
@@ -26,8 +25,6 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
     private lateinit var recyclerAdapter: RecyclerAdapter
     private lateinit var viewModel: ImageViewModel
     private lateinit var favoriteViewModel: FavoriteViewModel
-    private lateinit var factory: ImageViewModelFactory
-    private lateinit var favoriteFactory: FavoriteViewModelFactory
     private lateinit var imageDao: ImageDao
     private lateinit var favoriteDao: FavoriteDao
 
@@ -66,13 +63,10 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
         favoriteDao = FavoriteDatabaseInstance.getInstance(requireActivity()).imageDao()
 
         val db = DatabaseInstance.getInstance(requireContext())
-        posterRepository = PosterRepository(db)
+        posterRepository = PosterRepository()
 
 
-        favoriteFactory = FavoriteViewModelFactory(activity?.application!!, favoriteDao)
-
-        favoriteViewModel =
-            ViewModelProvider(this, favoriteFactory).get(FavoriteViewModel::class.java)
+        favoriteViewModel = FavoriteViewModel(requireActivity().application, favoriteDao)
 
         imagePathList = ArrayList<String>()
 
@@ -82,9 +76,7 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
             inputParamter = binding!!.inputParameter.text.toString()
             if(inputParamter != null) {
                 //reminder: what happens when the entered text doesn't match any movie!!!!
-                factory =
-                    ImageViewModelFactory(activity?.application!!, posterRepository, inputParamter)
-                viewModel = ViewModelProvider(this, factory).get(ImageViewModel::class.java)
+                viewModel = ImageViewModel(requireActivity().application, posterRepository, imageDao, inputParamter)
                 viewModel.getImages(inputParamter)
                 getImagePath()
             } else {

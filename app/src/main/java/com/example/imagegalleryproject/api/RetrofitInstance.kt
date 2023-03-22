@@ -8,7 +8,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 class RetrofitInstance {
 
     companion object {
-        private val BASE_URL = "https://omdbapi.com/"
+        private val BASE_URL = "https://omdbapi.com"
+        val API_KEY = "36dffe50"
         private val retrofitInstance by lazy {
             val loggingInterceptor = HttpLoggingInterceptor()
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
