@@ -23,6 +23,9 @@ import com.example.imagegalleryproject.fragments.GalleryFragment
 import com.example.imagegalleryproject.fragments.ImageFragment
 import com.example.imagegalleryproject.fragments.MainFragment
 import com.example.imagegalleryproject.viewmodel.ImageViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 
@@ -35,6 +38,8 @@ class MainActivity : AppCompatActivity() {
 
 
     private lateinit var mAuth: FirebaseAuth
+
+    lateinit var mGoogleSignInClient: GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,6 +90,12 @@ class MainActivity : AppCompatActivity() {
             drawerLayoutUName.text = mAuth.currentUser!!.email.toString()
         }
 
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.google_web_client_id))
+            .requestEmail()
+            .build()
+        mGoogleSignInClient= GoogleSignIn.getClient(this,gso)
+
         navView.setNavigationItemSelectedListener {
             var fragment: Fragment? = null
             val fragmentClass: Class<*> = when (it.itemId) {
@@ -133,7 +144,6 @@ class MainActivity : AppCompatActivity() {
         override fun onCreateOptionsMenu(menu: Menu): Boolean {
             // Inflate the menu; this adds items to the action bar if it is present.
             menuInflater.inflate(R.menu.menu_main, menu)
-
             return true
         }
 
@@ -144,6 +154,12 @@ class MainActivity : AppCompatActivity() {
                     mAuth.signOut()
                     val intent = Intent(this, SignInActivity::class.java)
                     startActivity(intent)
+                } else if(GoogleSignIn.getLastSignedInAccount(this)!=null) {
+                    mGoogleSignInClient.signOut().addOnCompleteListener {
+                        val intent= Intent(this, SignInActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
                 }
             }
         }

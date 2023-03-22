@@ -73,8 +73,19 @@
         android:layout_height="wrap_content"
         android:id="@+id/goToRegistration"
         android:text="Register Now"
+        android:textColor="@color/blue"
+        android:textStyle="bold"
         android:layout_marginTop="365dp"
         android:layout_marginLeft="45dp"
+        android:layout_gravity="center_horizontal"
+        />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/googleSignInBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="405dp"
+        android:layout_marginRight="50dp"
         android:layout_gravity="center_horizontal"
         />
 
