@@ -5,10 +5,13 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.imagegalleryproject.db.FavoriteDao
+import com.example.imagegalleryproject.db.FavoriteDatabaseInstance
 import com.example.imagegalleryproject.model.FavoriteImage
 import kotlinx.coroutines.launch
 
-class FavoriteViewModel(application: Application, val favoriteDao: FavoriteDao): AndroidViewModel(application) {
+class FavoriteViewModel(application: Application): AndroidViewModel(application) {
+    private val context = getApplication<Application>().applicationContext
+    val favoriteDao = FavoriteDatabaseInstance.getInstance(context).imageDao()
 
     var favoriteImages = MediatorLiveData<List<FavoriteImage>>()
     val fetchedImages = favoriteDao.getFavorites()

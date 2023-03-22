@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import androidx.lifecycle.*
+import com.example.imagegalleryproject.db.DatabaseInstance
 import com.example.imagegalleryproject.db.ImageDao
 import com.example.imagegalleryproject.db.PosterRepository
 import com.example.imagegalleryproject.model.Movies
@@ -13,9 +14,10 @@ import com.example.imagegalleryproject.util.Resource
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class ImageViewModel(application: Application, val repository: PosterRepository, val imageDao: ImageDao, val searchParameter: String): AndroidViewModel(application) {
+class ImageViewModel(application: Application, val repository: PosterRepository, val searchParameter: String): AndroidViewModel(application) {
     var imagePathData = MediatorLiveData<Resource<Movies>>()
     private val context = getApplication<Application>().applicationContext
+    private val imageDao = DatabaseInstance.getInstance(context).imageDao()
     var postersFromDB = getImagesFromDB()
 
     init {

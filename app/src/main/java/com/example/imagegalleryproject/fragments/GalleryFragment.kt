@@ -6,8 +6,6 @@ import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.imagegalleryproject.R
 import com.example.imagegalleryproject.SignInActivity
@@ -66,7 +64,7 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
         posterRepository = PosterRepository()
 
 
-        favoriteViewModel = FavoriteViewModel(requireActivity().application, favoriteDao)
+        favoriteViewModel = FavoriteViewModel(requireActivity().application)
 
         imagePathList = ArrayList<String>()
 
@@ -76,7 +74,7 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
             inputParamter = binding!!.inputParameter.text.toString()
             if(inputParamter != null) {
                 //reminder: what happens when the entered text doesn't match any movie!!!!
-                viewModel = ImageViewModel(requireActivity().application, posterRepository, imageDao, inputParamter)
+                viewModel = ImageViewModel(requireActivity().application, posterRepository, inputParamter)
                 viewModel.getImages(inputParamter)
                 getImagePath()
             } else {
