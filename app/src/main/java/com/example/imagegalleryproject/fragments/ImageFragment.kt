@@ -48,7 +48,7 @@ class ImageFragment: Fragment() {
         favoriteDao = FavoriteDatabaseInstance.getInstance(requireActivity()).imageDao()
 
         favoriteViewModel =
-            ViewModelProvider(requireActivity()).get(FavoriteViewModel::class.java)
+            FavoriteViewModel(requireActivity().application, favoriteDao)
 
         binding1.favRv.layoutManager = GridLayoutManager(requireContext(), 4)
         binding1.favRv.setHasFixedSize(true)
