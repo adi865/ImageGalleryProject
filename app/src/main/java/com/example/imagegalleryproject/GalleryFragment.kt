@@ -54,7 +54,6 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
         savedInstanceState: Bundle?
     ): View? {
 
-        println("Coming from main fragment after drawer layout")
 
         // Inflate the layout for this fragment
         binding = FragmentGalleryBinding.inflate(inflater, container, false)
@@ -147,6 +146,7 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
     }
 
     override fun removeOnItemLongClickListener(imagePath: String) {
+         //to be done in favorite fragment, not here! Will Remove once the project is finalized
 //        viewModel.removeImage(Image(imagePath))
     }
 
