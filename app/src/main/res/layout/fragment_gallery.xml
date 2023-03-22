@@ -13,6 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/inputParameter"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
         android:hint="Enter the movie name to search" />
 
     <Button
@@ -20,12 +22,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="submit"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="41dp"
         android:layout_gravity="center_horizontal"
         />
 
+
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="83dp"
         android:id="@+id/rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

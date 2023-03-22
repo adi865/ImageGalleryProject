@@ -1,81 +1,219 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+     android:background="@color/white"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".SignInActivity">
 
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Theme.ImageGalleryProject.AppBarOverlay">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/Theme.ImageGalleryProject.PopupOverlay" />
+        android:theme="@style/Theme.ImageGalleryProject.AppBarOverlay"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.521">
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/design_one"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="60dp"
+        android:layout_height="130dp"
+        android:rotation="180"
+        android:scaleType="fitXY"
+        android:src="@drawable/ellipse_one"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="0dp"
+        android:layout_height="210dp"
+        android:layout_marginStart="12dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/design_two"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
 
     <!-- TODO: Update blank fragment layout -->
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="55dp"
         android:layout_gravity="center_horizontal"
         android:text="Sign In"
+        android:textColor="@color/white"
         android:textSize="22sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.953"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.055" />
 
-    <EditText
-        android:layout_width="wrap_content"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card1"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/uName"
-        android:hint="Enter your username"
-        android:inputType="textEmailAddress"
-        android:layout_marginTop="125dp"
-        android:layout_gravity="center_horizontal" />
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="-64dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="8dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView2">
 
-    <EditText
-        android:layout_width="wrap_content"
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/white"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/uName"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingTop="5dp"
+                android:background="@color/white"
+                android:hint="Enter Your Email"
+                android:textColor="@color/black"
+                android:inputType="textEmailAddress"
+                android:paddingStart="12dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card2"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/password"
-        android:hint="Enter your password"
-        android:inputType="textPassword"
-        app:passwordToggleEnabled="true"
-        android:layout_marginTop="225dp"
-        android:layout_gravity="center_horizontal" />
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="5dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="8dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/card1">
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/white"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:hintEnabled="false"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/password"
+                android:paddingTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:hint="Enter your password"
+                android:textColor="@color/black"
+                android:inputType="textPassword"
+                android:paddingStart="12dp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+    </com.google.android.material.card.MaterialCardView>
 
     <Button
         android:id="@+id/btnSignIn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="305dp"
+        android:layout_width="105dp"
+        android:layout_height="63dp"
         android:layout_gravity="center_horizontal"
-        android:text="Sign In"/>
+        android:text="Sign In"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.803"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.756" />
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:text="New User?"
-        android:layout_marginTop="365dp"
-        android:layout_marginRight="55dp"
-        android:layout_gravity="center_horizontal"
-        />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.305"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.658" />
 
     <TextView
+        android:id="@+id/goToRegistration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/goToRegistration"
-        android:text="Register Now"
-        android:layout_marginTop="365dp"
-        android:layout_marginLeft="45dp"
         android:layout_gravity="center_horizontal"
-        />
+        android:text="Register Now"
+        android:textColor="@color/blue"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.68"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.658" />
 
-</FrameLayout>
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/googleSignInBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.334"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.748" />
+
+
+
+    <!--To Be Added Later-->
+    <!--    <com.facebook.login.widget.LoginButton-->
+    <!--        android:id="@+id/fbLoginButton"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="center_horizontal"-->
+    <!--        android:layout_marginTop="465dp"-->
+    <!--        android:text="Continue With Facebook"-->
+    <!--        android:textAllCaps="false"-->
+    <!--        android:textColor="@android:color/white" />-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>
