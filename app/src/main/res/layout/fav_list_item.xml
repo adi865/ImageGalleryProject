@@ -9,6 +9,17 @@
     android:gravity="center"
     android:elevation="8dp"
     app:cardCornerRadius="8dp">
+    <CheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="3dp"
+        android:translationZ="10dp"
+        android:visibility="gone"
+        android:button="@drawable/checkbox_drawable"
+        android:layout_gravity="start|top"
+        />
 
     <ImageView
         android:id="@+id/favRvIv"

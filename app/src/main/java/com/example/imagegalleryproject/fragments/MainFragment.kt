@@ -5,16 +5,14 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 import com.example.imagegalleryproject.R
 import com.example.imagegalleryproject.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
     private var binding: FragmentMainBinding? = null
-    private lateinit var navController: NavController
 
     private val binding1 get() = binding!!
 
@@ -25,12 +23,12 @@ class MainFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        navController = Navigation.findNavController(requireActivity(), R.id.imageNavHostContainer)
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Dashboard"
     }
 
     override fun onStart() {
         super.onStart()
-        navController = requireActivity().findNavController(R.id.imageNavHostContainer)
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Dashboard"
     }
 
 
@@ -41,22 +39,61 @@ class MainFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentMainBinding.inflate(inflater, container, false)
 
+        container!!.removeAllViews()
 
         binding1.galleryBtn.setOnClickListener {
-            navController.navigate(R.id.action_mainFragment_to_galleryFragment)
+            var fragment: Fragment? = null
+            val fragmentClass: Class<*> = GalleryFragment::class.java
+
+            try {
+                fragment = fragmentClass.newInstance() as Fragment
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            val fragmentManager = requireActivity().supportFragmentManager
+            fragmentManager.beginTransaction().replace(R.id.flContent, fragment!!).commit()
         }
 
 
         binding1.favBtn.setOnClickListener {
-            navController.navigate(R.id.action_mainFragment_to_imageFragment)
+            var fragment: Fragment? = null
+            val fragmentClass: Class<*> = ImageFragment::class.java
+
+            try {
+                fragment = fragmentClass.newInstance() as Fragment
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            val fragmentManager = requireActivity().supportFragmentManager
+            fragmentManager.beginTransaction().replace(R.id.flContent, fragment!!).commit()
         }
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Dashboard"
 
         binding1.bottomNavigationView.setOnItemSelectedListener{ item: MenuItem ->
             val itemId = item.itemId
             if (itemId == R.id.gallery) {
-                navController.navigate(R.id.action_mainFragment_to_galleryFragment)
+                var fragment: Fragment? = null
+                val fragmentClass: Class<*> = GalleryFragment::class.java
+
+                try {
+                    fragment = fragmentClass.newInstance() as Fragment
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+                val fragmentManager = requireActivity().supportFragmentManager
+                fragmentManager.beginTransaction().replace(R.id.flContent, fragment!!).commit()
             } else if (itemId == R.id.fav) {
-                navController.navigate(R.id.action_mainFragment_to_imageFragment)
+                var fragment: Fragment? = null
+                val fragmentClass: Class<*> = ImageFragment::class.java
+
+                try {
+                    fragment = fragmentClass.newInstance() as Fragment
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+                val fragmentManager = requireActivity().supportFragmentManager
+                fragmentManager.beginTransaction().replace(R.id.flContent, fragment!!).commit()
             }
             true
         }

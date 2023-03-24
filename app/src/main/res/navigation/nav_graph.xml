@@ -9,21 +9,28 @@
         android:id="@+id/galleryFragment"
         android:name="com.example.imagegalleryproject.fragments.GalleryFragment"
         android:label="fragment_gallery"
-        tools:layout="@layout/fragment_gallery" >
+        tools:layout="@layout/fragment_gallery">
         <action
             android:id="@+id/action_galleryFragment_to_imageFragment"
             app:destination="@id/imageFragment" />
+        <action
+            android:id="@+id/action_galleryFragment_to_imageViewerFragment"
+            app:destination="@id/imageViewerFragment" />
     </fragment>
     <fragment
         android:id="@+id/imageFragment"
         android:name="com.example.imagegalleryproject.fragments.ImageFragment"
         android:label="fragment_image"
-        tools:layout="@layout/fragment_image" />
+        tools:layout="@layout/fragment_image">
+        <action
+            android:id="@+id/action_imageFragment_to_imageViewerFragment"
+            app:destination="@id/imageViewerFragment" />
+    </fragment>
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.example.imagegalleryproject.fragments.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" >
+        tools:layout="@layout/fragment_main">
         <action
             android:id="@+id/action_mainFragment_to_galleryFragment"
             app:destination="@id/galleryFragment" />
@@ -31,4 +38,9 @@
             android:id="@+id/action_mainFragment_to_imageFragment"
             app:destination="@id/imageFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/imageViewerFragment"
+        android:name="com.example.imagegalleryproject.fragments.ImageViewerFragment"
+        android:label="fragment_image_viewer"
+        tools:layout="@layout/fragment_image_viewer" />
 </navigation>

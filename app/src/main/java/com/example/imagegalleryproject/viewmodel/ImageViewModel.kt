@@ -18,12 +18,11 @@ import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
 
-class ImageViewModel(application: Application, val repository: PosterRepository, val searchParameter: String): AndroidViewModel(application) {
+class ImageViewModel(application: Application, val repository: PosterRepository, val searchParameter: String?): AndroidViewModel(application) {
     var imagePathData = MutableLiveData<Resource<Movies>>()
     private val context = getApplication<Application>().applicationContext
     private val imageDao = DatabaseInstance.getInstance(context).imageDao()
     var postersFromDB = getImagesFromDB()
-
     init {
         if(isConnectionAvailable(context)) {
             getImages(searchParameter)
@@ -33,12 +32,12 @@ class ImageViewModel(application: Application, val repository: PosterRepository,
     }
 
     @SuppressLint("SuspiciousIndentation")
-    fun getImages(searchParamter: String) {
+    fun getImages(searchParamter: String?) {
         viewModelScope.launch {
             removeImage()
             imagePathData.postValue(Resource.Loading())
             val response = try {
-              repository.getPosters(searchParamter.replace("\\s+","+"))
+              repository.getPosters(searchParamter!!.replace("\\s+","+"))
             } catch(e: IOException) {
                 Log.e("My TAG", "No Internet Connection Available ")
                Toast.makeText(context," Can't do search Internet not connected", Toast.LENGTH_SHORT).show()
@@ -48,7 +47,7 @@ class ImageViewModel(application: Application, val repository: PosterRepository,
                 Toast.makeText(context, "API didn't return a valid response", Toast.LENGTH_SHORT).show()
                return@launch
             }
-
+            println("state of $response")
             if(response.body()!!.Search == null) {
                 Toast.makeText(context, "The title you entered not found", Toast.LENGTH_SHORT).show()
                 return@launch
@@ -89,4 +88,5 @@ class ImageViewModel(application: Application, val repository: PosterRepository,
 
 
     fun getImagesFromDB() = imageDao.getImages()
+
 }

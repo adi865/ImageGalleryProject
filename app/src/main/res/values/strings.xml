@@ -25,4 +25,8 @@
     <string name="facebook_app_id">6820491341300113</string>
     <string name="fb_login_protocol_scheme">fb6820491341300113</string>
     <string name="facebook_client_token">96ab03fb2c0bf1a97f8a009577554885</string>
+    <string name="title_activity_image_viewer">ImageViewerActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>

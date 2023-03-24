@@ -11,7 +11,7 @@ interface MovieApi {
     @GET("/")
     suspend fun fetchMoviePosters(
         @Query(value = "s", encoded = true)
-        title: String,
+        title: String?,
         @Query("apikey")
         apiKey: String = API_KEY
     ): Response<Movies>

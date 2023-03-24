@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:isScrollContainer="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".fragments.MainFragment">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="75dp"
+        android:textColor="@color/black"
         android:textStyle="bold"
         android:textSize="22sp"
         android:layout_gravity="center_horizontal"
@@ -41,3 +49,4 @@
         android:layout_gravity="bottom"
         app:menu="@menu/bottom_navigation_menu" />
 </FrameLayout>
+</ScrollView>

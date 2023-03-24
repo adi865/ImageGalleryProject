@@ -12,10 +12,10 @@ import com.example.imagegalleryproject.R
 import com.example.imagegalleryproject.databinding.ListItemBinding
 import com.example.imagegalleryproject.model.Search
 
-class RecyclerAdapter(val context: Context, private val recyclerItemClickListener: RecyclerItemClickListener) :
-    RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder>() {
+class RecyclerAdapter(val context: Context, private val recyclerItemClickListener: RecyclerItemClickListener): RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder>() {
 
     private val pathsList: ArrayList<String> = ArrayList<String>()
+
 
 
     private val differCallback = object : DiffUtil.ItemCallback<Search>() {
@@ -27,61 +27,43 @@ class RecyclerAdapter(val context: Context, private val recyclerItemClickListene
             return oldItem == newItem
         }
     }
+
     val differ = AsyncListDiffer(this, differCallback)
 
+    fun setData(imagesList: List<Search>) = differ.submitList(imagesList)
 
     inner class RecyclerViewHolder(val binding: ListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         var selected = BooleanArray(differ.currentList.size)
-        var isChecked: Boolean = false
         fun bind(search: Search) {
-                Glide.with(binding.rvIv).load(search.Poster)
-                    .placeholder(R.drawable.ic_loading_foreground).into(binding.rvIv)
+            Glide.with(binding.rvIv).load(differ.currentList[position].Poster)
+                .placeholder(R.drawable.ic_loading_foreground).into(binding.rvIv)
 
-//                if(!mainActivity.isInAction) {
-////                    binding.iButton.visibility = View.GONE
-//                    binding.checkbox.visibility  = View.GONE
-//                } else {
-////                    binding.iButton.visibility = View.VISIBLE
-//                    binding.checkbox.visibility = View.VISIBLE
-//                }
-
-//                if(selected[position]) {
-//                    binding.iButton.setImageResource(R.drawable.ic_fav_filled)
-//                    binding.iButton.visibility = View.VISIBLE
-//                } else {
-//                    binding.iButton.setImageResource(R.drawable.ic_fav_unfilled)
-//                    binding.iButton.visibility = View.GONE
-//                }
-
-
-                binding.rvIv.setOnClickListener {
+            binding.rvIv.setOnLongClickListener {
+                binding.checkbox.visibility = View.VISIBLE
+                if (selected[position]) {
+                    binding.checkbox.visibility = View.GONE
+                    selected[position] = false
+                } else {
                     binding.checkbox.visibility = View.VISIBLE
-                    if(selected[position]) {
-                        binding.checkbox.visibility = View.GONE
-                        recyclerItemClickListener.removeOnItemLongClickListener(search.Poster)
-                        selected[position] = false
-                    } else {
-                        binding.checkbox.visibility = View.VISIBLE
-                        selected[position] = true
-                        binding.checkbox.setOnClickListener {
-                            if(binding.checkbox.isChecked) {
-                                binding.checkbox.setButtonDrawable(R.drawable.checked)
-                                pathsList.add(differ.currentList.get(position).Poster)
-                                recyclerItemClickListener.itemClickListener(pathsList)
-                            }
-                            else {
-                                binding.checkbox.setButtonDrawable(R.drawable.unchecked)
-                            }
+                    selected[position] = true
+                    binding.checkbox.setOnClickListener {
+                        if (binding.checkbox.isChecked) {
+                            pathsList.add(differ.currentList.get(position).Poster)
+                            recyclerItemClickListener.itemClickListener(pathsList)
                         }
-                        recyclerItemClickListener.itemLongClickListener()
                     }
+                    recyclerItemClickListener.itemLongClickListener()
                 }
+                return@setOnLongClickListener true
+            }
 
-                binding.root.setOnClickListener {
-//                    recyclerItemClickListener.itemClickListener(image)
+            binding.rvIv.setOnClickListener {
+                if (binding.checkbox.visibility == View.VISIBLE) {
+                    binding.checkbox.visibility = View.GONE
                 }
-
+                recyclerItemClickListener.goToViewFragment(differ.currentList[position].Poster)
+            }
         }
     }
 
@@ -91,7 +73,7 @@ class RecyclerAdapter(val context: Context, private val recyclerItemClickListene
     }
 
     override fun getItemCount(): Int {
-        return differ.currentList.size
+        return differ.getCurrentList().size
     }
 
 
@@ -105,6 +87,7 @@ class RecyclerAdapter(val context: Context, private val recyclerItemClickListene
 
         public fun itemLongClickListener(): Boolean
 
-        public fun removeOnItemLongClickListener(imagePath: String)
+        public fun goToViewFragment(selectedImage: String)
     }
+
 }
