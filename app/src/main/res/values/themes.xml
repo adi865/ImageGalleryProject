@@ -11,15 +11,16 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <item name="actionModeBackground">@color/someGray</item>
+        <item name="actionBarTheme">@style/ThemeOverlay.Material3.Dark.ActionBar</item>
+        <item name="popupMenuBackground">@color/white</item>
         <!-- Customize your theme here. -->
     </style>
 
     <style name="Theme.ImageGalleryProject.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="Theme.ImageGalleryProject.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
     </style>
 
     <style name="Theme.ImageGalleryProject.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

@@ -1,10 +1,18 @@
 package com.example.imagegalleryproject.fragments
 
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.*
+import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.imagegalleryproject.R
@@ -18,7 +26,7 @@ import com.example.imagegalleryproject.viewmodel.ImageViewModel
 import com.google.firebase.auth.FirebaseAuth
 import java.util.ArrayList
 
-class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
+class GalleryFragment : Fragment(), RecyclerAdapter.RecyclerItemClickListener {
     private var binding: FragmentGalleryBinding? = null
     private lateinit var recyclerAdapter: RecyclerAdapter
     private lateinit var viewModel: ImageViewModel
@@ -72,8 +80,9 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
 
         binding!!.submitBtn.setOnClickListener {
             inputParamter = binding!!.inputParameter.text.toString()
-            if(inputParamter != null) {
-                viewModel = ImageViewModel(requireActivity().application, posterRepository, inputParamter)
+            if (inputParamter != null) {
+                viewModel =
+                    ImageViewModel(requireActivity().application, posterRepository, inputParamter)
                 viewModel.getImages(inputParamter)
                 getImagePath()
             } else {
@@ -84,33 +93,34 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
         return binding!!.root
     }
 
-    private val actionModeCallback: ActionMode.Callback = object: ActionMode.Callback {
+    private val actionModeCallback: ActionMode.Callback = object : ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
             mode!!.menuInflater.inflate(R.menu.custom_menu, menu)
-            return true
+
+                return true
         }
 
         override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-           return false
+            return false
         }
 
         override fun onActionItemClicked(mode: ActionMode?, menu: MenuItem?): Boolean {
-            when(menu!!.itemId) {
+            when (menu!!.itemId) {
                 R.id.signOut -> {
-                if(mAuth.currentUser != null) {
-                    //reminder: session not being managed manually, using firebase exclusively
-                    mAuth.signOut()
-                    val intent = Intent(requireActivity(), SignInActivity::class.java)
-                    startActivity(intent)
+                    if (mAuth.currentUser != null) {
+                        //reminder: session not being managed manually, using firebase exclusively
+                        mAuth.signOut()
+                        val intent = Intent(requireActivity(), SignInActivity::class.java)
+                        startActivity(intent)
+                    }
                 }
-            }
                 R.id.addFav -> {
                     imagePathList.forEach {
                         favoriteViewModel.addFavorites(FavoriteImage(it))
                     }
-                  mode?.finish()
+                    mode?.finish()
                     (activity as AppCompatActivity).supportActionBar?.show()
-            }
+                }
                 R.id.cancel -> {
                     mode?.finish()
                     (activity as AppCompatActivity).supportActionBar?.show()
@@ -123,7 +133,8 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
         }
 
         override fun onDestroyActionMode(mode: ActionMode?) {
-           actMode = null
+            (activity as AppCompatActivity).supportActionBar?.show()
+            actMode = null
         }
     }
 
@@ -139,7 +150,7 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
     }
 
     override fun removeOnItemLongClickListener(imagePath: String) {
-         //to be done in favorite fragment, not here! Will Remove once the project is finalized
+        //to be done in favorite fragment, not here! Will Remove once the project is finalized
 //        viewModel.removeImage(Image(imagePath))
     }
 
@@ -148,7 +159,7 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
     }
 
     override fun itemLongClickListener(): Boolean {
-        if(actMode != null) {
+        if (actMode != null) {
             return false
         } else {
             isInActionMode = true
@@ -159,10 +170,10 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
         }
     }
 
-    override fun onDestroyView() {
+        override fun onDestroyView() {
         super.onDestroyView()
         binding = null
-        if(actMode != null) {
+        if (actMode != null) {
             actMode!!.finish()
         }
     }

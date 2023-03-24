@@ -36,7 +36,7 @@ class RecyclerAdapter(val context: Context, private val recyclerItemClickListene
         var isChecked: Boolean = false
         fun bind(search: Search) {
                 Glide.with(binding.rvIv).load(search.Poster)
-                    .placeholder(R.drawable.ic_launcher_background).into(binding.rvIv)
+                    .placeholder(R.drawable.ic_loading_foreground).into(binding.rvIv)
 
 //                if(!mainActivity.isInAction) {
 ////                    binding.iButton.visibility = View.GONE
