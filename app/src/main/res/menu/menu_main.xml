@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/signOut"
-        android:title="Sign Ouy">
+        android:title="Sign Out">
     </item>
 
 </menu>

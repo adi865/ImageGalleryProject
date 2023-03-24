@@ -55,13 +55,8 @@ class RecyclerAdapter(val context: Context, private val recyclerItemClickListene
 //                }
 
 
-                binding.root.setOnLongClickListener {
-                    binding.checkbox.visibility = View.VISIBLE
-                    return@setOnLongClickListener true
-                }
-
-
                 binding.rvIv.setOnClickListener {
+                    binding.checkbox.visibility = View.VISIBLE
                     if(selected[position]) {
                         binding.checkbox.visibility = View.GONE
                         recyclerItemClickListener.removeOnItemLongClickListener(search.Poster)
@@ -71,8 +66,12 @@ class RecyclerAdapter(val context: Context, private val recyclerItemClickListene
                         selected[position] = true
                         binding.checkbox.setOnClickListener {
                             if(binding.checkbox.isChecked) {
+                                binding.checkbox.setButtonDrawable(R.drawable.checked)
                                 pathsList.add(differ.currentList.get(position).Poster)
                                 recyclerItemClickListener.itemClickListener(pathsList)
+                            }
+                            else {
+                                binding.checkbox.setButtonDrawable(R.drawable.unchecked)
                             }
                         }
                         recyclerItemClickListener.itemLongClickListener()
