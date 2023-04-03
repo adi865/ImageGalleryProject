@@ -42,5 +42,9 @@
         android:id="@+id/imageViewerFragment"
         android:name="com.example.imagegalleryproject.fragments.ImageViewerFragment"
         android:label="fragment_image_viewer"
-        tools:layout="@layout/fragment_image_viewer" />
+        tools:layout="@layout/fragment_image_viewer" >
+        <argument
+            android:name="imageRes"
+            app:argType="string" />
+    </fragment>
 </navigation>

@@ -1,30 +1,33 @@
 package com.example.imagegalleryproject.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.imagegalleryproject.databinding.FragmentImageViewerBinding
-import com.example.imagegalleryproject.viewmodel.ViewerViewModel
 
 
 class ImageViewerFragment : Fragment() {
     lateinit var binding: FragmentImageViewerBinding
-    private lateinit var viewerViewModel: ViewerViewModel
+    private val args: ImageViewerFragmentArgs by navArgs()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        val onBackPressedCallback = object: OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                requireActivity().supportFragmentManager.popBackStack()
+                findNavController().popBackStack()
             }
         }
         requireActivity().getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback)
     }
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,22 +37,15 @@ class ImageViewerFragment : Fragment() {
 //        container!!.removeAllViews()
 
         requireActivity().supportFragmentManager
+        val imageRes = args.imageRes
 
-        viewerViewModel = ViewModelProvider(requireActivity()).get(ViewerViewModel::class.java)
+            Glide.with(binding.ivDialog).load(imageRes).into(binding.ivDialog)
 
-        viewerViewModel.name.observe(viewLifecycleOwner, {
-            Glide.with(binding.ivDialog).load(it).into(binding.ivDialog)
-        })
 
         return binding.root
     }
 
     override fun onResume() {
         super.onResume()
-//        viewerViewModel = ViewModelProvider(requireActivity()).get(ViewerViewModel::class.java)
-//
-//        viewerViewModel.name.observe(viewLifecycleOwner, {
-//            Glide.with(binding.ivDialog).load(it).into(binding.ivDialog)
-//        })
     }
 }

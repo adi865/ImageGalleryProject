@@ -5,9 +5,10 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.example.imagegalleryproject.R
 import com.example.imagegalleryproject.databinding.FragmentMainBinding
 
@@ -19,6 +20,18 @@ class MainFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val onBackPressedCallback = object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                //for quitting app from the Main Fragment when the back button is pressed
+                val count = requireActivity().supportFragmentManager.backStackEntryCount
+                if (count == 0) {
+                    requireActivity().finish()
+                } else {
+                    findNavController().popBackStack()
+                }
+            }
+        }
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback)
     }
 
     override fun onResume() {
@@ -31,7 +44,6 @@ class MainFragment : Fragment() {
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Dashboard"
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,30 +54,14 @@ class MainFragment : Fragment() {
         container!!.removeAllViews()
 
         binding1.galleryBtn.setOnClickListener {
-            var fragment: Fragment? = null
-            val fragmentClass: Class<*> = GalleryFragment::class.java
-
-            try {
-                fragment = fragmentClass.newInstance() as Fragment
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            val fragmentManager = requireActivity().supportFragmentManager
-            fragmentManager.beginTransaction().replace(R.id.flContent, fragment!!).commit()
+            val direction = MainFragmentDirections.actionMainFragmentToGalleryFragment()
+            findNavController().navigate(direction)
         }
 
 
         binding1.favBtn.setOnClickListener {
-            var fragment: Fragment? = null
-            val fragmentClass: Class<*> = ImageFragment::class.java
-
-            try {
-                fragment = fragmentClass.newInstance() as Fragment
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            val fragmentManager = requireActivity().supportFragmentManager
-            fragmentManager.beginTransaction().replace(R.id.flContent, fragment!!).commit()
+            val direction = MainFragmentDirections.actionMainFragmentToImageFragment()
+            findNavController().navigate(direction)
         }
 
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Dashboard"
@@ -73,27 +69,11 @@ class MainFragment : Fragment() {
         binding1.bottomNavigationView.setOnItemSelectedListener{ item: MenuItem ->
             val itemId = item.itemId
             if (itemId == R.id.gallery) {
-                var fragment: Fragment? = null
-                val fragmentClass: Class<*> = GalleryFragment::class.java
-
-                try {
-                    fragment = fragmentClass.newInstance() as Fragment
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-                val fragmentManager = requireActivity().supportFragmentManager
-                fragmentManager.beginTransaction().replace(R.id.flContent, fragment!!).commit()
+                val direction = MainFragmentDirections.actionMainFragmentToGalleryFragment()
+                findNavController().navigate(direction)
             } else if (itemId == R.id.fav) {
-                var fragment: Fragment? = null
-                val fragmentClass: Class<*> = ImageFragment::class.java
-
-                try {
-                    fragment = fragmentClass.newInstance() as Fragment
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-                val fragmentManager = requireActivity().supportFragmentManager
-                fragmentManager.beginTransaction().replace(R.id.flContent, fragment!!).commit()
+                val direction = MainFragmentDirections.actionMainFragmentToImageFragment()
+                findNavController().navigate(direction)
             }
             true
         }

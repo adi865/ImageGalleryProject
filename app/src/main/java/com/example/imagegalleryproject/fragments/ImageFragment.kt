@@ -6,10 +6,8 @@ import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.imagegalleryproject.MainActivity
 import com.example.imagegalleryproject.R
 import com.example.imagegalleryproject.SignInActivity
 import com.example.imagegalleryproject.adapter.FavRecyclerAdapter
@@ -18,14 +16,12 @@ import com.example.imagegalleryproject.db.FavoriteDao
 import com.example.imagegalleryproject.db.FavoriteDatabaseInstance
 import com.example.imagegalleryproject.model.FavoriteImage
 import com.example.imagegalleryproject.viewmodel.FavoriteViewModel
-import com.example.imagegalleryproject.viewmodel.ViewerViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 class ImageFragment: Fragment(), FavRecyclerAdapter.FavRecyclerItemClickListener {
     private var binding: FragmentImageBinding? = null
     private lateinit var adapter: FavRecyclerAdapter
     private lateinit var favoriteViewModel: FavoriteViewModel
-    private lateinit var viewerViewModel: ViewerViewModel
     private lateinit var favoriteDao: FavoriteDao
 
     private lateinit var mAuth: FirebaseAuth
@@ -52,7 +48,7 @@ class ImageFragment: Fragment(), FavRecyclerAdapter.FavRecyclerItemClickListener
         super.onCreate(savedInstanceState)
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(context, MainActivity::class.java))
+                findNavController().popBackStack()
             }
         }
         requireActivity().getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback)
@@ -73,8 +69,6 @@ class ImageFragment: Fragment(), FavRecyclerAdapter.FavRecyclerItemClickListener
 
         favoriteViewModel =
             FavoriteViewModel(requireActivity().application)
-
-        viewerViewModel = ViewModelProvider(requireActivity()).get(ViewerViewModel::class.java)
 
         favSelectedImages = ArrayList()
 
@@ -121,8 +115,13 @@ class ImageFragment: Fragment(), FavRecyclerAdapter.FavRecyclerItemClickListener
                     favSelectedImages.forEach {
                         favoriteViewModel.deleteFavorites(FavoriteImage(it))
                     }
-                    adapter.notifyDataSetChanged()
+//                    adapter.notifyDataSetChanged()
                     mode?.finish()
+                    println("from deletion event ${adapter.itemCount}")
+                    if(adapter.itemCount <= 1) {
+                        binding1.tvDefault1.visibility = View.VISIBLE
+                        binding1.favRv.visibility = View.GONE
+                    }
                 }
                 R.id.cancel -> {
                     mode?.finish()
@@ -164,13 +163,8 @@ class ImageFragment: Fragment(), FavRecyclerAdapter.FavRecyclerItemClickListener
     }
 
     override fun goToViewFragmen(selectedImage: String) {
-        val imageViewerFragment = ImageViewerFragment()
-        val fragmentManager = requireActivity().supportFragmentManager
-//        val args = Bundle()
-//        args.putString("imageRes", selectedImage)
-//        imageViewerFragment.arguments = args
-        viewerViewModel.fetchImage(selectedImage)
-        fragmentManager.beginTransaction().replace(R.id.flContent, imageViewerFragment).addToBackStack(null).commit()
+        val directions = ImageFragmentDirections.actionImageFragmentToImageViewerFragment(selectedImage)
+        findNavController().navigate(directions)
     }
 
     override fun onDestroyView() {

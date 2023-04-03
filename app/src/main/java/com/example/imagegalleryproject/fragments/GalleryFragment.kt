@@ -1,19 +1,15 @@
 package com.example.imagegalleryproject.fragments
 
-import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.*
-import android.view.inputmethod.EditorInfo
 import android.widget.SearchView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.imagegalleryproject.MainActivity
 import com.example.imagegalleryproject.R
 import com.example.imagegalleryproject.SignInActivity
 import com.example.imagegalleryproject.adapter.RecyclerAdapter
@@ -22,17 +18,13 @@ import com.example.imagegalleryproject.db.*
 import com.example.imagegalleryproject.model.FavoriteImage
 import com.example.imagegalleryproject.viewmodel.FavoriteViewModel
 import com.example.imagegalleryproject.viewmodel.ImageViewModel
-import com.example.imagegalleryproject.viewmodel.ViewerViewModel
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.launch
-import okhttp3.internal.notifyAll
 
 class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
     private var binding: FragmentGalleryBinding? = null
     private var recyclerAdapter: RecyclerAdapter? = null
     private lateinit var viewModel: ImageViewModel
     private lateinit var favoriteViewModel: FavoriteViewModel
-    private lateinit var viewerViewModel: ViewerViewModel
 
     private lateinit var imageDao: ImageDao
     private lateinit var favoriteDao: FavoriteDao
@@ -70,7 +62,7 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
         super.onCreate(savedInstanceState)
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(context, MainActivity::class.java))
+                findNavController().popBackStack()
             }
         }
         requireActivity().getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback)
@@ -102,8 +94,6 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
         posterRepository = PosterRepository()
 
         favoriteViewModel = FavoriteViewModel(requireActivity().application)
-
-        viewerViewModel = ViewModelProvider(requireActivity())[ViewerViewModel::class.java]
 
         imagePathList = ArrayList<String>()
 
@@ -138,6 +128,7 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
                     }
                     mode?.finish()
                     (requireActivity() as AppCompatActivity).supportActionBar?.show()
+                    onResume()
                 }
                 R.id.cancel -> {
                     mode?.finish()
@@ -165,6 +156,7 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
         viewModel.postersFromDB.observe(viewLifecycleOwner, {
             recyclerAdapter!!.setData(it)
             recyclerAdapter!!.notifyDataSetChanged()
+            binding1.progressBar.visibility = View.GONE
 //            recyclerAdapter.notifyDataSetChanged() //is an expensive process, as it recreates (refereshes all rows) ViewHolder recycled by the RecyclerView
         })
     }
@@ -174,14 +166,12 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
         inflater.inflate(R.menu.toolbar_gallery, menu)
         val search = menu.findItem(R.id.appSearchBar)
         val searchView = search.actionView as SearchView
-        search.setIcon(R.drawable.ic_search)
-        searchView.imeOptions = EditorInfo.IME_ACTION_SEARCH
-        searchView.isHardwareAccelerated
         searchView.queryHint = "Search Images from API"
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 viewModel = ImageViewModel(requireActivity().application, posterRepository, query)
                 viewModel.getImages(query)
+                binding1.progressBar.visibility = View.VISIBLE
                 launchRecyclerView()
                 return true
             }
@@ -208,10 +198,8 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
     }
 
     override fun goToViewFragment(selectedImage: String) {
-        val imageViewerFragment = ImageViewerFragment()
-        val fragmentManager = requireActivity().supportFragmentManager
-        viewerViewModel.fetchImage(selectedImage)
-        fragmentManager.beginTransaction().replace(R.id.flContent, imageViewerFragment).addToBackStack(null).commit()
+        val direction = GalleryFragmentDirections.actionGalleryFragmentToImageViewerFragment(selectedImage)
+        findNavController().navigate(direction)
     }
 
     override fun onDestroyView() {

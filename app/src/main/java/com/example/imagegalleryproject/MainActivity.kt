@@ -11,15 +11,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.*
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.example.imagegalleryproject.databinding.ActivityMainBinding
-import com.example.imagegalleryproject.fragments.GalleryFragment
-import com.example.imagegalleryproject.fragments.ImageFragment
-import com.example.imagegalleryproject.fragments.MainFragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -37,6 +33,8 @@ class MainActivity: AppCompatActivity() {
 
     lateinit var mGoogleSignInClient: GoogleSignInClient
 
+    private lateinit var navHostFragment: NavHostFragment
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,12 +51,7 @@ class MainActivity: AppCompatActivity() {
 
         binding.appBarMain.toolbar.overflowIcon?.setColorFilter(ContextCompat.getColor(this, android.R.color.white), PorterDuff.Mode.SRC_ATOP)
 
-
-//        val icMenu = ContextCompat.getDrawable(this, R.drawable.ic_nav_toolbar)
-//        icMenu!!.setColorFilter(resources.getColor(android.R.color.white), PorterDuff.Mode.SRC_ATOP);
-
-
-        val navHostFragment =
+       navHostFragment =
             supportFragmentManager.findFragmentById(R.id.imageNavHostContainer) as NavHostFragment
         navController = navHostFragment.navController
 
@@ -84,7 +77,7 @@ class MainActivity: AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.mainFragment, R.id.galleryFragment, R.id.imageFragment
+                R.id.mainFragment, R.id.galleryFragment, R.id.imageFragment, R.id.imageViewerFragment
             ), drawerLayout
         )
 
@@ -107,30 +100,12 @@ class MainActivity: AppCompatActivity() {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
         navView.setNavigationItemSelectedListener {
-            var fragment: Fragment? = null
-            val fragmentClass: Class<*> = when (it.itemId) {
-                R.id.nav_fav -> ImageFragment::class.java
-                R.id.nav_gallery -> GalleryFragment::class.java
-                R.id.home -> MainFragment::class.java
-                else -> MainFragment::class.java
+             when (it.itemId) {
+                R.id.nav_fav -> navController.navigate(R.id.imageFragment)
+                R.id.nav_gallery -> navController.navigate(R.id.galleryFragment)
+                R.id.home -> navController.navigate(R.id.mainFragment)
+                else -> navController.navigate(R.id.mainFragment)
             }
-
-            try {
-                fragment = fragmentClass.newInstance() as Fragment
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-            // Insert the fragment by replacing any existing fragment
-            val fragmentManager = supportFragmentManager
-            fragmentManager.beginTransaction().replace(R.id.flContent, fragment!!).commit()
-
-            // Highlight the selected item has been done by NavigationView
-            it.isChecked = true
-
-            // Set action bar title
-            title = it.title
-
             // Close the navigation drawer
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             true
@@ -142,14 +117,6 @@ class MainActivity: AppCompatActivity() {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
-        }
-        //for quitting apps from the Main Fragment or rather MainActivity when the back button is pressed
-        val count = supportFragmentManager.backStackEntryCount
-
-        if (count == 0) {
-            finish()
-        } else {
-            supportFragmentManager.popBackStack()
         }
     }
 
