@@ -139,6 +139,7 @@
             android:layout_height="60dp"
             android:background="@color/white"
             app:boxStrokeWidth="0dp"
+            app:passwordToggleTint="@android:color/black"
             app:boxStrokeWidthFocused="0dp"
             app:hintEnabled="false"
             app:passwordToggleEnabled="true">
@@ -184,6 +185,7 @@
             android:layout_height="60dp"
             android:background="@color/white"
             app:boxStrokeWidth="0dp"
+            app:passwordToggleTint="@android:color/black"
             app:boxStrokeWidthFocused="0dp"
             app:hintEnabled="false"
             app:passwordToggleEnabled="true">
@@ -244,6 +246,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.837" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

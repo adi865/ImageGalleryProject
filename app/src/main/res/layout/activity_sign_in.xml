@@ -149,6 +149,7 @@
             app:boxStrokeWidth="0dp"
             app:boxStrokeWidthFocused="0dp"
             app:hintEnabled="false"
+            app:passwordToggleTint="@android:color/black"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
