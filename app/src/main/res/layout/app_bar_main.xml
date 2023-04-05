@@ -18,6 +18,7 @@
             android:background="?attr/colorPrimary"
             app:titleTextColor="@color/white"
             app:navigationIcon="@drawable/ic_nav_toolbar"
+            app:actionViewClass="android.support.v7.widget.SearchView"
             app:popupTheme="@style/Theme.ImageGalleryProject.AppBarOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>

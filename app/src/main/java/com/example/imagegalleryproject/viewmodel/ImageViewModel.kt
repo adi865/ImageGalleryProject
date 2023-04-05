@@ -18,14 +18,16 @@ import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
 
-class ImageViewModel(application: Application, val repository: PosterRepository, val searchParameter: String?): AndroidViewModel(application) {
+class ImageViewModel(application: Application, val repository: PosterRepository, val searchParamter: String?): AndroidViewModel(application) {
     var imagePathData = MutableLiveData<Resource<Movies>>()
     private val context = getApplication<Application>().applicationContext
     private val imageDao = DatabaseInstance.getInstance(context).imageDao()
     var postersFromDB = getImagesFromDB()
+
+
     init {
         if(isConnectionAvailable(context)) {
-            getImages(searchParameter)
+            getImages(searchParamter)
         } else {
             getPostersFromDB()
         }

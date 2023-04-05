@@ -18,6 +18,7 @@ import com.example.imagegalleryproject.db.*
 import com.example.imagegalleryproject.model.FavoriteImage
 import com.example.imagegalleryproject.viewmodel.FavoriteViewModel
 import com.example.imagegalleryproject.viewmodel.ImageViewModel
+import com.example.imagegalleryproject.viewmodel.LocalImageViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
@@ -25,12 +26,12 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
     private var recyclerAdapter: RecyclerAdapter? = null
     private lateinit var viewModel: ImageViewModel
     private lateinit var favoriteViewModel: FavoriteViewModel
+    private lateinit var localImageViewModel: LocalImageViewModel
 
     private lateinit var imageDao: ImageDao
     private lateinit var favoriteDao: FavoriteDao
 
     private lateinit var posterRepository: PosterRepository
-
 
     private val binding1 get() = binding!!
 
@@ -40,17 +41,15 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
 
     private lateinit var imagePathList: ArrayList<String>
 
-    var isInActionMode = false
-
     override fun onResume() {
         super.onResume()
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Movie Gallery"
-        binding!!.rv.visibility = View.VISIBLE
     }
 
     override fun onPause() {
         super.onPause()
         (requireActivity() as AppCompatActivity).supportActionBar?.show()
+        requireActivity().invalidateOptionsMenu()
     }
 
     override fun onStart() {
@@ -60,14 +59,16 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //it is called before onCreateOptionsMenu
+        setRetainInstance(true);
+        setHasOptionsMenu(true)
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 findNavController().popBackStack()
             }
         }
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback)
+        requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -79,15 +80,13 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
         container!!.removeAllViews()
 
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Movie Gallery"
-
-        //it is called before onCreateOptionsMenu
-        setHasOptionsMenu(true)
         return binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         imageDao = DatabaseInstance.getInstance(requireActivity()).imageDao()
+
 
         favoriteDao = FavoriteDatabaseInstance.getInstance(requireActivity()).imageDao()
 
@@ -99,7 +98,24 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
 
         mAuth = FirebaseAuth.getInstance()
 
-        binding!!.rv.visibility = View.VISIBLE
+        localImageViewModel = LocalImageViewModel(requireActivity().application, posterRepository)
+
+        recyclerAdapter = RecyclerAdapter(requireContext(), this)
+        binding!!.rv.adapter = recyclerAdapter
+        binding!!.rv.layoutManager = GridLayoutManager(activity, 4)
+        binding!!.rv.setHasFixedSize(true)
+        localImageViewModel.localDBImages.observe(viewLifecycleOwner,  {
+            recyclerAdapter!!.differ.submitList(it)
+            if(recyclerAdapter!!.differ.currentList.size < 1) {
+                binding!!.rv.visibility = View.GONE
+                binding!!.tvDefault.visibility = View.VISIBLE
+            } else {
+                binding!!.rv.visibility = View.VISIBLE
+                binding!!.tvDefault.visibility = View.GONE
+            }
+        })
+
+
     }
 
     private val actionModeCallback: ActionMode.Callback = object : ActionMode.Callback {
@@ -128,11 +144,13 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
                     }
                     mode?.finish()
                     (requireActivity() as AppCompatActivity).supportActionBar?.show()
+                    requireActivity().invalidateOptionsMenu()
                     onResume()
                 }
                 R.id.cancel -> {
                     mode?.finish()
                     (requireActivity() as AppCompatActivity).supportActionBar?.show()
+                    requireActivity().invalidateOptionsMenu()
                 }
                 else -> {
                     return false
@@ -143,20 +161,20 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
 
         override fun onDestroyActionMode(mode: ActionMode?) {
             (requireActivity() as AppCompatActivity).supportActionBar?.show()
+            requireActivity().invalidateOptionsMenu()
             actMode = null
         }
     }
 
     fun launchRecyclerView() {
         recyclerAdapter = RecyclerAdapter(requireContext(), this)
-        binding1.tvDefault.visibility = View.GONE
         binding1.rv.layoutManager = GridLayoutManager(activity, 4)
         binding1.rv.setHasFixedSize(true)
         binding1.rv.adapter = recyclerAdapter
         viewModel.postersFromDB.observe(viewLifecycleOwner, {
             recyclerAdapter!!.setData(it)
             recyclerAdapter!!.notifyDataSetChanged()
-            binding1.progressBar.visibility = View.GONE
+            binding!!.progressBar.visibility = View.GONE
 //            recyclerAdapter.notifyDataSetChanged() //is an expensive process, as it recreates (refereshes all rows) ViewHolder recycled by the RecyclerView
         })
     }
@@ -165,13 +183,16 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.toolbar_gallery, menu)
         val search = menu.findItem(R.id.appSearchBar)
-        val searchView = search.actionView as SearchView
+        val searchView = search.actionView as androidx.appcompat.widget.SearchView
         searchView.queryHint = "Search Images from API"
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 viewModel = ImageViewModel(requireActivity().application, posterRepository, query)
                 viewModel.getImages(query)
                 binding1.progressBar.visibility = View.VISIBLE
+                binding1.tvDefault.visibility = View.GONE
+                binding1.rv.visibility = View.VISIBLE
                 launchRecyclerView()
                 return true
             }
@@ -189,12 +210,11 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
         if (actMode != null) {
             return false
         } else {
-            isInActionMode = true
             setMenuVisibility(false)
             (requireActivity() as AppCompatActivity).supportActionBar?.hide()
             actMode = requireActivity().startActionMode(actionModeCallback)
-            return true
         }
+            return true
     }
 
     override fun goToViewFragment(selectedImage: String) {
@@ -213,6 +233,6 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         binding!!.rv.visibility = View.VISIBLE
+        (requireActivity() as AppCompatActivity).invalidateOptionsMenu()
     }
-
 }

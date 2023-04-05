@@ -34,22 +34,23 @@ class RecyclerAdapter(val context: Context, private val recyclerItemClickListene
 
     inner class RecyclerViewHolder(val binding: ListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        var selected = BooleanArray(differ.currentList.size)
+        var selected = false
         fun bind(search: Search) {
             Glide.with(binding.rvIv).load(differ.currentList[position].Poster)
                 .placeholder(R.drawable.ic_loading_foreground).into(binding.rvIv)
 
+
             binding.rvIv.setOnLongClickListener {
                 binding.checkbox.visibility = View.VISIBLE
-                if (selected[position]) {
+                if (selected) {
                     binding.checkbox.visibility = View.GONE
-                    selected[position] = false
+                    selected = false
                 } else {
                     binding.checkbox.visibility = View.VISIBLE
-                    selected[position] = true
+                    selected = true
                     binding.checkbox.setOnClickListener {
                         if (binding.checkbox.isChecked) {
-                            pathsList.add(differ.currentList.get(position).Poster)
+                            pathsList.add(differ.currentList[position].Poster)
                             recyclerItemClickListener.itemClickListener(pathsList)
                         }
                     }
