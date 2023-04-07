@@ -32,7 +32,7 @@ class MainFragment : Fragment() {
                 }
             }
         }
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback)
+        requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     override fun onResume() {

@@ -24,7 +24,7 @@ class ImageViewerFragment : Fragment() {
                 findNavController().popBackStack()
             }
         }
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback)
+        requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     @SuppressLint("SuspiciousIndentation")

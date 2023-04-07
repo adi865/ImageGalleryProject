@@ -52,7 +52,7 @@ class ImageFragment: Fragment(), FavRecyclerAdapter.FavRecyclerItemClickListener
                 findNavController().popBackStack()
             }
         }
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback)
+        requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     override fun onCreateView(
