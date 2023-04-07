@@ -6,24 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.ImageViewerFragment">
 
-<!--    <com.jsibbold.zoomage.ZoomageView-->
-<!--        android:id="@+id/ivDialog"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.0"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:zoomage_animateOnReset="true"-->
-<!--        app:zoomage_autoCenter="true"-->
-<!--        app:zoomage_autoResetMode="UNDER"-->
-<!--        app:zoomage_maxScale="8"-->
-<!--        app:zoomage_minScale="0.6"-->
-<!--        app:zoomage_restrictBounds="false"-->
-<!--        app:zoomage_translatable="true"-->
-<!--        app:zoomage_zoomable="true" />-->
-
     <ImageView
         android:id="@+id/ivDialog"
         android:layout_width="400dp"
@@ -32,4 +14,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/addFav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_fav_filled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.875" />
 </androidx.constraintlayout.widget.ConstraintLayout>
