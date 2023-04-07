@@ -154,8 +154,6 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
                 binding!!.tvDefault.visibility = View.GONE
             }
         })
-
-
     }
 
     private val actionModeCallback: ActionMode.Callback = object : ActionMode.Callback {
@@ -218,29 +216,6 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
 //            recyclerAdapter.notifyDataSetChanged() //is an expensive process, as it recreates (refereshes all rows) ViewHolder recycled by the RecyclerView
         })
     }
-
-//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-//        inflater.inflate(R.menu.toolbar_gallery, menu)
-//        val search = menu.findItem(R.id.appSearchBar)
-//        val searchView = search.actionView as androidx.appcompat.widget.SearchView
-//        searchView.queryHint = "Search Images from API"
-//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
-//            androidx.appcompat.widget.SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                viewModel = ImageViewModel(requireActivity().application, posterRepository, query)
-//                viewModel.getImages(query)
-//                binding1.progressBar.visibility = View.VISIBLE
-//                binding1.tvDefault.visibility = View.GONE
-//                binding1.rv.visibility = View.VISIBLE
-//                launchRecyclerView()
-//                return true
-//            }
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                return false
-//            }
-//        })
-//        super.onCreateOptionsMenu(menu, inflater)
-//    }
 
     override fun itemClickListener(paths: ArrayList<String>) {
         imagePathList.addAll(paths)
