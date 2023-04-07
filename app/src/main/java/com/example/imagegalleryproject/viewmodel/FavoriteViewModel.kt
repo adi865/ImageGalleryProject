@@ -33,7 +33,6 @@ class FavoriteViewModel(application: Application): AndroidViewModel(application)
     }
 
     fun deleteFavorites(favoriteImage: FavoriteImage) = viewModelScope.launch {
-        println("from inside delete function")
         favoriteDao.deleteFavorites(favoriteImage)
     }
 }

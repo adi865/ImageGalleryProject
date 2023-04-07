@@ -49,11 +49,11 @@ class ImageViewerFragment : Fragment() {
 
         Glide.with(binding.ivDialog).load(imageRes).into(binding.ivDialog)
 
+
         binding.addFav.setOnClickListener {
             favoriteViewModel.addFavorites(FavoriteImage(imageRes))
             Toast.makeText(requireContext(), "Image Added to Favorites", Toast.LENGTH_SHORT).show()
         }
-
         return binding.root
     }
 
