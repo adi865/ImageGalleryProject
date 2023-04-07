@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/galleryFragment"
         android:name="com.example.imagegalleryproject.fragments.GalleryFragment"
-        android:label="fragment_gallery"
+        android:label="Movie Gallery"
         tools:layout="@layout/fragment_gallery">
         <action
             android:id="@+id/action_galleryFragment_to_imageFragment"
@@ -20,7 +20,7 @@
     <fragment
         android:id="@+id/imageFragment"
         android:name="com.example.imagegalleryproject.fragments.ImageFragment"
-        android:label="fragment_image"
+        android:label="Favorites Gallery"
         tools:layout="@layout/fragment_image">
         <action
             android:id="@+id/action_imageFragment_to_imageViewerFragment"
@@ -29,7 +29,7 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.example.imagegalleryproject.fragments.MainFragment"
-        android:label="fragment_main"
+        android:label="Dashboard"
         tools:layout="@layout/fragment_main">
         <action
             android:id="@+id/action_mainFragment_to_galleryFragment"
@@ -41,7 +41,7 @@
     <fragment
         android:id="@+id/imageViewerFragment"
         android:name="com.example.imagegalleryproject.fragments.ImageViewerFragment"
-        android:label="fragment_image_viewer"
+        android:label="View Image"
         tools:layout="@layout/fragment_image_viewer" >
         <argument
             android:name="imageRes"

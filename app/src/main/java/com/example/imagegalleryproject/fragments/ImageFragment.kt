@@ -61,8 +61,6 @@ class ImageFragment: Fragment(), FavRecyclerAdapter.FavRecyclerItemClickListener
         // Inflate the layout for this fragment
         binding = FragmentImageBinding.inflate(inflater, container, false)
 
-        container!!.removeAllViews()
-
         favoriteDao = FavoriteDatabaseInstance.getInstance(requireActivity()).imageDao()
 
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Favorites Gallery"

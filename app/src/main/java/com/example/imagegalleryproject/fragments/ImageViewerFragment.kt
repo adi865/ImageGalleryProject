@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -15,7 +16,6 @@ import com.example.imagegalleryproject.databinding.FragmentImageViewerBinding
 class ImageViewerFragment : Fragment() {
     lateinit var binding: FragmentImageViewerBinding
     private val args: ImageViewerFragmentArgs by navArgs()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +34,8 @@ class ImageViewerFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentImageViewerBinding.inflate(inflater, container, false)
-//        container!!.removeAllViews()
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "View Image"
 
         requireActivity().supportFragmentManager
         val imageRes = args.imageRes
@@ -47,5 +48,16 @@ class ImageViewerFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "View Image"
+    }
+
+    override fun onPause() {
+        super.onPause()
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "View Image"
+    }
+
+    override fun onStart() {
+        super.onStart()
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "View Image"
     }
 }

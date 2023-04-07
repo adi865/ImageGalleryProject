@@ -7,6 +7,9 @@ import android.view.*
 import android.widget.SearchView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat.invalidateOptionsMenu
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -44,12 +47,13 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
     override fun onResume() {
         super.onResume()
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Movie Gallery"
+        invalidateOptionsMenu(requireActivity())
     }
 
     override fun onPause() {
         super.onPause()
         (requireActivity() as AppCompatActivity).supportActionBar?.show()
-        requireActivity().invalidateOptionsMenu()
+        invalidateOptionsMenu(requireActivity())
     }
 
     override fun onStart() {
@@ -59,9 +63,6 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //it is called before onCreateOptionsMenu
-        setRetainInstance(true);
-        setHasOptionsMenu(true)
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 findNavController().popBackStack()
@@ -77,7 +78,8 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
         // Inflate the layout for this fragment
         binding = FragmentGalleryBinding.inflate(inflater, container, false)
 
-        container!!.removeAllViews()
+        //it is called before onCreateOptionsMenu
+        setHasOptionsMenu(true)
 
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Movie Gallery"
         return binding!!.root
@@ -85,8 +87,45 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        imageDao = DatabaseInstance.getInstance(requireActivity()).imageDao()
+        // The usage of an interface lets you inject your own implementation
+        val menuHost: MenuHost = requireActivity()
 
+        // Add menu items without using the Fragment Menu APIs
+        // Note how we can tie the MenuProvider to the viewLifecycleOwner
+        // and an optional Lifecycle.State (here, RESUMED) to indicate when
+        // the menu should be visible
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                // Add menu items here
+                menuInflater.inflate(R.menu.toolbar_gallery, menu)
+                val search = menu.findItem(R.id.appSearchBar)
+                val searchView = search.actionView as androidx.appcompat.widget.SearchView
+                searchView.queryHint = "Search Images from API"
+                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+                    androidx.appcompat.widget.SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        viewModel = ImageViewModel(requireActivity().application, posterRepository, query)
+                        viewModel.getImages(query)
+                        binding1.progressBar.visibility = View.VISIBLE
+                        binding1.tvDefault.visibility = View.GONE
+                        binding1.rv.visibility = View.VISIBLE
+                        launchRecyclerView()
+                        return true
+                    }
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        return false
+                    }
+                })
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                // Handle the menu selection
+
+                return false
+            }
+        }, viewLifecycleOwner)
+
+        imageDao = DatabaseInstance.getInstance(requireActivity()).imageDao()
 
         favoriteDao = FavoriteDatabaseInstance.getInstance(requireActivity()).imageDao()
 
@@ -150,7 +189,7 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
                 R.id.cancel -> {
                     mode?.finish()
                     (requireActivity() as AppCompatActivity).supportActionBar?.show()
-                    requireActivity().invalidateOptionsMenu()
+                    invalidateOptionsMenu(requireActivity())
                 }
                 else -> {
                     return false
@@ -161,7 +200,7 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
 
         override fun onDestroyActionMode(mode: ActionMode?) {
             (requireActivity() as AppCompatActivity).supportActionBar?.show()
-            requireActivity().invalidateOptionsMenu()
+            invalidateOptionsMenu(requireActivity())
             actMode = null
         }
     }
@@ -179,28 +218,28 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
         })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.toolbar_gallery, menu)
-        val search = menu.findItem(R.id.appSearchBar)
-        val searchView = search.actionView as androidx.appcompat.widget.SearchView
-        searchView.queryHint = "Search Images from API"
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
-            androidx.appcompat.widget.SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                viewModel = ImageViewModel(requireActivity().application, posterRepository, query)
-                viewModel.getImages(query)
-                binding1.progressBar.visibility = View.VISIBLE
-                binding1.tvDefault.visibility = View.GONE
-                binding1.rv.visibility = View.VISIBLE
-                launchRecyclerView()
-                return true
-            }
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return false
-            }
-        })
-    }
+//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+//        inflater.inflate(R.menu.toolbar_gallery, menu)
+//        val search = menu.findItem(R.id.appSearchBar)
+//        val searchView = search.actionView as androidx.appcompat.widget.SearchView
+//        searchView.queryHint = "Search Images from API"
+//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+//            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                viewModel = ImageViewModel(requireActivity().application, posterRepository, query)
+//                viewModel.getImages(query)
+//                binding1.progressBar.visibility = View.VISIBLE
+//                binding1.tvDefault.visibility = View.GONE
+//                binding1.rv.visibility = View.VISIBLE
+//                launchRecyclerView()
+//                return true
+//            }
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                return false
+//            }
+//        })
+//        super.onCreateOptionsMenu(menu, inflater)
+//    }
 
     override fun itemClickListener(paths: ArrayList<String>) {
         imagePathList.addAll(paths)

@@ -1,5 +1,6 @@
 package com.example.imagegalleryproject.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -44,14 +45,13 @@ class MainFragment : Fragment() {
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Dashboard"
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentMainBinding.inflate(inflater, container, false)
-
-        container!!.removeAllViews()
 
         binding1.galleryBtn.setOnClickListener {
             val direction = MainFragmentDirections.actionMainFragmentToGalleryFragment()
@@ -66,6 +66,7 @@ class MainFragment : Fragment() {
 
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Dashboard"
 
+        binding1.bottomNavigationView.setBackgroundColor(com.google.android.material.R.color.design_default_color_primary)
         binding1.bottomNavigationView.setOnItemSelectedListener{ item: MenuItem ->
             val itemId = item.itemId
             if (itemId == R.id.gallery) {
