@@ -14,9 +14,10 @@ import com.bumptech.glide.Glide
 import com.example.imagegalleryproject.databinding.FragmentImageViewerBinding
 import com.example.imagegalleryproject.model.FavoriteImage
 import com.example.imagegalleryproject.viewmodel.FavoriteViewModel
+import kotlinx.coroutines.*
 
 
-class ImageViewerFragment : Fragment() {
+class ImageViewerFragment: Fragment() {
     lateinit var binding: FragmentImageViewerBinding
     private lateinit var favoriteViewModel: FavoriteViewModel
     private val args: ImageViewerFragmentArgs by navArgs()
@@ -39,20 +40,28 @@ class ImageViewerFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentImageViewerBinding.inflate(inflater, container, false)
 
-        favoriteViewModel = FavoriteViewModel(requireActivity().application)
 
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "View Image"
 
         requireActivity().supportFragmentManager
 
         val imageRes = args.imageRes
-
         Glide.with(binding.ivDialog).load(imageRes).into(binding.ivDialog)
+        favoriteViewModel = FavoriteViewModel(requireActivity().application, imageRes)
 
+        favoriteViewModel.getSingleFavorite(imageRes)
 
         binding.addFav.setOnClickListener {
-            favoriteViewModel.addFavorites(FavoriteImage(imageRes))
-            Toast.makeText(requireContext(), "Image Added to Favorites", Toast.LENGTH_SHORT).show()
+            var compareImages = ""
+            favoriteViewModel.singleImage.observe(viewLifecycleOwner, {
+                compareImages = it
+                if(compareImages == imageRes) {
+                    Toast.makeText(requireContext(), "Image Already in Favorites", Toast.LENGTH_SHORT).show()
+                } else {
+                    favoriteViewModel.addFavorites(FavoriteImage(imageRes))
+                    Toast.makeText(requireContext(), "Image Added to Favorites", Toast.LENGTH_SHORT).show()
+                }
+            })
         }
         return binding.root
     }

@@ -9,13 +9,12 @@ interface FavoriteDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addFavorite(favoriteDao: FavoriteImage)
 
-
     @Delete
     suspend fun deleteFavorites(favoriteImage: FavoriteImage)
 
     @Query("SELECT * FROM favorites")
     fun getFavorites(): LiveData<List<FavoriteImage>>
 
-    @Query("SELECT * FROM favorites WHERE favoriteImage=(:favoriteImage)")
-    fun getImage(favoriteImage: String): FavoriteImage
+    @Query("SELECT * FROM favorites WHERE favoriteImage LIKE :favoriteImage")
+    fun getImage(favoriteImage: String): String
 }
