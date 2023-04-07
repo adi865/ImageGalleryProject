@@ -37,6 +37,7 @@ class ImageFragment: Fragment(), FavRecyclerAdapter.FavRecyclerItemClickListener
     override fun onResume() {
         super.onResume()
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Favorites Gallery"
+        binding1.tvDefault1.visibility = View.GONE
     }
 
     override fun onStart() {
@@ -76,6 +77,7 @@ class ImageFragment: Fragment(), FavRecyclerAdapter.FavRecyclerItemClickListener
         binding1.favRv.setHasFixedSize(true)
         adapter = FavRecyclerAdapter(requireContext(), this)
         binding1.favRv.adapter = adapter
+
 
         favoriteViewModel.fetchedImages.observe(viewLifecycleOwner, {
             adapter.differ.submitList(it)

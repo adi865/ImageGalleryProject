@@ -48,6 +48,7 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
         super.onResume()
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Movie Gallery"
         invalidateOptionsMenu(requireActivity())
+        binding1.tvDefault.visibility = View.GONE
     }
 
     override fun onPause() {

@@ -15,4 +15,7 @@ interface FavoriteDao {
 
     @Query("SELECT * FROM favorites")
     fun getFavorites(): LiveData<List<FavoriteImage>>
+
+    @Query("SELECT * FROM favorites WHERE favoriteImage=(:favoriteImage)")
+    fun getImage(): FavoriteImage
 }
