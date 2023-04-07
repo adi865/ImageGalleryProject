@@ -1,31 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_horizontal"
-    android:layout_margin="3dp"
-    android:gravity="center"
-    android:elevation="8dp"
-    app:cardCornerRadius="8dp">
-    <CheckBox
-        android:id="@+id/checkbox"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginLeft="3dp"
-        android:layout_marginTop="3dp"
-        android:translationZ="10dp"
-        android:visibility="gone"
-        app:buttonTint="@color/white"
-        android:layout_gravity="start|top"
-        />
-        <ImageView
-            android:id="@+id/rvIv"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center"
-            android:scaleType="centerCrop">
-        </ImageView>
+    android:layout_marginTop="10dp">
 
-</androidx.cardview.widget.CardView>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/dataRoot"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/bg_row"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="150dp"/>
+        <TextView
+            android:id="@+id/tvMovieName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:text="Movie Name"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/sandyTan"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/guideLine"
+            app:layout_constraintTop_toTopOf="parent"/>
+        <ImageView
+            android:id="@+id/imgType"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/baseline_type_24"
+            app:layout_constraintStart_toStartOf="@id/guideLine"
+            app:layout_constraintTop_toBottomOf="@id/tvMovieName"/>
+        <TextView
+            android:id="@+id/type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Type"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/imgType"
+            app:layout_constraintTop_toTopOf="@id/imgType"
+            app:layout_constraintBottom_toBottomOf="@id/imgType"/>
+        <ImageView
+            android:id="@+id/imgDate"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/baseline_date_range_24"
+            app:layout_constraintTop_toBottomOf="@id/imgType"
+            app:layout_constraintStart_toStartOf="@id/guideLine" />
+
+        <TextView
+            android:id="@+id/year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/imgDate"
+            app:layout_constraintBottom_toBottomOf="@id/imgDate"
+            app:layout_constraintTop_toTopOf="@id/imgDate" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/imgRoot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/dataRoot"
+        app:layout_constraintBottom_toBottomOf="@id/dataRoot"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp">
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="start|top"
+            android:layout_marginTop="3dp"
+            android:translationZ="10dp"
+            android:visibility="gone"
+            app:buttonTint="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imgMovie"
+            android:layout_width="115dp"
+            android:layout_height="160dp"
+            android:scaleType="fitXY"
+            android:background="@color/white"
+            app:shapeAppearanceOverlay="@style/RoundedImageView"
+            app:srcCompat="@drawable/poster_placeholder"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

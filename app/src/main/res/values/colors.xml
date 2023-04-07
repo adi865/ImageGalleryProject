@@ -9,4 +9,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="someGray">#40FFFFFF</color>
     <color name="blue">#3533BC</color>
+
+    <color name="indigo">#133B5C</color>
+    <color name="sandyTan">#FCDAB7</color>
+
 </resources>

@@ -22,7 +22,8 @@ abstract class FavoriteDatabaseInstance: RoomDatabase() {
                         context.applicationContext,
                         FavoriteDatabaseInstance::class.java,
                         "favorites"
-                    ).build()
+                    ).allowMainThreadQueries() //allow querying of single row for checking if image being favorited is already in the DB
+                        .build()
                 }
                 return instance
             }

@@ -12,6 +12,7 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.imagegalleryproject.R
 import com.example.imagegalleryproject.SignInActivity
 import com.example.imagegalleryproject.adapter.RecyclerAdapter
@@ -136,7 +137,7 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
 
         recyclerAdapter = RecyclerAdapter(requireContext(), this)
         binding!!.rv.adapter = recyclerAdapter
-        binding!!.rv.layoutManager = GridLayoutManager(activity, 4)
+        binding!!.rv.layoutManager = LinearLayoutManager(activity)
         binding!!.rv.setHasFixedSize(true)
         localImageViewModel.localDBImages.observe(viewLifecycleOwner,  {
             recyclerAdapter!!.differ.submitList(it)
@@ -196,7 +197,7 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
 
     fun launchRecyclerView() {
         recyclerAdapter = RecyclerAdapter(requireContext(), this)
-        binding1.rv.layoutManager = GridLayoutManager(activity, 4)
+        binding1.rv.layoutManager = LinearLayoutManager(activity)
         binding1.rv.setHasFixedSize(true)
         binding1.rv.adapter = recyclerAdapter
         viewModel.postersFromDB.observe(viewLifecycleOwner, {

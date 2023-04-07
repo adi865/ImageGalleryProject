@@ -36,11 +36,16 @@ class RecyclerAdapter(val context: Context, private val recyclerItemClickListene
         RecyclerView.ViewHolder(binding.root) {
         var selected = false
         fun bind(search: Search) {
-            Glide.with(binding.rvIv).load(differ.currentList[position].Poster)
-                .placeholder(R.drawable.ic_loading_foreground).into(binding.rvIv)
+            Glide.with(binding.imgMovie).load(differ.currentList[position].Poster)
+                .placeholder(R.drawable.ic_loading_foreground).into(binding.imgMovie)
 
+            binding.tvMovieName.setText(differ.currentList[position].Title)
 
-            binding.rvIv.setOnLongClickListener {
+            binding.type.setText(differ.currentList[position].Type)
+
+            binding.year.setText(differ.currentList[position].Year)
+
+            binding.imgMovie.setOnLongClickListener {
                 binding.checkbox.visibility = View.VISIBLE
                 if (selected) {
                     binding.checkbox.visibility = View.GONE
@@ -59,7 +64,7 @@ class RecyclerAdapter(val context: Context, private val recyclerItemClickListene
                 return@setOnLongClickListener true
             }
 
-            binding.rvIv.setOnClickListener {
+            binding.imgMovie.setOnClickListener {
                 if (binding.checkbox.visibility == View.VISIBLE) {
                     binding.checkbox.visibility = View.GONE
                 }
