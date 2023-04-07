@@ -115,9 +115,7 @@ class ImageFragment: Fragment(), FavRecyclerAdapter.FavRecyclerItemClickListener
                     favSelectedImages.forEach {
                         favoriteViewModel.deleteFavorites(FavoriteImage(it))
                     }
-//                    adapter.notifyDataSetChanged()
                     mode?.finish()
-                    println("from deletion event ${adapter.itemCount}")
                     if(adapter.itemCount <= 1) {
                         binding1.tvDefault1.visibility = View.VISIBLE
                         binding1.favRv.visibility = View.GONE

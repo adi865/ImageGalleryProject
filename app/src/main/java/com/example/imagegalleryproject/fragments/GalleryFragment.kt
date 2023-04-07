@@ -7,7 +7,6 @@ import android.view.*
 import android.widget.SearchView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat.invalidateOptionsMenu
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -47,14 +46,12 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
     override fun onResume() {
         super.onResume()
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Movie Gallery"
-        invalidateOptionsMenu(requireActivity())
         binding1.tvDefault.visibility = View.GONE
     }
 
     override fun onPause() {
         super.onPause()
         (requireActivity() as AppCompatActivity).supportActionBar?.show()
-        invalidateOptionsMenu(requireActivity())
     }
 
     override fun onStart() {
@@ -78,9 +75,6 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentGalleryBinding.inflate(inflater, container, false)
-
-        //it is called before onCreateOptionsMenu
-        setHasOptionsMenu(true)
 
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Movie Gallery"
         return binding!!.root
@@ -182,13 +176,10 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
                     }
                     mode?.finish()
                     (requireActivity() as AppCompatActivity).supportActionBar?.show()
-                    requireActivity().invalidateOptionsMenu()
-                    onResume()
                 }
                 R.id.cancel -> {
                     mode?.finish()
                     (requireActivity() as AppCompatActivity).supportActionBar?.show()
-                    invalidateOptionsMenu(requireActivity())
                 }
                 else -> {
                     return false
@@ -199,7 +190,6 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
 
         override fun onDestroyActionMode(mode: ActionMode?) {
             (requireActivity() as AppCompatActivity).supportActionBar?.show()
-            invalidateOptionsMenu(requireActivity())
             actMode = null
         }
     }
@@ -248,6 +238,5 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         binding!!.rv.visibility = View.VISIBLE
-        (requireActivity() as AppCompatActivity).invalidateOptionsMenu()
     }
 }

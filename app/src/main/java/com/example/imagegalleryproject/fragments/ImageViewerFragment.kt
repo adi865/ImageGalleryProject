@@ -38,10 +38,10 @@ class ImageViewerFragment : Fragment() {
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "View Image"
 
         requireActivity().supportFragmentManager
+
         val imageRes = args.imageRes
 
-            Glide.with(binding.ivDialog).load(imageRes).into(binding.ivDialog)
-
+        Glide.with(binding.ivDialog).load(imageRes).into(binding.ivDialog)
 
         return binding.root
     }
