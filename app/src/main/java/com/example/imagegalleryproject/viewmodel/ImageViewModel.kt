@@ -24,7 +24,6 @@ class ImageViewModel(application: Application, val repository: PosterRepository,
     private val imageDao = DatabaseInstance.getInstance(context).imageDao()
     var postersFromDB = getImagesFromDB()
 
-
     init {
         if(isConnectionAvailable(context)) {
             getImages(searchParamter)
@@ -88,7 +87,6 @@ class ImageViewModel(application: Application, val repository: PosterRepository,
 
     suspend fun removeImage() = imageDao.deleteImage()
 
-
-    fun getImagesFromDB() = imageDao.getImages()
+    private fun getImagesFromDB() = imageDao.getImages()
 
 }

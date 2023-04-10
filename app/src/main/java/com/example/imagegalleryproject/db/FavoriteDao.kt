@@ -1,8 +1,9 @@
 package com.example.imagegalleryproject.db
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.imagegalleryproject.model.FavoriteImage
+import kotlinx.coroutines.flow.Flow
+
 
 @Dao
 interface FavoriteDao {
@@ -13,7 +14,7 @@ interface FavoriteDao {
     suspend fun deleteFavorites(favoriteImage: FavoriteImage)
 
     @Query("SELECT * FROM favorites")
-    fun getFavorites(): LiveData<List<FavoriteImage>>
+    fun getFavorites(): Flow<MutableList<FavoriteImage>>
 
     @Query("SELECT * FROM favorites WHERE favoriteImage LIKE :favoriteImage")
     fun getImage(favoriteImage: String): String

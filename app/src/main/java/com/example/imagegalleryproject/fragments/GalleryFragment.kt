@@ -203,7 +203,11 @@ class GalleryFragment: Fragment(), RecyclerAdapter.RecyclerItemClickListener {
         viewModel.postersFromDB.observe(viewLifecycleOwner, {
             recyclerAdapter!!.setData(it)
             recyclerAdapter!!.notifyDataSetChanged()
-            binding!!.progressBar.visibility = View.GONE
+            if(recyclerAdapter!!.differ.currentList.size > 0) {
+                binding!!.progressBar.visibility = View.GONE
+            } else {
+                binding!!.progressBar.visibility = View.VISIBLE
+            }
 //            recyclerAdapter.notifyDataSetChanged() //is an expensive process, as it recreates (refereshes all rows) ViewHolder recycled by the RecyclerView
         })
     }
