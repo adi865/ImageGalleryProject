@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tvDefault"
-        android:text="Pease type something in search bar to see results"
+        android:text="Please type something in search bar to see results"
         android:textColor="@color/black"
         android:textSize="22sp"
         android:gravity="center_vertical|center_horizontal"
