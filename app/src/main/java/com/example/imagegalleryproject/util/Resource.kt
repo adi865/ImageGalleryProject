@@ -1,10 +1,29 @@
 package com.example.imagegalleryproject.util
 
-sealed class Resource<T>(val data: T? = null, val message: String? = null) {
+data class Resource<out T>(val status: Status, val data: T? = null, val message: String? = null) {
 
-    class Success<T>(data: T): Resource<T>(data)
+    enum class Status {
+        LOADING, SUCCESS, ERROR
+    }
 
-    class Error<T>(message: String, data: T? = null): Resource<T>(data, message)
+    companion object {
+        fun <T> loading(): Resource<T> {
+            return Resource(Status.LOADING)
+        }
 
-    class Loading<T>: Resource<T>()
+        fun <T> success(data: T?): Resource<T> {
+            return Resource(Status.SUCCESS, data)
+        }
+
+        fun <T> error(error: String): Resource<T> {
+            return Resource(Status.ERROR, message = error)
+        }
+    }
+
+
+//    class Success<T>(data: T): Resource<T>(data)
+//
+//    class Error<T>(message: String, data: T? = null): Resource<T>(data, message)
+//
+//    class Loading<T>: Resource<T>()
 }

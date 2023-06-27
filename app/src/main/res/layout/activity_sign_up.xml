@@ -1,250 +1,212 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".SignUpActivity">
+    android:orientation="vertical"
+    style="@style/groupStylegray_100"
+    tools:context=".ui.SignUpActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/Theme.ImageGalleryProject.AppBarOverlay"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/design_one"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="60dp"
-        android:layout_height="130dp"
-        android:rotation="180"
-        android:scaleType="fitXY"
-        android:src="@drawable/ellipse_one"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="0dp"
-        android:layout_height="210dp"
-        android:layout_marginStart="12dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/design_two"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView android:id="@+id/imageImageOne"
         android:layout_gravity="center_horizontal"
+        android:layout_height="@dimen/_73pxh"
+        android:layout_marginEnd="@dimen/_32pxh"
+        android:layout_marginStart="@dimen/_32pxh"
+        android:layout_marginTop="@dimen/_16pxv"
+        android:layout_width="@dimen/_75pxh"
+        android:scaleType="fitXY"
+        tools:ignore="ContentDescription"
+        android:src="@drawable/img_image1"/>
+
+    <TextView
+        android:ellipsize="end"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_32pxh"
+        android:layout_marginStart="@dimen/_32pxh"
+        android:layout_marginTop="@dimen/_15pxv"
+        android:layout_width="wrap_content"
+        android:lineSpacingExtra="@dimen/_5pxh"
+        android:singleLine="true"
         android:text="Sign Up"
-        android:textColor="@color/white"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.952"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.061" />
+        style="@style/txtIntersemibold20" tools:text="Sign Up"/>
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card1"
-        android:layout_width="0dp"
+    <LinearLayout android:gravity="start"
+        android:id="@+id/linearInputfieldPla"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="42dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="8dp"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView2"
-        app:layout_constraintVertical_bias="0.0">
+        android:layout_marginEnd="@dimen/_23pxh"
+        android:layout_marginStart="@dimen/_23pxh"
+        android:layout_marginTop="@dimen/_24pxv"
+        android:layout_width="match_parent"
+        android:orientation="vertical" style="@style/groupStylecornerRadius">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@color/white"
-            app:boxStrokeWidth="0dp"
-            app:boxStrokeWidthFocused="0dp"
-            app:hintEnabled="false">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/uName"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:hint="Enter your Email"
-                android:inputType="textEmailAddress"
-                android:paddingStart="12dp"
-                android:paddingTop="5dp"
-                android:paddingEnd="12dp"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black" />
-        </com.google.android.material.textfield.TextInputLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card2"
-        android:layout_width="0dp"
+    </LinearLayout>
+    <LinearLayout android:gravity="start"
+        android:id="@+id/linearInputfieldPlat1"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:padding="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="8dp"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.375"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card1"
-        app:layout_constraintVertical_bias="0.026">
-
-        <com.google.android.material.textfield.TextInputLayout
+        android:layout_marginEnd="@dimen/_23pxh"
+        android:layout_marginStart="@dimen/_23pxh"
+        android:layout_marginTop="@dimen/_20pxv"
+        android:layout_width="match_parent"
+        android:orientation="vertical" style="@style/groupStylecornerRadius">
+        <TextView android:ellipsize="end"
+            android:id="@+id/txtBodyOne"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_10pxh"
+            android:layout_width="wrap_content"
+            android:lineSpacingExtra="@dimen/_3pxh"
+            android:singleLine="true"
+            android:text="Your Full Name"
+            style="@style/txtInterbold12"/>
+        <EditText
+            android:id="@+id/displayName"
+            android:background="@drawable/rectangle_bg_gray_50_radius_15"
+            android:ellipsize="end"
+            android:hint="Enter your name"
+            android:inputType="textEmailAddress"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_15pxv"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@color/white"
-            app:boxStrokeWidth="0dp"
-            app:passwordToggleTint="@android:color/black"
-            app:boxStrokeWidthFocused="0dp"
-            app:hintEnabled="false"
-            app:passwordToggleEnabled="true">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/password"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:hint="Enter your password"
-                android:inputType="textPassword"
-                android:paddingStart="12dp"
-                android:paddingTop="5dp"
-                android:paddingEnd="12dp"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card3"
-        android:layout_width="0dp"
+            android:lineSpacingExtra="@dimen/_3pxh"
+            android:paddingBottom="@dimen/_15pxv"
+            android:paddingEnd="@dimen/_30pxh"
+            android:paddingStart="@dimen/_20pxh"
+            android:paddingTop="@dimen/_17pxv"
+            android:singleLine="true"
+            android:textColorHint="@color/bluegray_200"
+            style="@style/etSolidRounded" tools:ignore="Autofill"/>
+    </LinearLayout>
+    <LinearLayout android:gravity="start"
+        android:id="@+id/linearInputfieldPla1"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:padding="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="8dp"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card2"
-        app:layout_constraintVertical_bias="0.0">
-
-        <com.google.android.material.textfield.TextInputLayout
+        android:layout_marginEnd="@dimen/_23pxh"
+        android:layout_marginStart="@dimen/_23pxh"
+        android:layout_marginTop="@dimen/_20pxv"
+        android:layout_width="match_parent"
+        android:orientation="vertical" style="@style/groupStylecornerRadius">
+        <TextView android:ellipsize="end"
+            android:id="@+id/txtBodyThree"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_10pxh"
+            android:layout_width="wrap_content"
+            android:lineSpacingExtra="@dimen/_3pxh"
+            android:singleLine="true"
+            android:text="Email"
+            style="@style/txtInterbold12"/>
+        <EditText
+            android:id="@+id/uName"
+            android:background="@drawable/rectangle_bg_gray_50_radius_15"
+            android:ellipsize="end"
+            android:hint="Enter your email"
+            android:inputType="textEmailAddress"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_15pxv"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@color/white"
-            app:boxStrokeWidth="0dp"
-            app:passwordToggleTint="@android:color/black"
-            app:boxStrokeWidthFocused="0dp"
-            app:hintEnabled="false"
-            app:passwordToggleEnabled="true">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/cPassword"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:hint="Re-enter your password"
-                android:inputType="textPassword"
-                android:paddingStart="12dp"
-                android:paddingTop="5dp"
-                android:paddingEnd="12dp"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <TextView
-        android:id="@+id/tvForgotPassword"
+            android:lineSpacingExtra="@dimen/_3pxh"
+            android:paddingBottom="@dimen/_15pxv"
+            android:paddingEnd="@dimen/_30pxh"
+            android:paddingStart="@dimen/_20pxh"
+            android:paddingTop="@dimen/_17pxv"
+            android:singleLine="true"
+            android:textColorHint="@color/bluegray_200"
+            style="@style/etSolidRounded" tools:ignore="Autofill"/>
+    </LinearLayout>
+    <TextView android:ellipsize="end"
+        android:id="@+id/txtBodyFive"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_23pxh"
+        android:layout_marginStart="@dimen/_23pxh"
+        android:layout_marginTop="@dimen/_20pxv"
         android:layout_width="wrap_content"
+        android:lineSpacingExtra="@dimen/_3pxh"
+        android:singleLine="true"
+        android:text="Password"
+        style="@style/txtInterbold12"/>
+    <EditText
+        android:background="@drawable/rectangle_bg_gray_50_radius_15"
+        android:drawableEnd="@drawable/img_eye"
+        android:drawablePadding="@dimen/_30pxh"
+        android:ellipsize="end"
+        android:hint="Enter your password"
+        android:id="@+id/password"
+        android:inputType="textPassword"
         android:layout_height="wrap_content"
-        android:text="Already have account?"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75" />
-
-    <TextView
-        android:id="@+id/tvSignIn"
+        android:layout_marginEnd="@dimen/_23pxh"
+        android:layout_marginStart="@dimen/_23pxh"
+        android:layout_marginTop="@dimen/_15pxv"
+        android:layout_width="match_parent"
+        android:lineSpacingExtra="@dimen/_3pxh"
+        android:paddingBottom="@dimen/_18pxv"
+        android:paddingEnd="@dimen/_21pxh"
+        android:paddingStart="@dimen/_20pxh"
+        android:paddingTop="@dimen/_14pxv"
+        android:singleLine="true"
+        android:textColorHint="@color/bluegray_200"
+        style="@style/etSolidRounded_1" tools:ignore="Autofill"/>
+    <TextView android:ellipsize="end"
+        android:id="@+id/txtBodySix"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_23pxh"
+        android:layout_marginStart="@dimen/_23pxh"
+        android:layout_marginTop="@dimen/_21pxv"
         android:layout_width="wrap_content"
+        android:lineSpacingExtra="@dimen/_3pxh"
+        android:singleLine="true"
+        android:text="Retype your password"
+        style="@style/txtInterbold12"/>
+    <EditText
+        android:background="@drawable/rectangle_bg_gray_50_radius_15"
+        android:drawableEnd="@drawable/img_call"
+        android:drawablePadding="@dimen/_30pxh"
+        android:ellipsize="end"
+        android:hint="Retype your password"
+        android:id="@+id/cPassword"
+        android:inputType="textPassword"
         android:layout_height="wrap_content"
-        android:text="SignIn"
-        android:textColor="@color/blue"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.77"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75" />
-
-    <Button
+        android:layout_marginEnd="@dimen/_23pxh"
+        android:layout_marginStart="@dimen/_23pxh"
+        android:layout_marginTop="@dimen/_14pxv"
+        android:layout_width="match_parent"
+        android:lineSpacingExtra="@dimen/_3pxh"
+        android:paddingBottom="@dimen/_16pxv"
+        android:paddingEnd="@dimen/_21pxh"
+        android:paddingStart="@dimen/_20pxh"
+        android:paddingTop="@dimen/_16pxv"
+        android:singleLine="true"
+        android:textColorHint="@color/bluegray_200"
+        style="@style/etSolidRounded_1" tools:ignore="Autofill"/>
+    <androidx.appcompat.widget.AppCompatButton
+        android:ellipsize="end" android:gravity="center"
         android:id="@+id/btnSignUp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|center_vertical"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="@dimen/_50pxv"
+        android:layout_marginEnd="@dimen/_23pxh"
+        android:layout_marginStart="@dimen/_23pxh"
+        android:layout_marginTop="@dimen/_20pxv"
+        android:layout_width="@dimen/_184pxh"
+        android:lineSpacingExtra="@dimen/_3pxh"
+        android:paddingBottom="@dimen/_16pxv"
+        android:paddingEnd="@dimen/_30pxh"
+        android:paddingStart="@dimen/_30pxh"
+        android:paddingTop="@dimen/_16pxv"
+        android:singleLine="true"
         android:text="Sign Up"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.539"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.837" />
+        android:textAllCaps="false"
+        style="@style/btnGradientRounded"/>
+    <TextView android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:id="@+id/tvSignIn"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_27pxv"
+        android:layout_marginEnd="@dimen/_23pxh"
+        android:layout_marginStart="@dimen/_23pxh"
+        android:layout_marginTop="@dimen/_16pxv"
+        android:layout_width="match_parent"
+        android:lineSpacingExtra="@dimen/_3pxh"
+        android:singleLine="true"
+        android:text="Already have an account? Sign In"
+        style="@style/txtRobotoregular12"/>
+</LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>

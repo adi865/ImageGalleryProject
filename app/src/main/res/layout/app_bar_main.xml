@@ -25,4 +25,35 @@
 
     <include android:id="@+id/flContent" layout="@layout/content_main" />
 
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/bottomAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_margin="10dp"
+            android:backgroundTint="#ffffff"
+            app:fabCradleRoundedCornerRadius="16dp"
+            app:fabAlignmentMode="center"
+            app:hideOnScroll="true"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp"
+            app:fabAnimationMode="slide">
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/navigation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                app:elevation="0dp"
+                app:itemIconTint="@color/bottom_nav_material_selection_icon"
+                app:itemTextColor="@color/bottom_nav_material_selection_icon"
+                app:menu="@menu/material_nav_menu" />
+        </com.google.android.material.bottomappbar.BottomAppBar>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#FFAC5F"
+            app:srcCompat="@drawable/baseline_photo_camera_24"
+            app:tint="@android:color/white"
+            app:layout_anchor="@id/bottomAppBar" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

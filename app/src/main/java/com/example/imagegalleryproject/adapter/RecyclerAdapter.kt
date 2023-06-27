@@ -10,12 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.imagegalleryproject.R
 import com.example.imagegalleryproject.databinding.ListItemBinding
+import com.example.imagegalleryproject.model.FavoriteImage
 import com.example.imagegalleryproject.model.Search
 
-class RecyclerAdapter(val context: Context, private val recyclerItemClickListener: RecyclerItemClickListener): RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder>() {
-
-    private val pathsList: ArrayList<String> = ArrayList<String>()
-
+class RecyclerAdapter(val context: Context, private val recyclerItemClickListener: RecyclerItemClickListener?) : RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder>() {
+    constructor(context: Context) : this(
+        context, null)
+    val pathsList: ArrayList<FavoriteImage> = ArrayList<FavoriteImage>()
 
 
     private val differCallback = object : DiffUtil.ItemCallback<Search>() {
@@ -30,37 +31,45 @@ class RecyclerAdapter(val context: Context, private val recyclerItemClickListene
 
     val differ = AsyncListDiffer(this, differCallback)
 
-    fun setData(imagesList: List<Search>) = differ.submitList(imagesList)
 
-    inner class RecyclerViewHolder(val binding: ListItemBinding) :
+    inner class RecyclerViewHolder(private val binding: ListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        var selected = false
+
         fun bind(search: Search) {
-            Glide.with(binding.imgMovie).load(differ.currentList[position].Poster)
-                .placeholder(R.drawable.ic_loading_foreground).into(binding.imgMovie)
+            Glide.with(binding.root.context)
+                .load(differ.currentList[position].Poster)
+                .placeholder(R.drawable.ic_loading_foreground)
+                .into(binding.imgMovie)
 
-            binding.tvMovieName.setText(differ.currentList[position].Title)
-
-            binding.type.setText(differ.currentList[position].Type)
-
-            binding.year.setText(differ.currentList[position].Year)
-
+            val selectedItems = HashSet<Int>()
             binding.imgMovie.setOnLongClickListener {
                 binding.checkbox.visibility = View.VISIBLE
-                if (selected) {
-                    binding.checkbox.visibility = View.GONE
-                    selected = false
-                } else {
+                val itemPosition = adapterPosition
+                if (!selectedItems.contains(itemPosition)) {
                     binding.checkbox.visibility = View.VISIBLE
-                    selected = true
-                    binding.checkbox.setOnClickListener {
-                        if (binding.checkbox.isChecked) {
-                            pathsList.add(differ.currentList[position].Poster)
-                            recyclerItemClickListener.itemClickListener(pathsList)
+                    selectedItems.add(itemPosition)
+                } else {
+                    binding.checkbox.visibility = View.GONE
+                    selectedItems.remove(itemPosition)
+                }
+
+                binding.checkbox.setOnClickListener {
+                    val isChecked = binding.checkbox.isChecked
+
+                    if (isChecked) {
+                        val selectedPaths = selectedItems.mapNotNull { position ->
+                            differ.currentList.getOrNull(position)?.Poster
+                        }
+                        pathsList.clear()
+                        pathsList.addAll(selectedPaths.map { FavoriteImage(it) })
+                    } else {
+                        pathsList.removeAll { item ->
+                            selectedItems.contains(differ.currentList.indexOfFirst { it.Poster == item.favorite })
                         }
                     }
-                    recyclerItemClickListener.itemLongClickListener()
+                    recyclerItemClickListener!!.itemClickListener(pathsList)
                 }
+                recyclerItemClickListener!!.itemLongClickListener()
                 return@setOnLongClickListener true
             }
 
@@ -68,7 +77,7 @@ class RecyclerAdapter(val context: Context, private val recyclerItemClickListene
                 if (binding.checkbox.visibility == View.VISIBLE) {
                     binding.checkbox.visibility = View.GONE
                 }
-                recyclerItemClickListener.goToViewFragment(differ.currentList[position].Poster)
+                recyclerItemClickListener!!.goToViewFragment(differ.currentList[position].Poster!!)
             }
         }
     }
@@ -79,21 +88,21 @@ class RecyclerAdapter(val context: Context, private val recyclerItemClickListene
     }
 
     override fun getItemCount(): Int {
-        return differ.getCurrentList().size
+        return differ.currentList.size
     }
 
 
     override fun onBindViewHolder(holder: RecyclerViewHolder, position: Int) {
-        val image = differ.currentList.get(position)
+        val image = differ.currentList[position]
         holder.bind(image)
     }
 
+
     interface RecyclerItemClickListener {
-        public fun itemClickListener(paths: ArrayList<String>)
+        fun itemClickListener(paths: List<FavoriteImage>)
 
-        public fun itemLongClickListener(): Boolean
+        fun itemLongClickListener(): Boolean
 
-        public fun goToViewFragment(selectedImage: String)
+        fun goToViewFragment(selectedImage: String)
     }
-
 }

@@ -6,10 +6,6 @@ data class DataStatus<out T>(
     val msg: String? = null,
     val isEmpty: Boolean? = false) {
 
-    enum class Status {
-        LOADING, ERROR, SUCCESS
-    }
-
     companion object {
         fun<T> loading(): DataStatus<T> {
             return DataStatus(Status.LOADING)
@@ -23,4 +19,8 @@ data class DataStatus<out T>(
             return DataStatus(Status.ERROR, msg = error)
         }
     }
+}
+
+enum class Status {
+    LOADING, ERROR, SUCCESS
 }

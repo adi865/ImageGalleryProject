@@ -1,51 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.ImageGalleryProject" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.MyApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_200</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <item name="actionMenuTextColor">@android:color/white</item>
-
-        <item name="actionModeBackground">@color/someGray</item>
-        <item name="actionBarTheme">@style/ThemeOverlay.Material3.Dark.ActionBar</item>
-
-        <item name="popupMenuStyle">@style/popupMenuStyle</item>
-        <item name="android:textAppearanceSmallPopupMenu">@style/myPopupMenuTextAppearanceSmall</item>
-        <item name="android:textAppearanceLargePopupMenu">@style/myPopupMenuTextAppearanceLarge</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
-
-    <style name="popupMenuStyle" parent="Widget.AppCompat.PopupMenu">
-        <item name="android:popupBackground">@color/white</item>
-        <item name="android:textColor">@color/black</item>
-    </style>
-    <style name="myPopupMenuTextAppearanceSmall" parent="@style/TextAppearance.AppCompat.Widget.PopupMenu.Small">
-        <item name="android:textColor">@color/black</item>
-    </style>
-
-    <style name="myPopupMenuTextAppearanceLarge" parent="@style/TextAppearance.AppCompat.Widget.PopupMenu.Large">
-        <item name="android:textColor">@color/black</item>
-    </style>
-
-    <style name="Theme.ImageGalleryProject.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="ToolbarColoredBackArrow" parent="ThemeOverlay.AppCompat.Light">
-        <item name="android:textColorPrimary">@color/white</item>
-    </style>
-
-    <style name="Theme.ImageGalleryProject.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary" >
-        <item name="colorOnPrimary">@color/white</item>
-    </style>
-
-    <style name="Theme.ImageGalleryProject.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

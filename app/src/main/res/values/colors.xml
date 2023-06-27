@@ -10,7 +10,34 @@
     <color name="someGray">#40FFFFFF</color>
     <color name="blue">#3533BC</color>
 
+    <color name="gray_501">#999999</color>
+    <color name="gray_600">#787878</color>
+    <color name="gray_700">#686868</color>
+    <color name="gray_400">#babec1</color>
+    <color name="gray_500">#979ea5</color>
+    <color name="red_A200">#fc5c4c</color>
+    <color name="gray_800">#474747</color>
+    <color name="gray_701">#555555</color>
+    <color name="gray_900">#272727</color>
+    <color name="gray_101">#f3f6fc</color>
+    <color name="gray_300">#e2e2e2</color>
+    <color name="gray_50">#f8f8fa</color>
+    <color name="gray_100">#f0f4f4</color>
+    <color name="red_50">#fef4ee</color>
+    <color name="bluegray_900">#1f1f39</color>
+    <color name="bluegray_800">#38385e</color>
+    <color name="bluegray_600_3f">#3f3e6789</color>
+    <color name="black_900">#000000</color>
+    <color name="bluegray_400">#77829d</color>
+    <color name="bluegray_200">#b1b8c6</color>
+    <color name="deep_orange_400">#fd814a</color>
+    <color name="white_A700">#ffffff</color>
+    <color name="deep_orange_400_3f">#3ffd714b</color>
+    <color name="indigo_600">#3845ab</color>
     <color name="indigo">#133B5C</color>
     <color name="sandyTan">#FCDAB7</color>
+    <color name="gray">#868686</color>
+
+    <color name="translucent">#80000000</color>
 
 </resources>

@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/mainFragment">
+    app:startDestination="@id/galleryFragment">
 
     <fragment
         android:id="@+id/galleryFragment"
-        android:name="com.example.imagegalleryproject.fragments.GalleryFragment"
+        android:name="com.example.imagegalleryproject.ui.fragments.GalleryFragment"
         android:label="Movie Gallery"
         tools:layout="@layout/fragment_gallery">
         <action
@@ -16,35 +16,40 @@
         <action
             android:id="@+id/action_galleryFragment_to_imageViewerFragment"
             app:destination="@id/imageViewerFragment" />
+        <action
+            android:id="@+id/action_galleryFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_galleryFragment_self"
+            app:destination="@id/galleryFragment" />
     </fragment>
     <fragment
         android:id="@+id/imageFragment"
-        android:name="com.example.imagegalleryproject.fragments.ImageFragment"
+        android:name="com.example.imagegalleryproject.ui.fragments.ImageFragment"
         android:label="Favorites Gallery"
         tools:layout="@layout/fragment_image">
         <action
             android:id="@+id/action_imageFragment_to_imageViewerFragment"
             app:destination="@id/imageViewerFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/mainFragment"
-        android:name="com.example.imagegalleryproject.fragments.MainFragment"
-        android:label="Dashboard"
-        tools:layout="@layout/fragment_main">
         <action
-            android:id="@+id/action_mainFragment_to_galleryFragment"
-            app:destination="@id/galleryFragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_imageFragment"
-            app:destination="@id/imageFragment" />
+            android:id="@+id/action_imageFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/imageViewerFragment"
-        android:name="com.example.imagegalleryproject.fragments.ImageViewerFragment"
+        android:name="com.example.imagegalleryproject.ui.fragments.ImageViewerFragment"
         android:label="View Image"
         tools:layout="@layout/fragment_image_viewer" >
         <argument
             android:name="imageRes"
             app:argType="string" />
+        <action
+            android:id="@+id/action_imageViewerFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.imagegalleryproject.ui.fragments.ProfileFragment"
+        android:label="Profile Fragment"
+        tools:layout="@layout/fragment_profile" />
 </navigation>
