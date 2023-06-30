@@ -29,6 +29,7 @@ fun BottomBar(navController: NavController) {
         backgroundColor = Color.White,
         cutoutShape = CircleShape,
         modifier = Modifier
+            .height(48.dp)
             .padding(start = 3.dp, end = 3.dp, bottom = 5.dp)
             .clip(RoundedCornerShape(15.dp))
     ) {

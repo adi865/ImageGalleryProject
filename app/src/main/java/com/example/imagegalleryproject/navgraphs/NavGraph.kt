@@ -27,7 +27,8 @@ fun SetupNavGraph(navController: NavHostController) {
             composable(Pages.Gallery.route) {
                 GalleryPage(navController = navController)
             }
-            composable(PagesWithIconAndTitles.Favorites.route) { FavoriteImagesPage(navController = navController)
+            composable(PagesWithIconAndTitles.Favorites.route) {
+                FavoriteImagesPage(navController = navController)
             }
 
             composable(PagesWithIconAndTitles.ProfileManagement.route) {

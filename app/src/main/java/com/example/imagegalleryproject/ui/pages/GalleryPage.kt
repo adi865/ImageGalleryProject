@@ -8,18 +8,14 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.FabPosition
 import androidx.compose.material.icons.Icons
@@ -39,7 +35,6 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,18 +45,17 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.imagegalleryproject.BottomBar.BottomBar
-import com.example.imagegalleryproject.R
 import com.example.imagegalleryproject.model.FavoriteImage
 import com.example.imagegalleryproject.model.Search
 import com.example.imagegalleryproject.screens.Pages
 import com.example.imagegalleryproject.screens.PagesWithIconAndTitles
 import com.example.imagegalleryproject.ui.AppBar.ContextualTopBar
-import com.example.imagegalleryproject.ui.MainActivity
 import com.example.imagegalleryproject.ui.drawerlayout.DrawerBody
 import com.example.imagegalleryproject.ui.drawerlayout.DrawerHeader
 import com.example.imagegalleryproject.util.Status
 import com.example.imagegalleryproject.viewmodel.FavoriteViewModel
 import com.example.imagegalleryproject.viewmodel.ThumbnailViewModel
+import com.example.imagegalleryproject.widgets.FAB
 import com.google.firebase.auth.FirebaseAuth
 import com.google.relay.compose.RowScopeInstanceImpl.align
 import kotlinx.coroutines.Job
@@ -98,7 +92,9 @@ fun GalleryPage(
 
     val context = LocalContext.current
 
-    androidx.compose.material.Scaffold(backgroundColor = Color(240, 244, 244), topBar = {
+    androidx.compose.material.Scaffold(
+        backgroundColor = Color(240, 244, 244),
+        topBar = {
         MainAppBar(
             navController = navController,
             searchWidgetState = searchWidgetState,
@@ -188,12 +184,6 @@ fun DefaultAppBar(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var showMenu by remember { mutableStateOf(false) }
-    val bottomNavigationItems = listOf(
-        PagesWithIconAndTitles.Gallery,
-        PagesWithIconAndTitles.Favorites,
-        PagesWithIconAndTitles.ProfileEdit,
-        PagesWithIconAndTitles.ProfileManagement
-    )
 
     val isContextualActionModeActive = remember { mutableStateOf(false) }
     val countOfItemsSelected = remember { mutableStateOf(0) }
@@ -286,17 +276,7 @@ fun DefaultAppBar(
             }
         },
             floatingActionButton = {
-                androidx.compose.material.FloatingActionButton(
-                    onClick = {
-                        (context as? MainActivity)?.requestCameraPermission()
-                    },
-                    backgroundColor = Color(0xFFFFAC5F),
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.baseline_photo_camera_24),
-                        contentDescription = "fab"
-                    )
-                }
+                FAB()
             },
             isFloatingActionButtonDocked = true,
             floatingActionButtonPosition = FabPosition.Center,

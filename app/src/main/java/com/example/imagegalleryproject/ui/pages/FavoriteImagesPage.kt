@@ -55,6 +55,7 @@ import com.example.imagegalleryproject.ui.drawerlayout.DrawerHeader
 import com.example.imagegalleryproject.util.DataStatus
 import com.example.imagegalleryproject.util.Status
 import com.example.imagegalleryproject.viewmodel.FavoriteViewModel
+import com.example.imagegalleryproject.widgets.FAB
 import com.google.firebase.auth.FirebaseAuth
 import com.google.relay.compose.RowScopeInstanceImpl.align
 import kotlinx.coroutines.Job
@@ -117,17 +118,7 @@ fun FavoriteImagesPage(
                     }
                 },
                 floatingActionButton = {
-                    androidx.compose.material.FloatingActionButton(
-                        onClick = {
-                            (context as? MainActivity)?.requestCameraPermission()
-                        },
-                        backgroundColor = Color(0xFFFFAC5F),
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.baseline_photo_camera_24),
-                            contentDescription = "fab"
-                        )
-                    }
+                    FAB()
                 },
                 isFloatingActionButtonDocked = true,
                 floatingActionButtonPosition = FabPosition.Center,
