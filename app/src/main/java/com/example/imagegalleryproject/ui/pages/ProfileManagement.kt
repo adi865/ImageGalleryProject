@@ -38,7 +38,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
+import com.example.imagegalleryproject.BottomBar.BottomBar
 import com.example.imagegalleryproject.R
+import com.example.imagegalleryproject.TopBar
 import com.example.imagegalleryproject.screens.Pages
 import com.example.imagegalleryproject.screens.PagesWithIconAndTitles
 import com.example.imagegalleryproject.ui.MainActivity
@@ -50,6 +52,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import kotlinx.coroutines.launch
+import org.checkerframework.common.subtyping.qual.Bottom
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -57,16 +60,8 @@ import kotlinx.coroutines.launch
 fun ProfileManagement(
     navController: NavController,
 ) {
-    val mAuth = FirebaseAuth.getInstance()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    var showMenu by remember { mutableStateOf(false) }
-    val bottomNavigationItems = listOf(
-        PagesWithIconAndTitles.Gallery,
-        PagesWithIconAndTitles.Favorites,
-        PagesWithIconAndTitles.ProfileEdit,
-        PagesWithIconAndTitles.ProfileManagement
-    )
     val userInfoViewModel = UserInfoViewModel()
     userInfoViewModel.getUserInfo(navController)
 
@@ -103,53 +98,7 @@ fun ProfileManagement(
         content = {
             androidx.compose.material.Scaffold(
                 topBar = {
-                    androidx.compose.material.TopAppBar(
-                        title = {
-                            Text(text = "Profile Management", color = Color.White)
-                        },
-                        navigationIcon = {
-                            IconButton(onClick = {
-                                scope.launch {
-                                    drawerState.open()
-                                }
-                            }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Menu,
-                                    contentDescription = "Toggle DrawerLayout",
-                                    tint = Color.White
-                                )
-                            }
-                        },
-                        actions = {
-                            androidx.compose.material3.IconButton(onClick = {
-                                showMenu = !showMenu
-                            }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.MoreVert,
-                                    contentDescription = "More Options",
-                                    tint = Color.White
-                                )
-                            }
-                            DropdownMenu(
-                                expanded = showMenu,
-                                onDismissRequest = { showMenu = false }
-                            ) {
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(text = "Sign Out", color = Color.White)
-                                    },
-                                    onClick = {
-                                        if (mAuth.currentUser != null) {
-                                            mAuth.signOut()
-                                            navController.navigate(Pages.SignIn.route)
-                                        }
-                                    }
-                                )
-                            }
-                        }
-                    )
+                    TopBar(title = "ProfileManagement", drawerState = drawerState, navController = navController)
                 },
                 floatingActionButton = {
                     androidx.compose.material.FloatingActionButton(
@@ -167,59 +116,7 @@ fun ProfileManagement(
                 isFloatingActionButtonDocked = true,
                 floatingActionButtonPosition = FabPosition.Center,
                 bottomBar = {
-                    androidx.compose.material.BottomAppBar(
-                        backgroundColor = Color.White,
-                        cutoutShape = CircleShape,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(15.dp))
-                            .padding(start = 10.dp, end = 10.dp, bottom = 5.dp)
-                    ) {
-                        val navBackStackEntry by navController.currentBackStackEntryAsState()
-                        val currentRoute = navBackStackEntry?.arguments?.getString(PagesWithIconAndTitles.ProfileManagement.route)
-                        BottomNavigation(
-                            backgroundColor = Color.Transparent,
-                            elevation = 0.dp
-                        ) {
-                            Row(
-                                Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                val weightLeft = 1f / 2 // Two items on the left side
-                                val weightRight = 1f / 2 // Two items on the right side
-                                bottomNavigationItems.subList(0, 2).forEach { screen ->
-                                    BottomNavigationItem(
-                                        selected = (currentRoute == screen.route),
-                                        icon = { Icon(screen.icon, screen.route, tint = Color.DarkGray) },
-                                        modifier = Modifier.weight(weightLeft),
-                                        onClick = {
-                                            navController.navigate(screen.route) {
-                                                popUpTo = navController.graph.getStartDestination()
-                                                launchSingleTop = true
-                                            }
-                                        }
-                                    )
-                                }
-
-                                Spacer(Modifier.weight(0.5f))
-
-                                bottomNavigationItems.subList(2, bottomNavigationItems.size)
-                                    .forEach { screen ->
-                                        BottomNavigationItem(
-                                            selected = (currentRoute == screen.route),
-                                            icon = { Icon(screen.icon, screen.route, tint = Color.DarkGray) },
-                                            modifier = Modifier.weight(weightRight),
-                                            onClick = {
-                                                navController.navigate(screen.route) {
-                                                    popUpTo =
-                                                        navController.graph.getStartDestination()
-                                                    launchSingleTop = true
-                                                }
-                                            }
-                                        )
-                                    }
-                            }
-                        }
-                    }
+                    BottomBar(navController)
                 }
             ) {
                 Column(modifier = Modifier

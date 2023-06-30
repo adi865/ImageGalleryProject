@@ -42,10 +42,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.imagegalleryproject.BottomBar.BottomBar
 import com.example.imagegalleryproject.R
+import com.example.imagegalleryproject.TopBar
 import com.example.imagegalleryproject.model.FavoriteImage
 import com.example.imagegalleryproject.screens.Pages
 import com.example.imagegalleryproject.screens.PagesWithIconAndTitles
+import com.example.imagegalleryproject.ui.AppBar.ContextualTopBar
 import com.example.imagegalleryproject.ui.MainActivity
 import com.example.imagegalleryproject.ui.drawerlayout.DrawerBody
 import com.example.imagegalleryproject.ui.drawerlayout.DrawerHeader
@@ -65,17 +68,8 @@ import java.nio.charset.StandardCharsets
 fun FavoriteImagesPage(
     navController: NavController
 ) {
-    val mAuth = FirebaseAuth.getInstance()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    var showMenu by remember { mutableStateOf(false) }
-
-    val bottomNavigationItems = listOf(
-        PagesWithIconAndTitles.Gallery,
-        PagesWithIconAndTitles.Favorites,
-        PagesWithIconAndTitles.ProfileEdit,
-        PagesWithIconAndTitles.ProfileManagement
-    )
 
     val isContextualActionModeActive = remember { mutableStateOf(false) }
     val countOfSelectedItems = remember { mutableStateOf(0) }
@@ -117,69 +111,9 @@ fun FavoriteImagesPage(
                     if (isContextualActionModeActive.value) {
                         // Render contextual action mode topBar
                         // Replace with your desired implementation
-                        androidx.compose.material.TopAppBar(
-                            title = { Text(text = "${countOfSelectedItems.value} selected") },
-                            actions = {
-                                IconButton(onClick = { /* Handle action */ }) {
-                                    Icon(
-                                        imageVector = Icons.Default.Delete,
-                                        contentDescription = "Delete",
-                                        tint = Color.White,
-                                        modifier = Modifier.clickable {
-                                            favoriteViewModel.deleteFavorites(selectedFavorites)
-                                        }
-                                    )
-                                }
-                            }
-                        )
+                       ContextualTopBar(countOfSelectedItems = countOfSelectedItems, imageVector = Icons.Default.Delete, performAction = {favoriteViewModel.deleteFavorites(selectedFavorites)})
                     } else {
-                        androidx.compose.material.TopAppBar(
-                            title = {
-                                Text(text = "Favorites", color = Color.White)
-                            },
-                            navigationIcon = {
-                                IconButton(onClick = {
-                                    scope.launch {
-                                        drawerState.open()
-                                    }
-                                }
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Menu,
-                                        contentDescription = "Toggle DrawerLayout",
-                                        tint = Color.White
-                                    )
-                                }
-                            },
-                            actions = {
-                                IconButton(onClick = {
-                                    showMenu = !showMenu
-                                }
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.MoreVert,
-                                        contentDescription = "More Options",
-                                        tint = Color.White
-                                    )
-                                }
-                                DropdownMenu(
-                                    expanded = showMenu,
-                                    onDismissRequest = { showMenu = false }
-                                ) {
-                                    DropdownMenuItem(
-                                        text = {
-                                            Text(text = "Sign Out", color = Color.White)
-                                        },
-                                        onClick = {
-                                            if (mAuth.currentUser != null) {
-                                                mAuth.signOut()
-                                                navController.navigate(Pages.SignIn.route)
-                                            }
-                                        }
-                                    )
-                                }
-                            }
-                        )
+                        TopBar(title = "Favorites", drawerState = drawerState, navController = navController)
                     }
                 },
                 floatingActionButton = {
@@ -198,71 +132,7 @@ fun FavoriteImagesPage(
                 isFloatingActionButtonDocked = true,
                 floatingActionButtonPosition = FabPosition.Center,
                 bottomBar = {
-                    androidx.compose.material.BottomAppBar(
-                        backgroundColor = Color.White,
-                        cutoutShape = CircleShape,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(15.dp))
-                            .padding(start = 10.dp, end = 10.dp, bottom = 5.dp)
-                    ) {
-                        val navBackStackEntry by navController.currentBackStackEntryAsState()
-                        val currentRoute = navBackStackEntry?.arguments?.getString(PagesWithIconAndTitles.Favorites.route)
-                        BottomNavigation(
-                            backgroundColor = Color.Transparent,
-                            elevation = 0.dp
-                        ) {
-                            Row(
-                                Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                val weightLeft = 1f / 2 // Two items on the left side
-                                val weightRight = 1f / 2 // Two items on the right side
-                                bottomNavigationItems.subList(0, 2).forEach { screen ->
-                                    BottomNavigationItem(
-                                        selected = (currentRoute == screen.route),
-                                        icon = {
-                                            Icon(
-                                                screen.icon,
-                                                screen.route,
-                                                tint = Color.DarkGray
-                                            )
-                                        },
-                                        modifier = Modifier.weight(weightLeft),
-                                        onClick = {
-                                            navController.navigate(screen.route) {
-                                                popUpTo = navController.graph.getStartDestination()
-                                                launchSingleTop = true
-                                            }
-                                        }
-                                    )
-                                }
-
-                                Spacer(Modifier.weight(0.5f))
-
-                                bottomNavigationItems.subList(2, bottomNavigationItems.size)
-                                    .forEach { screen ->
-                                        BottomNavigationItem(
-                                            selected = (currentRoute == screen.route),
-                                            icon = {
-                                                Icon(
-                                                    screen.icon,
-                                                    screen.route,
-                                                    tint = Color.DarkGray
-                                                )
-                                            },
-                                            modifier = Modifier.weight(weightRight),
-                                            onClick = {
-                                                navController.navigate(screen.route) {
-                                                    popUpTo =
-                                                        navController.graph.getStartDestination()
-                                                    launchSingleTop = true
-                                                }
-                                            }
-                                        )
-                                    }
-                            }
-                        }
-                    }
+                    BottomBar(navController)
                 }
             ) {
                 showFavorites(

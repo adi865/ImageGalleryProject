@@ -46,15 +46,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.*
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.imagegalleryproject.BottomBar.BottomBar
 import com.example.imagegalleryproject.R
 import com.example.imagegalleryproject.model.FavoriteImage
 import com.example.imagegalleryproject.model.Search
 import com.example.imagegalleryproject.screens.Pages
 import com.example.imagegalleryproject.screens.PagesWithIconAndTitles
+import com.example.imagegalleryproject.ui.AppBar.ContextualTopBar
 import com.example.imagegalleryproject.ui.MainActivity
 import com.example.imagegalleryproject.ui.drawerlayout.DrawerBody
 import com.example.imagegalleryproject.ui.drawerlayout.DrawerHeader
@@ -222,23 +223,19 @@ fun DefaultAppBar(
             }
         }
     }, content = {
-        androidx.compose.material.Scaffold(topBar = {
+        androidx.compose.material.Scaffold(
+            topBar = {
             if (isContextualActionModeActive.value) {
                 // Render contextual action mode topBar
                 // Replace with your desired implementation
-                androidx.compose.material.TopAppBar(title = { Text(text = "${countOfItemsSelected.value} selected") },
-                    actions = {
-                        IconButton(onClick = { /* Handle action */ }) {
-                            Icon(imageVector = Icons.Default.Favorite,
-                                contentDescription = "Favorites",
-                                tint = Color.White,
-                                modifier = Modifier.clickable {
-                                    favoriteViewModel.addFavorites(selectedImages)
-                                })
-                        }
-                    })
+                ContextualTopBar(
+                    countOfSelectedItems = countOfItemsSelected,
+                    imageVector = Icons.Default.Favorite,
+                    performAction = { favoriteViewModel.addFavorites(selectedImages) }
+                )
             } else {
-                androidx.compose.material.TopAppBar(title = {
+                androidx.compose.material.TopAppBar(
+                    title = {
                     Text(
                         text = "GalleryFragment",
                         fontWeight = FontWeight.SemiBold,
@@ -304,63 +301,7 @@ fun DefaultAppBar(
             isFloatingActionButtonDocked = true,
             floatingActionButtonPosition = FabPosition.Center,
             bottomBar = {
-                androidx.compose.material.BottomAppBar(
-                    elevation = 16.dp,
-                    backgroundColor = Color.White,
-                    cutoutShape = CircleShape,
-                    modifier = Modifier
-                        .padding(start = 3.dp, end = 3.dp, bottom = 5.dp)
-                        .clip(RoundedCornerShape(15.dp))
-                ) {
-                    val navBackStackEntry by navController.currentBackStackEntryAsState()
-                    val currentRoute =
-                        navBackStackEntry?.arguments?.getString(PagesWithIconAndTitles.Gallery.route)
-                    BottomNavigation(
-                        backgroundColor = Color.Transparent, elevation = 0.dp
-                    ) {
-                        Row(
-                            Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            val weightLeft = 1f / 2 // Two items on the left side
-                            val weightRight = 1f / 2 // Two items on the right side
-                            bottomNavigationItems.subList(0, 2).forEach { screen ->
-                                BottomNavigationItem(selected = (currentRoute == screen.route),
-                                    icon = {
-                                        Icon(
-                                            screen.icon, screen.route, tint = Color.DarkGray
-                                        )
-                                    },
-                                    modifier = Modifier.weight(weightLeft),
-                                    onClick = {
-                                        navController.navigate(screen.route) {
-                                            popUpTo = navController.graph.getStartDestination()
-                                            launchSingleTop = true
-                                        }
-                                    })
-                            }
-
-                            Spacer(Modifier.weight(0.5f))
-
-                            bottomNavigationItems.subList(2, bottomNavigationItems.size)
-                                .forEach { screen ->
-                                    BottomNavigationItem(selected = (currentRoute == screen.route),
-                                        icon = {
-                                            Icon(
-                                                screen.icon, screen.route, tint = Color.DarkGray
-                                            )
-                                        },
-                                        modifier = Modifier.weight(weightRight),
-                                        onClick = {
-                                            navController.navigate(screen.route) {
-                                                popUpTo = navController.graph.getStartDestination()
-                                                launchSingleTop = true
-                                            }
-                                        })
-                                }
-                        }
-                    }
-                }
+                BottomBar(navController)
             },
             content = {
                 PopulateView(
@@ -743,7 +684,6 @@ fun ListItem(
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
