@@ -10,9 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
@@ -67,7 +65,8 @@ import java.nio.charset.StandardCharsets
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "CoroutineCreationDuringComposition")
 @Composable
 fun FavoriteImagesPage(
-    navController: NavController
+    navController: NavController,
+    scrollState: LazyStaggeredGridState
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -76,8 +75,6 @@ fun FavoriteImagesPage(
     val countOfSelectedItems = remember { mutableStateOf(0) }
 
     val selectedFavorites = ArrayList<FavoriteImage>()
-
-    val context = LocalContext.current
 
     val favoriteViewModel = FavoriteViewModel()
 
@@ -118,12 +115,16 @@ fun FavoriteImagesPage(
                     }
                 },
                 floatingActionButton = {
-                    FAB()
+                    if(scrollState.firstVisibleItemIndex == 0) {
+                        FAB()
+                    }
                 },
                 isFloatingActionButtonDocked = true,
                 floatingActionButtonPosition = FabPosition.Center,
                 bottomBar = {
-                    BottomBar(navController)
+                    if(scrollState.firstVisibleItemIndex == 0) {
+                        BottomBar(navController)
+                    }
                 }
             ) {
                 showFavorites(
@@ -131,7 +132,8 @@ fun FavoriteImagesPage(
                     favViewModel = favoriteViewModel,
                     isContextualActionModeActive,
                     countOfSelectedItems,
-                    selectedFavorites
+                    selectedFavorites,
+                    scrollState
                 )
             }
         }
@@ -145,7 +147,8 @@ fun showFavorites(
     favViewModel: FavoriteViewModel,
     isContextualActionModeActive: MutableState<Boolean>,
     countOfSelectedItems: MutableState<Int>,
-    selectedFavorite: ArrayList<FavoriteImage>
+    selectedFavorite: ArrayList<FavoriteImage>,
+    scrollState: LazyStaggeredGridState
 ) {
     val getFavorites = favViewModel.fetchedImages.observeAsState()
     val message = favViewModel.message.observeAsState()
@@ -212,6 +215,7 @@ fun showFavorites(
         }
     } else {
         LazyVerticalStaggeredGrid(
+            state = scrollState,
             columns = StaggeredGridCells.Fixed(2),
             modifier = Modifier
                 .fillMaxSize()
@@ -327,5 +331,5 @@ fun FavItem(
 @Preview(showBackground = true)
 @Composable
 fun PreviewFavoriteImagesPage() {
-    FavoriteImagesPage(rememberNavController())
+    FavoriteImagesPage(rememberNavController(), rememberLazyStaggeredGridState())
 }

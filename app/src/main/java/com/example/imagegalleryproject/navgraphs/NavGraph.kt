@@ -1,6 +1,8 @@
 package com.example.imagegalleryproject.navgraphs
 
 import android.util.Log
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -18,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun SetupNavGraph(navController: NavHostController) {
+    val scrollState = rememberLazyStaggeredGridState()
     var mAuth = FirebaseAuth.getInstance()
     if (mAuth.currentUser != null) {
         NavHost(
@@ -25,10 +28,10 @@ fun SetupNavGraph(navController: NavHostController) {
             startDestination = PagesWithIconAndTitles.Gallery.route
         ) {
             composable(Pages.Gallery.route) {
-                GalleryPage(navController = navController)
+                GalleryPage(navController = navController, scrollState = scrollState)
             }
             composable(PagesWithIconAndTitles.Favorites.route) {
-                FavoriteImagesPage(navController = navController)
+                FavoriteImagesPage(navController = navController, scrollState = scrollState)
             }
 
             composable(PagesWithIconAndTitles.ProfileManagement.route) {
@@ -59,7 +62,7 @@ fun SetupNavGraph(navController: NavHostController) {
             }
             
             composable(Pages.Gallery.route) {
-                GalleryPage(navController = navController)
+                GalleryPage(navController = navController, scrollState)
             }
         }
     }

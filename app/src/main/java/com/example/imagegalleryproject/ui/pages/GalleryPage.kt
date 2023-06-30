@@ -10,9 +10,9 @@ import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.staggeredgrid.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -69,7 +69,8 @@ import java.util.*
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun GalleryPage(
-    navController: NavController
+    navController: NavController,
+    scrollState: LazyStaggeredGridState
 ) {
     val mAuth = FirebaseAuth.getInstance()
     var movieTitleQuery by remember {
@@ -91,6 +92,8 @@ fun GalleryPage(
     val selectedImages = ArrayList<FavoriteImage>()
 
     val context = LocalContext.current
+
+
 
     androidx.compose.material.Scaffold(
         backgroundColor = Color(240, 244, 244),
@@ -115,7 +118,8 @@ fun GalleryPage(
             thumbnailViewModel = thumbnailViewModel,
             mAuth = mAuth,
             context = context,
-            query = movieTitleQuery
+            query = movieTitleQuery,
+            scrollState = scrollState
         )
     }, content = {
         if (mAuth.currentUser != null) {
@@ -126,7 +130,8 @@ fun GalleryPage(
                 query = movieTitleQuery,
                 isContextualActionModeActive = isContextualActionModeActive,
                 countOfSelectedItems = countOfSelectedItems,
-                selectedImages = selectedImages
+                selectedImages = selectedImages,
+                scrollState = scrollState
             )
         } else {
             navController.navigate(Pages.SignIn.route)
@@ -146,7 +151,8 @@ fun MainAppBar(
     thumbnailViewModel: ThumbnailViewModel,
     mAuth: FirebaseAuth,
     context: Context,
-    query: String
+    query: String,
+    scrollState: LazyStaggeredGridState
 ) {
     when (searchWidgetState) {
         SearchWidgetState.CLOSED -> {
@@ -156,7 +162,8 @@ fun MainAppBar(
                 mAuth = mAuth,
                 thumbnailViewModel = thumbnailViewModel,
                 context = context,
-                movieTitleQuery = query
+                movieTitleQuery = query,
+                scrollState = scrollState
             )
         }
         SearchWidgetState.OPENED -> {
@@ -179,7 +186,8 @@ fun DefaultAppBar(
     mAuth: FirebaseAuth,
     thumbnailViewModel: ThumbnailViewModel,
     context: Context,
-    movieTitleQuery: String
+    movieTitleQuery: String,
+    scrollState: LazyStaggeredGridState
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -276,12 +284,16 @@ fun DefaultAppBar(
             }
         },
             floatingActionButton = {
-                FAB()
+                if(scrollState.firstVisibleItemIndex == 0) {
+                    FAB()
+                }
             },
             isFloatingActionButtonDocked = true,
             floatingActionButtonPosition = FabPosition.Center,
             bottomBar = {
-                BottomBar(navController)
+                if(scrollState.firstVisibleItemIndex == 0) {
+                    BottomBar(navController)
+                }
             },
             content = {
                 PopulateView(
@@ -291,7 +303,8 @@ fun DefaultAppBar(
                     isContextualActionModeActive = isContextualActionModeActive,
                     countOfSelectedItems = countOfItemsSelected,
                     query = movieTitleQuery,
-                    selectedImages = selectedImages
+                    selectedImages = selectedImages,
+                    scrollState = scrollState
                 )
             })
     })
@@ -369,7 +382,8 @@ fun PopulateView(
     query: String,
     isContextualActionModeActive: MutableState<Boolean>,
     countOfSelectedItems: MutableState<Int>,
-    selectedImages: ArrayList<FavoriteImage>
+    selectedImages: ArrayList<FavoriteImage>,
+    scrollState: LazyStaggeredGridState
 ) {
     val selectedItems = remember { mutableStateListOf<Search>() }
     val isLongPressActive = remember { mutableStateOf(false) }
@@ -532,6 +546,7 @@ fun PopulateView(
           }
       } else {
           LazyVerticalStaggeredGrid(
+              state = scrollState,
               columns = StaggeredGridCells.Fixed(2),
               modifier = Modifier
                   .fillMaxSize()
@@ -668,5 +683,5 @@ fun ListItem(
 @Preview(showBackground = true)
 @Composable
 fun PreviewGalleryPage() {
-    GalleryPage(rememberNavController())
+    GalleryPage(rememberNavController(), rememberLazyStaggeredGridState())
 }

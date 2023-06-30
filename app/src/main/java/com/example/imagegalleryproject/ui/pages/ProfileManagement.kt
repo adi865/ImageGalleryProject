@@ -35,15 +35,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
 import com.example.imagegalleryproject.BottomBar.BottomBar
 import com.example.imagegalleryproject.R
 import com.example.imagegalleryproject.TopBar
-import com.example.imagegalleryproject.screens.Pages
 import com.example.imagegalleryproject.screens.PagesWithIconAndTitles
-import com.example.imagegalleryproject.ui.MainActivity
 import com.example.imagegalleryproject.ui.drawerlayout.DrawerBody
 import com.example.imagegalleryproject.ui.drawerlayout.DrawerHeader
 import com.example.imagegalleryproject.viewmodel.UserInfoViewModel
@@ -53,8 +50,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import kotlinx.coroutines.launch
-import org.checkerframework.common.subtyping.qual.Bottom
-
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -68,8 +63,6 @@ fun ProfileManagement(
 
 
     val userDataInfoInterface = userInfoViewModel.userInforDataObserver.observeAsState()
-
-    val context = LocalContext.current
 
     ModalNavigationDrawer(
         drawerState = drawerState,
