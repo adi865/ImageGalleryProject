@@ -38,10 +38,8 @@ import com.example.imagegalleryproject.ui.drawerlayout.DrawerBody
 import com.example.imagegalleryproject.ui.drawerlayout.DrawerHeader
 import com.example.imagegalleryproject.viewmodel.UserInfoViewModel
 import com.example.imagegalleryproject.widgets.FAB
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.UploadTask
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -271,21 +269,15 @@ fun ProfileItem(
 }
 
 fun uploadImageToFirebase(uri: Uri) {
-    var mAuth = FirebaseAuth.getInstance()
-    var storage = FirebaseStorage.getInstance()
-    var storageRef = storage!!.reference
+    val mAuth = FirebaseAuth.getInstance()
+    val storage = FirebaseStorage.getInstance()
+    val storageRef = storage.reference
     val imageRef = storageRef.child("${mAuth.currentUser!!.uid}/images/")
 
     imageRef.putFile(uri)
-        .addOnSuccessListener(object : OnSuccessListener<UploadTask.TaskSnapshot?> {
-            override fun onSuccess(p0: UploadTask.TaskSnapshot?) {
-                imageRef.downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
-                    override fun onSuccess(uri: Uri?) {
-
-                    }
-                })
-            }
-        }).addOnFailureListener {
+        .addOnSuccessListener {
+            imageRef.downloadUrl.addOnSuccessListener { }
+        }.addOnFailureListener {
 
         }
 }

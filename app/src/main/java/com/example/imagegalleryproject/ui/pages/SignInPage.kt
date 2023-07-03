@@ -16,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -53,43 +52,59 @@ fun SignInPage(navController: NavController) {
 
     val mContext = LocalContext.current
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally,
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.background(Color(240, 244, 244))
     ) {
         if (openDialog.value) {
             ResetPassword()
         }
-        Box(
-        ) {
-          Column(horizontalAlignment = Alignment.CenterHorizontally,
-              verticalArrangement = Arrangement.Center,
-              modifier = Modifier.padding(10.dp)
-          ) {
-              Image(
-                  painter = painterResource(id = R.drawable.img_image1),
-                  contentDescription = "Gallery Project",
-                  modifier = Modifier
-                      .width(82.4.dp)
-                      .height(80.2.dp),
-                  contentScale = ContentScale.Fit
-              )
-              Text(
-                  text = "Sign In",
-                  fontWeight = FontWeight.Bold,
-                  fontSize = 22.sp,
-                  color = Color.Black
-              )
-          }
+        Box {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.padding(10.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.img_image1),
+                    contentDescription = "Gallery Project",
+                    modifier = Modifier
+                        .width(82.4.dp)
+                        .height(80.2.dp),
+                    contentScale = ContentScale.Fit
+                )
+                Text(
+                    text = "Sign In",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp,
+                    color = Color.Black
+                )
+            }
         }
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = Modifier.clip(RoundedCornerShape(32.dp)).background(Color.White).padding(35.dp).wrapContentHeight()
+            modifier = Modifier
+                .clip(RoundedCornerShape(32.dp))
+                .background(Color.White)
+                .padding(35.dp)
+                .wrapContentHeight()
         ) {
-            Text(text = "Email", color = Color.Black, textAlign = TextAlign.Left, fontWeight = FontWeight.SemiBold, modifier = Modifier.align(Alignment.Start))
+            Text(
+                text = "Email",
+                color = Color.Black,
+                textAlign = TextAlign.Left,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.align(Alignment.Start)
+            )
             TextField(
-                colors = TextFieldDefaults.colors(focusedContainerColor = Color(0xFFF9F9FB), unfocusedContainerColor = Color(0xFFF9F9FB), focusedTextColor = Color.Black, unfocusedTextColor = Color.Black),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color(0xFFF9F9FB),
+                    unfocusedContainerColor = Color(0xFFF9F9FB),
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black
+                ),
                 value = emailState, onValueChange = {
                     emailState = it
                 },
@@ -105,9 +120,20 @@ fun SignInPage(navController: NavController) {
                 visualTransformation = VisualTransformation.None
             )
             Spacer(modifier = Modifier.height(25.dp))
-            Text(text = "Password", color = Color.Black, textAlign = TextAlign.Left, fontWeight = FontWeight.SemiBold, modifier = Modifier.align(Alignment.Start))
+            Text(
+                text = "Password",
+                color = Color.Black,
+                textAlign = TextAlign.Left,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.align(Alignment.Start)
+            )
             TextField(
-                colors = TextFieldDefaults.colors(focusedContainerColor = Color(0xFFF9F9FB), unfocusedContainerColor = Color(0xFFF9F9FB), focusedTextColor = Color.Black, unfocusedTextColor = Color.Black),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color(0xFFF9F9FB),
+                    unfocusedContainerColor = Color(0xFFF9F9FB),
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black
+                ),
                 value = passwordState, onValueChange = {
                     passwordState = it
                 },
@@ -184,7 +210,7 @@ fun SignInPage(navController: NavController) {
             }
         }
     }
-    }
+}
 
 @Preview(showBackground = true)
 @Composable

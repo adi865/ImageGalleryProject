@@ -80,8 +80,7 @@ fun SingleImagePage(navController: NavController, imgId: String) {
             }
         },
         content = {
-            Scaffold(
-            ) {
+            Scaffold {
                 BottomSheetScaffold(
                     sheetElevation = 0.dp,
                     scaffoldState = bottomSheetScaffoldState,
@@ -200,7 +199,7 @@ fun SingleImagePage(navController: NavController, imgId: String) {
                                 )
                             }
 
-                            Column() {
+                            Column {
                                 Text(
                                     text = "Size",
                                     color = Color.Black,
@@ -224,7 +223,7 @@ fun SingleImagePage(navController: NavController, imgId: String) {
                                     )
                                 )
                             }
-                            Column() {
+                            Column {
                                 Text(
                                     text = "Location",
                                     color = Color.Black,

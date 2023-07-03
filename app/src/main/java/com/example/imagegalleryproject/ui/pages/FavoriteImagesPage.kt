@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -125,7 +124,6 @@ fun FavoriteImagesPage(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun showFavorites(
     navController: NavController,
@@ -224,8 +222,7 @@ fun showFavorites(
                                     navController,
                                     favorite,
                                     selectedItems,
-                                    isLongPressActive,
-                                    isContextualActionModeActive
+                                    isLongPressActive
                                 ) { isSelected ->
                                     if (isSelected) {
                                         selectedItems.add(favorite)
@@ -251,7 +248,6 @@ fun FavItem(
     favoriteImage: FavoriteImage,
     selectedItems: MutableList<FavoriteImage>,
     isLongPressActive: MutableState<Boolean>,
-    isContextualActionModeActive: MutableState<Boolean>,
     onSelectionChange: (Boolean) -> Unit
 ) {
     val isSelected = selectedItems.contains(favoriteImage)

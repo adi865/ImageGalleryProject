@@ -1,7 +1,6 @@
 package com.example.imagegalleryproject.ui.pages
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.hardware.camera2.*
 import android.util.Log
 import android.widget.Toast
@@ -89,9 +88,6 @@ fun GalleryPage(
     val countOfSelectedItems = remember { mutableStateOf(0) }
     val selectedImages = ArrayList<FavoriteImage>()
 
-    val context = LocalContext.current
-
-    var showMenu by remember { mutableStateOf(false) }
 
     androidx.compose.material.Scaffold(
         backgroundColor = Color(240, 244, 244),
@@ -115,10 +111,8 @@ fun GalleryPage(
                 },
                 thumbnailViewModel = thumbnailViewModel,
                 mAuth = mAuth,
-                context = context,
                 query = movieTitleQuery,
-                scrollState = scrollState,
-                showMenu = showMenu
+                scrollState = scrollState
             )
         }, content = {
             if (mAuth.currentUser != null) {
@@ -149,10 +143,8 @@ fun MainAppBar(
     onSearchTriggered: () -> Unit,
     thumbnailViewModel: ThumbnailViewModel,
     mAuth: FirebaseAuth,
-    context: Context,
     query: String,
-    scrollState: LazyStaggeredGridState,
-    showMenu: Boolean
+    scrollState: LazyStaggeredGridState
 ) {
     when (searchWidgetState) {
         SearchWidgetState.CLOSED -> {
@@ -161,7 +153,6 @@ fun MainAppBar(
                 onSearchClicked = onSearchTriggered,
                 mAuth = mAuth,
                 thumbnailViewModel = thumbnailViewModel,
-                context = context,
                 movieTitleQuery = query,
                 scrollState = scrollState
             )
@@ -186,7 +177,6 @@ fun DefaultAppBar(
     onSearchClicked: () -> Unit,
     mAuth: FirebaseAuth,
     thumbnailViewModel: ThumbnailViewModel,
-    context: Context,
     movieTitleQuery: String,
     scrollState: LazyStaggeredGridState
 ) {
@@ -259,7 +249,7 @@ fun DefaultAppBar(
                                 }
                             },
                             leadingIcon = {
-                                Row() {
+                                Row {
                                     IconButton(onClick = {
                                         scope.launch {
                                             drawerState.open()
@@ -483,8 +473,6 @@ fun PopulateView(
     val backHandler = LocalOnBackPressedDispatcherOwner.current
     val drawerState = rememberDrawerState(DrawerValue.Closed)
 
-    val localCopyCount = countOfSelectedItems
-
     if (stateOfOnSearchClicked) {
         val locallyObservableData = thumbnailViewModel.apiResult.observeAsState()
         val message = thumbnailViewModel.message.observeAsState()
@@ -497,7 +485,7 @@ fun PopulateView(
                         isLongPressActive.value = false
                         selectedItems.clear()
                     } else {
-
+                        navController.popBackStack()
                     }
                 }
             }
@@ -607,7 +595,7 @@ fun PopulateView(
 
         LaunchedEffect(selectedItems.size, isLongPressActive.value, selectedItems) {
             isContextualActionModeActive.value = isLongPressActive.value
-            localCopyCount.value = selectedItems.size
+            countOfSelectedItems.value = selectedItems.size
             selectedItems.forEach {
                 selectedImages.add(FavoriteImage(it.poster))
             }
