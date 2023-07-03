@@ -512,7 +512,7 @@ fun PopulateView(
             isContextualActionModeActive.value = isLongPressActive.value
             countOfSelectedItems.value = selectedItems.size
             selectedItems.forEach {
-                selectedImages.add(FavoriteImage(it.Poster))
+                selectedImages.add(FavoriteImage(it.poster))
             }
         }
 
@@ -609,7 +609,7 @@ fun PopulateView(
             isContextualActionModeActive.value = isLongPressActive.value
             localCopyCount.value = selectedItems.size
             selectedItems.forEach {
-                selectedImages.add(FavoriteImage(it.Poster))
+                selectedImages.add(FavoriteImage(it.poster))
             }
         }
 
@@ -736,7 +736,7 @@ fun ListItem(
                     isLongPressActive.value = false
                 } else {
                     val encodedUrl = URLEncoder.encode(
-                        search.Poster, StandardCharsets.UTF_8.toString()
+                        search.poster, StandardCharsets.UTF_8.toString()
                     )
                     navController.navigate(
                         route = Pages.SingleImagePage.passImgId(encodedUrl)
@@ -753,7 +753,7 @@ fun ListItem(
             })
         }) {
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current).data(search.Poster)
+            model = ImageRequest.Builder(LocalContext.current).data(search.poster)
                 .crossfade(true).build(),
             contentDescription = "barcode image",
             contentScale = ContentScale.Crop,
