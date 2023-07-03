@@ -1,16 +1,27 @@
 package com.example.imagegalleryproject.util
 
 import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.ContextWrapper
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.unit.dp
+import com.example.imagegalleryproject.ui.MainActivity
 
 
 const val SUCCESS = 200
 const val FAILED = 400
 const val SERVER_ERROR = 500
+
 
 fun View.isVisible(isShowingLoading: Boolean, container: View) {
     if(isShowingLoading) {

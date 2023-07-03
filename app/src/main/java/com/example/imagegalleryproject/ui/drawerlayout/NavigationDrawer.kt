@@ -1,7 +1,5 @@
 package com.example.imagegalleryproject.ui.drawerlayout
 
-import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -9,18 +7,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
-import androidx.compose.material.rememberBackdropScaffoldState
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,16 +24,13 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.imagegalleryproject.R
-import com.example.imagegalleryproject.screens.PagesWithIconAndTitles
-import com.example.imagegalleryproject.util.FirebaseUtils
+import com.example.imagegalleryproject.screens.Pages
 import com.example.imagegalleryproject.viewmodel.UserInfoViewModel
-import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun DrawerHeader() {
     val userInfoViewModel = UserInfoViewModel()
-    var navController = rememberNavController()
-    userInfoViewModel.getUserInfo(navController)
+    userInfoViewModel.getUserInfo()
     var userDataInfoInterface = userInfoViewModel.userInforDataObserver.observeAsState()
     var getUserProfilePic = userInfoViewModel.userProfilePic.observeAsState()
     Box(modifier = Modifier
@@ -47,8 +38,7 @@ fun DrawerHeader() {
         .background(Color(0xFFFFAB91))
         .padding(top = 32.dp, bottom = 0.dp)
     ) {
-
-      Column() {
+      Column {
           getUserProfilePic.value?.let {
               AsyncImage(
                   model = ImageRequest.Builder(LocalContext.current)
@@ -77,10 +67,10 @@ fun DrawerHeader() {
 
 @Composable
 fun DrawerBody(
-    items: List<PagesWithIconAndTitles>,
+    items: List<Pages>,
     modifier: Modifier = Modifier,
     itemTextStyle: TextStyle = TextStyle(fontSize = 18.sp),
-    onItemClick: (PagesWithIconAndTitles) -> Unit
+    onItemClick: (Pages) -> Unit
 ) {
     LazyColumn(modifier = Modifier.background(Color.White).fillMaxHeight()) {
         items(items) { item ->
@@ -104,8 +94,8 @@ fun DrawerBody(
 fun PreviewDrawerHeader() {
     DrawerHeader()
     DrawerBody(items = listOf(
-        PagesWithIconAndTitles.Gallery,
-        PagesWithIconAndTitles.Favorites
+        Pages.Gallery,
+        Pages.Favorites
     ), onItemClick = {
         println("Clicked")
     })

@@ -2,17 +2,16 @@ package com.example.imagegalleryproject.ui.pages
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -31,9 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.imagegalleryproject.R
-import com.example.imagegalleryproject.screens.Pages
 import com.google.firebase.auth.FirebaseAuth
-import com.google.relay.compose.RowScopeInstanceImpl.align
 
 @Composable
 fun ResetPassword() {
@@ -112,13 +109,13 @@ fun ResetPassword() {
                         },
                         modifier = Modifier.fillMaxWidth(),
                         label = {
-                            Text(text = InputType.Name.label, fontWeight = FontWeight.Bold)
+                            Text(text = "Enter your email here", fontWeight = FontWeight.Bold)
                         },
                         placeholder = {
                             Text(text = "Enter your email")
                         },
                         leadingIcon = {
-                            Icon(imageVector = InputType.Name.icon, null)
+                            Icon(imageVector = Icons.Default.Person, null)
                         },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),

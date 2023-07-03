@@ -27,6 +27,7 @@ import com.example.imagegalleryproject.ImageGalleryProjectTheme
 import com.example.imagegalleryproject.model.FavoriteImage
 import com.example.imagegalleryproject.navgraphs.SetupNavGraph
 import com.example.imagegalleryproject.viewmodel.FavoriteViewModel
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -54,7 +55,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var context: Context
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        FirebaseApp.initializeApp(this)
         setContent {
             ImageGalleryProjectTheme {
                 // A surface container using the 'background' color from the theme

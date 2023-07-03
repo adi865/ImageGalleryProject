@@ -13,7 +13,6 @@
                      android:maxSdkVersion="18" />
 
     <application
-        android:name=".db.MovieNetwork"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -33,14 +32,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
-        <activity
-            android:name=".ui.SignUpActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.SignInActivity"
-            android:exported="false">
-        </activity>
-
         <activity
             android:name=".ui.MainActivity"
             android:configChanges="orientation|screenSize|screenLayout"

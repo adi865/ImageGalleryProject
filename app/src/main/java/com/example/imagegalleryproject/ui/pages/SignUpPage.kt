@@ -7,6 +7,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -96,7 +100,7 @@ fun SignUpPage(navController: NavController) {
                     Text(text = "Your Username")
                 },
                 leadingIcon = {
-                    Icon(imageVector = InputType.Name.icon, null)
+                    Icon(imageVector = Icons.Default.VerifiedUser, null)
                 },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -114,7 +118,7 @@ fun SignUpPage(navController: NavController) {
                     Text(text = "Enter your email")
                 },
                 leadingIcon = {
-                    Icon(imageVector = InputType.Name.icon, null)
+                    Icon(imageVector = Icons.Default.Person, null)
                 },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -132,7 +136,7 @@ fun SignUpPage(navController: NavController) {
                     Text(text = "Enter your password")
                 },
                 leadingIcon = {
-                    Icon(imageVector = InputType.Password.icon, null)
+                    Icon(imageVector = Icons.Default.Lock, null)
                 },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
@@ -153,7 +157,7 @@ fun SignUpPage(navController: NavController) {
                     Text(text = "Re-enter your password")
                 },
                 leadingIcon = {
-                    Icon(imageVector = InputType.Password.icon, null)
+                    Icon(imageVector = Icons.Default.Lock, null)
                 },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
