@@ -2,7 +2,6 @@ package com.example.imagegalleryproject.model
 
 import com.google.gson.annotations.SerializedName
 
-
 data class Search(
     @SerializedName("imdbID")
     var imdbID: String,

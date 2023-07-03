@@ -65,8 +65,7 @@ fun SignUpPage(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.background(Color(240, 244, 244))
     ) {
-        Box(
-        ) {
+        Box {
             Column(horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(10.dp)
