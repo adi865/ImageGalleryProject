@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -152,16 +153,16 @@ fun SignInPage(navController: NavController) {
                 visualTransformation = PasswordVisualTransformation()
             )
             Spacer(modifier = Modifier.height(25.dp))
-            Text(
-                "Forgot your password?", modifier = Modifier
-                    .align(Alignment.Start)
-                    .clickable(
-                        onClick = {
-                            openDialog.value = !openDialog.value
-                        }
-                    ),
-                color = Color(253, 129, 74)
-            )
+           TextButton(onClick = {
+               openDialog.value = !openDialog.value
+           },
+               modifier = Modifier.align(Alignment.Start)
+           ) {
+               Text(
+                   "Forgot your password?",
+                   color = Color(253, 129, 74)
+               )
+           }
             Spacer(modifier = Modifier.height(25.dp))
             Button(
                 onClick = {
@@ -193,20 +194,24 @@ fun SignInPage(navController: NavController) {
             }
             Spacer(modifier = Modifier.height(15.dp))
             Row(
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     "Don't have an account?",
                     color = Color(134, 134, 134)
                 )
                 Spacer(modifier = Modifier.width(2.dp))
-                Text(
-                    text = "Sign Up",
-                    color = Color.Blue,
-                    modifier = Modifier.clickable {
-                        navController.navigate(route = Pages.SignUp.route)
-                    }
-                )
+               TextButton(onClick = { 
+                   navController.navigate(route = Pages.SignUp.route) 
+               }
+               ) {
+                   Text(
+                       text = "Sign Up",
+                       fontSize = 12.sp,
+                       color = Color.Blue
+                   )
+               }
             }
         }
     }

@@ -52,7 +52,6 @@ fun ProfileManagement(
     val userInfoViewModel = UserInfoViewModel()
     userInfoViewModel.getUserInfo()
 
-
     val userDataInfoInterface = userInfoViewModel.userInforDataObserver.observeAsState()
 
     ModalNavigationDrawer(

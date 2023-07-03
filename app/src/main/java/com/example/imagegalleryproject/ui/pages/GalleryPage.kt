@@ -88,48 +88,52 @@ fun GalleryPage(
     val countOfSelectedItems = remember { mutableStateOf(0) }
     val selectedImages = ArrayList<FavoriteImage>()
 
-
-    androidx.compose.material.Scaffold(
-        backgroundColor = Color(240, 244, 244),
-        topBar = {
-            MainAppBar(
-                navController = navController,
-                searchWidgetState = searchWidgetState,
-                searchTextState = searchTextState,
-                onTextChange = { thumbnailViewModel.updateSearchTextState(newValue = it) },
-                onCloseClicked = {
-                    thumbnailViewModel.updateSearchTextState(newValue = "")
-                    thumbnailViewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED)
-                },
-                onSearchClicked = {
-                    Log.d("Searched Text", it)
-                    movieTitleQuery = it
-                    stateOfOnSearchClicked = true
-                },
-                onSearchTriggered = {
-                    thumbnailViewModel.updateSearchWidgetState(newValue = SearchWidgetState.OPENED)
-                },
-                thumbnailViewModel = thumbnailViewModel,
-                mAuth = mAuth,
-                query = movieTitleQuery,
-                scrollState = scrollState
-            )
-        }, content = {
-            if (mAuth.currentUser != null) {
-                PopulateView(
-                    stateOfOnSearchClicked = stateOfOnSearchClicked,
+    if (mAuth.currentUser != null) {
+        androidx.compose.material.Scaffold(
+            backgroundColor = Color(240, 244, 244),
+            topBar = {
+                MainAppBar(
                     navController = navController,
+                    searchWidgetState = searchWidgetState,
+                    searchTextState = searchTextState,
+                    onTextChange = { thumbnailViewModel.updateSearchTextState(newValue = it) },
+                    onCloseClicked = {
+                        thumbnailViewModel.updateSearchTextState(newValue = "")
+                        thumbnailViewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED)
+                    },
+                    onSearchClicked = {
+                        Log.d("Searched Text", it)
+                        movieTitleQuery = it
+                        stateOfOnSearchClicked = true
+                    },
+                    onSearchTriggered = {
+                        thumbnailViewModel.updateSearchWidgetState(newValue = SearchWidgetState.OPENED)
+                    },
                     thumbnailViewModel = thumbnailViewModel,
+                    mAuth = mAuth,
                     query = movieTitleQuery,
-                    isContextualActionModeActive = isContextualActionModeActive,
-                    countOfSelectedItems = countOfSelectedItems,
-                    selectedImages = selectedImages,
                     scrollState = scrollState
                 )
-            } else {
-                navController.navigate(Pages.SignIn.route)
+            }, content = {
+                if (mAuth.currentUser != null) {
+                    PopulateView(
+                        stateOfOnSearchClicked = stateOfOnSearchClicked,
+                        navController = navController,
+                        thumbnailViewModel = thumbnailViewModel,
+                        query = movieTitleQuery,
+                        isContextualActionModeActive = isContextualActionModeActive,
+                        countOfSelectedItems = countOfSelectedItems,
+                        selectedImages = selectedImages,
+                        scrollState = scrollState
+                    )
+                } else {
+                    navController.navigate(Pages.SignIn.route)
+                }
             }
-        })
+        )
+    } else {
+        navController.navigate(Pages.SignIn.route)
+    }
 }
 
 @Composable
@@ -243,11 +247,13 @@ fun DefaultAppBar(
                                     color = Color.White,
                                 )
                             },
-                            modifier = Modifier.fillMaxWidth().onFocusChanged {
-                                if(it.isFocused) {
-                                    onSearchClicked()
-                                }
-                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .onFocusChanged {
+                                    if (it.isFocused) {
+                                        onSearchClicked()
+                                    }
+                                },
                             leadingIcon = {
                                 Row {
                                     IconButton(onClick = {

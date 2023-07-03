@@ -39,6 +39,7 @@ import com.example.imagegalleryproject.ui.drawerlayout.DrawerHeader
 import com.example.imagegalleryproject.util.Status
 import com.example.imagegalleryproject.viewmodel.FavoriteViewModel
 import com.example.imagegalleryproject.widgets.FAB
+import com.google.firebase.auth.FirebaseAuth
 import com.google.relay.compose.RowScopeInstanceImpl.align
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -61,67 +62,72 @@ fun FavoriteImagesPage(
     val selectedFavorites = ArrayList<FavoriteImage>()
 
     val favoriteViewModel = FavoriteViewModel()
-
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet {
-                Column {
-                    DrawerHeader()
-                    DrawerBody(
-                        items = listOf(
-                            Pages.Gallery,
-                            Pages.Favorites,
-                            Pages.ProfileManagement
-                        ),
-                        onItemClick = {
-                            scope.launch {
-                                navController.navigate(it.route) {
-                                    popUpTo = navController.graph.getStartDestination()
-                                    launchSingleTop = true
+    val mAuth = FirebaseAuth.getInstance()
+    if(mAuth.currentUser != null) {
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                ModalDrawerSheet {
+                    Column {
+                        DrawerHeader()
+                        DrawerBody(
+                            items = listOf(
+                                Pages.Gallery,
+                                Pages.Favorites,
+                                Pages.ProfileManagement
+                            ),
+                            onItemClick = {
+                                scope.launch {
+                                    navController.navigate(it.route) {
+                                        popUpTo = navController.graph.getStartDestination()
+                                        launchSingleTop = true
+                                    }
+                                    drawerState.close()
                                 }
-                                drawerState.close()
                             }
+                        )
+                    }
+                }
+            },
+            content = {
+                androidx.compose.material.Scaffold(
+                    topBar = {
+                        if (isContextualActionModeActive.value) {
+                            // Render contextual action mode topBar
+                            // Replace with your desired implementation
+                            ContextualTopBar(countOfSelectedItems = countOfSelectedItems, imageVector = Icons.Default.Delete, performAction = {favoriteViewModel.deleteFavorites(selectedFavorites)})
+                        } else {
+                            TopBar(title = "Favorites", drawerState = drawerState, navController = navController)
                         }
+                    },
+                    floatingActionButton = {
+                        if(scrollState.firstVisibleItemIndex == 0) {
+                            FAB()
+                        }
+                    },
+                    isFloatingActionButtonDocked = true,
+                    floatingActionButtonPosition = FabPosition.Center,
+                    bottomBar = {
+                        if(scrollState.firstVisibleItemIndex == 0) {
+                            BottomBar(navController)
+                        }
+                    }
+                ) {
+                    showFavorites(
+                        navController = navController,
+                        favViewModel = favoriteViewModel,
+                        isContextualActionModeActive,
+                        countOfSelectedItems,
+                        selectedFavorites,
+                        scrollState
                     )
                 }
             }
-        },
-        content = {
-            androidx.compose.material.Scaffold(
-                topBar = {
-                    if (isContextualActionModeActive.value) {
-                        // Render contextual action mode topBar
-                        // Replace with your desired implementation
-                       ContextualTopBar(countOfSelectedItems = countOfSelectedItems, imageVector = Icons.Default.Delete, performAction = {favoriteViewModel.deleteFavorites(selectedFavorites)})
-                    } else {
-                        TopBar(title = "Favorites", drawerState = drawerState, navController = navController)
-                    }
-                },
-                floatingActionButton = {
-                    if(scrollState.firstVisibleItemIndex == 0) {
-                        FAB()
-                    }
-                },
-                isFloatingActionButtonDocked = true,
-                floatingActionButtonPosition = FabPosition.Center,
-                bottomBar = {
-                    if(scrollState.firstVisibleItemIndex == 0) {
-                        BottomBar(navController)
-                    }
-                }
-            ) {
-                showFavorites(
-                    navController = navController,
-                    favViewModel = favoriteViewModel,
-                    isContextualActionModeActive,
-                    countOfSelectedItems,
-                    selectedFavorites,
-                    scrollState
-                )
-            }
-        }
-    )
+        )
+    } else {
+        navController.navigate(Pages.SignIn.route)
+    }
+
 }
 
 @Composable
