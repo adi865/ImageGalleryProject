@@ -534,7 +534,7 @@ fun PopulateView(
                 }
                 Status.SUCCESS -> {
                     it.data?.let {
-                        checkList.addAll(it.Search)
+                        checkList.addAll(it.search)
                     }
                     if (checkList.isEmpty()) {
                         EmptyResultsUI()
@@ -547,7 +547,7 @@ fun PopulateView(
                             contentPadding = PaddingValues(16.dp)
 
                         ) {
-                            items(it.data!!.Search) { listOfMovies ->
+                            items(it.data!!.search) { listOfMovies ->
                                 ListItem(
                                     navController, listOfMovies, selectedItems, isLongPressActive
                                 ) { isSelected ->
