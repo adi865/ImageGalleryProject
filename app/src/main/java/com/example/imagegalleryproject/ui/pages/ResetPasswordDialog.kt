@@ -7,6 +7,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -107,13 +109,13 @@ fun ResetPassword() {
                         },
                         modifier = Modifier.fillMaxWidth(),
                         label = {
-                            Text(text = InputType.Name.label, fontWeight = FontWeight.Bold)
+                            Text(text = "Enter your email here", fontWeight = FontWeight.Bold)
                         },
                         placeholder = {
                             Text(text = "Enter your email")
                         },
                         leadingIcon = {
-                            Icon(imageVector = InputType.Name.icon, null)
+                            Icon(imageVector = Icons.Default.Person, null)
                         },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),

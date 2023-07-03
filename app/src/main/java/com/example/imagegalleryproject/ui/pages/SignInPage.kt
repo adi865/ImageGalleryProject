@@ -98,7 +98,7 @@ fun SignInPage(navController: NavController) {
                     Text(text = "Enter your email")
                 },
                 leadingIcon = {
-                    Icon(imageVector = InputType.Name.icon, null)
+                    Icon(imageVector = Icons.Default.Person, null)
                 },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -116,7 +116,7 @@ fun SignInPage(navController: NavController) {
                     Text(text = "Enter your email")
                 },
                 leadingIcon = {
-                    Icon(imageVector = InputType.Password.icon, null)
+                    Icon(imageVector = Icons.Default.Lock, null)
                 },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
@@ -185,32 +185,6 @@ fun SignInPage(navController: NavController) {
         }
     }
     }
-
-sealed class InputType(
-    val label: String,
-    val icon: ImageVector,
-    val keyboardOptions: KeyboardOptions,
-    val visualTransformation: VisualTransformation
-) {
-    object Name : InputType(
-        label = "Username",
-        icon = Icons.Default.Person,
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-        visualTransformation = VisualTransformation.None
-    )
-
-    object Password : InputType(
-        label = "Password",
-        icon = Icons.Default.Lock,
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Done,
-            keyboardType = KeyboardType.Password
-        ),
-        visualTransformation = PasswordVisualTransformation()
-    )
-}
-
-
 
 @Preview(showBackground = true)
 @Composable
