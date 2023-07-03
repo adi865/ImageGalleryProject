@@ -54,7 +54,7 @@ class ThumbnailViewModel : ViewModel() {
 
             apiResult.value?.let { resource ->
                 resource.data?.let { postersList ->
-                    postersList.Search.let {
+                    postersList.search.let {
                         val newRef = databaseRef.child(mAuth.currentUser!!.uid).setValue(it)
                         newRef.addOnSuccessListener {
                             statusMessage.value = Event("Data Added Successfully")
