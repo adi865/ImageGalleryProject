@@ -1,12 +1,19 @@
 package com.example.imagegalleryproject.model
 
+import com.google.gson.annotations.SerializedName
+
 
 data class Search(
+    @SerializedName("imdbID")
     var imdbID: String,
-    var Poster: String,
-    var Title: String ,
-    var Type: String,
-    var Year: String
+    @SerializedName("Poster")
+    var poster: String,
+    @SerializedName("Title")
+    var title: String,
+    @SerializedName("Type")
+    var type: String,
+    @SerializedName("Year")
+    var year: String
 ){
     constructor(): this("", "", "", "", "")
 }
