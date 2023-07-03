@@ -8,12 +8,14 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ContentAlpha
@@ -29,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
@@ -93,50 +96,51 @@ fun GalleryPage(
 
     val context = LocalContext.current
 
-
+    var showMenu by remember { mutableStateOf(false) }
 
     androidx.compose.material.Scaffold(
         backgroundColor = Color(240, 244, 244),
         topBar = {
-        MainAppBar(
-            navController = navController,
-            searchWidgetState = searchWidgetState,
-            searchTextState = searchTextState,
-            onTextChange = { thumbnailViewModel.updateSearchTextState(newValue = it) },
-            onCloseClicked = {
-                thumbnailViewModel.updateSearchTextState(newValue = "")
-                thumbnailViewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED)
-            },
-            onSearchClicked = {
-                Log.d("Searched Text", it)
-                movieTitleQuery = it
-                stateOfOnSearchClicked = true
-            },
-            onSearchTriggered = {
-                thumbnailViewModel.updateSearchWidgetState(newValue = SearchWidgetState.OPENED)
-            },
-            thumbnailViewModel = thumbnailViewModel,
-            mAuth = mAuth,
-            context = context,
-            query = movieTitleQuery,
-            scrollState = scrollState
-        )
-    }, content = {
-        if (mAuth.currentUser != null) {
-            PopulateView(
-                stateOfOnSearchClicked = stateOfOnSearchClicked,
+            MainAppBar(
                 navController = navController,
+                searchWidgetState = searchWidgetState,
+                searchTextState = searchTextState,
+                onTextChange = { thumbnailViewModel.updateSearchTextState(newValue = it) },
+                onCloseClicked = {
+                    thumbnailViewModel.updateSearchTextState(newValue = "")
+                    thumbnailViewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED)
+                },
+                onSearchClicked = {
+                    Log.d("Searched Text", it)
+                    movieTitleQuery = it
+                    stateOfOnSearchClicked = true
+                },
+                onSearchTriggered = {
+                    thumbnailViewModel.updateSearchWidgetState(newValue = SearchWidgetState.OPENED)
+                },
                 thumbnailViewModel = thumbnailViewModel,
+                mAuth = mAuth,
+                context = context,
                 query = movieTitleQuery,
-                isContextualActionModeActive = isContextualActionModeActive,
-                countOfSelectedItems = countOfSelectedItems,
-                selectedImages = selectedImages,
-                scrollState = scrollState
+                scrollState = scrollState,
+                showMenu = showMenu
             )
-        } else {
-            navController.navigate(Pages.SignIn.route)
-        }
-    })
+        }, content = {
+            if (mAuth.currentUser != null) {
+                PopulateView(
+                    stateOfOnSearchClicked = stateOfOnSearchClicked,
+                    navController = navController,
+                    thumbnailViewModel = thumbnailViewModel,
+                    query = movieTitleQuery,
+                    isContextualActionModeActive = isContextualActionModeActive,
+                    countOfSelectedItems = countOfSelectedItems,
+                    selectedImages = selectedImages,
+                    scrollState = scrollState
+                )
+            } else {
+                navController.navigate(Pages.SignIn.route)
+            }
+        })
 }
 
 @Composable
@@ -152,7 +156,8 @@ fun MainAppBar(
     mAuth: FirebaseAuth,
     context: Context,
     query: String,
-    scrollState: LazyStaggeredGridState
+    scrollState: LazyStaggeredGridState,
+    showMenu: Boolean
 ) {
     when (searchWidgetState) {
         SearchWidgetState.CLOSED -> {
@@ -172,7 +177,8 @@ fun MainAppBar(
                 onTextChange = onTextChange,
                 onCloseClicked = onCloseClicked,
                 onSearchClicked = onSearchClicked,
-                thumbnailViewModel = thumbnailViewModel
+                navController = navController,
+                mAuth = mAuth
             )
         }
     }
@@ -191,7 +197,7 @@ fun DefaultAppBar(
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    var showMenu by remember { mutableStateOf(false) }
+
 
     val isContextualActionModeActive = remember { mutableStateOf(false) }
     val countOfItemsSelected = remember { mutableStateOf(0) }
@@ -200,6 +206,8 @@ fun DefaultAppBar(
 
 
     val favoriteViewModel = FavoriteViewModel()
+
+    var localMenu by remember { mutableStateOf(false) }
 
     ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
         ModalDrawerSheet {
@@ -223,75 +231,137 @@ fun DefaultAppBar(
     }, content = {
         androidx.compose.material.Scaffold(
             topBar = {
-            if (isContextualActionModeActive.value) {
-                // Render contextual action mode topBar
-                // Replace with your desired implementation
-                ContextualTopBar(
-                    countOfSelectedItems = countOfItemsSelected,
-                    imageVector = Icons.Default.Favorite,
-                    performAction = { favoriteViewModel.addFavorites(selectedImages) }
-                )
-            } else {
-                androidx.compose.material.TopAppBar(
-                    title = {
-                    Text(
-                        text = "GalleryFragment",
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.White
+                if (isContextualActionModeActive.value) {
+                    ContextualTopBar(
+                        countOfSelectedItems = countOfItemsSelected,
+                        imageVector = Icons.Default.Favorite,
+                        performAction = { favoriteViewModel.addFavorites(selectedImages) }
                     )
-                }, actions = {
-                    IconButton(onClick = {
-                        onSearchClicked()
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = "Search Icon",
-                            tint = Color.White
-                        )
-                    }
-                    IconButton(onClick = {
-                        showMenu = !showMenu
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.MoreVert,
-                            contentDescription = "More Options",
-                            tint = Color.White
-                        )
-                    }
-                    DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
-                        DropdownMenuItem(text = {
-                            Text(text = "Sign Out", color = Color.White)
-                        }, onClick = {
-                            if (mAuth.currentUser != null) {
-                                mAuth.signOut()
-                                navController.navigate(Pages.SignIn.route)
+                } else {
+                    Surface(
+                        modifier = Modifier
+                            .padding(vertical = 12.dp, horizontal = 12.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .fillMaxWidth()
+                            .height(56.dp),
+                        color = MaterialTheme.colorScheme.primary
+                    ) {
+                        TextField(
+                            value = "",
+                            onValueChange = {
+
+                            },
+                            placeholder = {
+                                Text(
+                                    text = "Click on the search bar to begin",
+                                    modifier = Modifier.alpha(ContentAlpha.medium),
+                                    color = Color.White,
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth().onFocusChanged {
+                                if(it.isFocused) {
+                                    onSearchClicked()
+                                }
+                            },
+                            leadingIcon = {
+                                Row() {
+                                    IconButton(onClick = {
+                                        scope.launch {
+                                            drawerState.open()
+                                        }
+                                    }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Menu,
+                                            contentDescription = "Toggle DrawerLayout",
+                                            tint = Color.White
+                                        )
+                                    }
+                                    IconButton(
+                                        onClick = {
+                                            onSearchClicked()
+                                        }, modifier = Modifier.alpha(ContentAlpha.medium)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Search,
+                                            contentDescription = "Search for movies",
+                                            tint = Color.White
+                                        )
+                                    }
+                                }
+                            },
+                            trailingIcon = {
+                                IconButton(onClick = {
+                                    localMenu = !localMenu
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.MoreVert,
+                                        contentDescription = "More Options",
+                                        tint = Color.White
+                                    )
+                                }
+                                DropdownMenu(
+                                    expanded = localMenu,
+                                    onDismissRequest = { localMenu = false }) {
+                                    DropdownMenuItem(text = {
+                                        Text(text = "Sign Out", color = Color.White)
+                                    }, onClick = {
+                                        if (mAuth.currentUser != null) {
+                                            mAuth.signOut()
+                                            navController.navigate(Pages.SignIn.route)
+                                        }
+                                    }
+                                    )
+                                }
                             }
-                        })
-                    }
-                }, navigationIcon = {
-                    IconButton(onClick = {
-                        scope.launch {
-                            drawerState.open()
-                        }
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Toggle DrawerLayout",
-                            tint = Color.White
                         )
                     }
-                })
-            }
-        },
+
+//                        actions = {
+//                            IconButton(onClick = {
+//                                onSearchClicked()
+//                            }) {
+//                                Icon(
+//                                    imageVector = Icons.Filled.Search,
+//                                    contentDescription = "Search Icon",
+//                                    tint = Color.White
+//                                )
+//                            }
+//                            IconButton(onClick = {
+//                                localMenu = !localMenu
+//                            }) {
+//                                Icon(
+//                                    imageVector = Icons.Default.MoreVert,
+//                                    contentDescription = "More Options",
+//                                    tint = Color.White
+//                                )
+//                            }
+//                            DropdownMenu(
+//                                expanded = localMenu,
+//                                onDismissRequest = { localMenu = false }) {
+//                                DropdownMenuItem(text = {
+//                                    Text(text = "Sign Out", color = Color.White)
+//                                }, onClick = {
+//                                    if (mAuth.currentUser != null) {
+//                                        mAuth.signOut()
+//                                        navController.navigate(Pages.SignIn.route)
+//                                    }
+//                                }
+//                                )
+//                            }
+//
+
+                }
+            },
             floatingActionButton = {
-                if(scrollState.firstVisibleItemIndex == 0) {
+                if (scrollState.firstVisibleItemIndex == 0) {
                     FAB()
                 }
             },
             isFloatingActionButtonDocked = true,
             floatingActionButtonPosition = FabPosition.Center,
             bottomBar = {
-                if(scrollState.firstVisibleItemIndex == 0) {
+                if (scrollState.firstVisibleItemIndex == 0) {
                     BottomBar(navController)
                 }
             },
@@ -317,10 +387,14 @@ fun SearchAppBar(
     onTextChange: (String) -> Unit,
     onCloseClicked: () -> Unit,
     onSearchClicked: (String) -> Unit,
-    thumbnailViewModel: ThumbnailViewModel
+    navController: NavController,
+    mAuth: FirebaseAuth
 ) {
+    var localMenu by remember { mutableStateOf(false) }
     Surface(
         modifier = Modifier
+            .padding(vertical = 12.dp, horizontal = 12.dp)
+            .clip(RoundedCornerShape(12.dp))
             .fillMaxWidth()
             .height(56.dp)
             .onKeyEvent {
@@ -330,45 +404,65 @@ fun SearchAppBar(
                 true
             }, color = MaterialTheme.colorScheme.primary
     ) {
-        TextField(value = text, onValueChange = {
-            onTextChange(it)
-        }, modifier = Modifier.fillMaxWidth(), placeholder = {
-            Text(
-                text = "Search the movie title here",
-                modifier = Modifier.alpha(ContentAlpha.medium),
-                color = Color.White
-            )
-        }, leadingIcon = {
-            IconButton(
-                onClick = {}, modifier = Modifier.alpha(ContentAlpha.medium)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Search for movies",
-                    tint = Color.White
+        TextField(
+            value = text,
+            onValueChange = {
+                onTextChange(it)
+            },
+            modifier = Modifier
+                .fillMaxWidth(),
+            placeholder = {
+                Text(
+                    text = "Search the movie title here",
+                    modifier = Modifier.alpha(ContentAlpha.medium),
+                    color = Color.White
                 )
-            }
-        }, trailingIcon = {
-            IconButton(
-                onClick = {
-                    if (text.isNotEmpty()) {
-                        onTextChange("")
-                    } else {
-                        onCloseClicked()
+            },
+            leadingIcon = {
+                IconButton(
+                    onClick = {
+                        if (text.isNotEmpty()) {
+                            onTextChange("")
+                        } else {
+                            onCloseClicked()
+                        }
+                    }, modifier = Modifier.alpha(ContentAlpha.medium)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Search for movies",
+                        tint = Color.White
+                    )
+                }
+            },
+            trailingIcon = {
+                IconButton(onClick = {
+                    localMenu = !localMenu
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = "More Options",
+                        tint = Color.White
+                    )
+                }
+                DropdownMenu(expanded = localMenu, onDismissRequest = { localMenu = false }) {
+                    DropdownMenuItem(text = {
+                        Text(text = "Sign Out", color = Color.White)
+                    }, onClick = {
+                        if (mAuth.currentUser != null) {
+                            mAuth.signOut()
+                            navController.navigate(Pages.SignIn.route)
+                        }
                     }
-                }, modifier = Modifier.alpha(ContentAlpha.medium)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Close Search",
-                    tint = Color.White
-                )
-            }
-        }, keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Search
-        ), keyboardActions = KeyboardActions(onSearch = {
-            onSearchClicked(text)
-        })
+                    )
+                }
+            },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(onSearch = {
+                onSearchClicked(text)
+            })
         )
     }
 }
@@ -395,196 +489,196 @@ fun PopulateView(
 
     val localCopyCount = countOfSelectedItems
 
-  if(stateOfOnSearchClicked) {
-      val locallyObservableData = thumbnailViewModel.apiResult.observeAsState()
-      val message = thumbnailViewModel.message.observeAsState()
+    if (stateOfOnSearchClicked) {
+        val locallyObservableData = thumbnailViewModel.apiResult.observeAsState()
+        val message = thumbnailViewModel.message.observeAsState()
 
-      DisposableEffect(Unit) {
-          val callback = object : OnBackPressedCallback(true) {
-              override fun handleOnBackPressed() {
-                  if (isContextualActionModeActive.value) {
-                      isContextualActionModeActive.value = false
-                      isLongPressActive.value = false
-                      selectedItems.clear()
-                  } else {
+        DisposableEffect(Unit) {
+            val callback = object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (isContextualActionModeActive.value) {
+                        isContextualActionModeActive.value = false
+                        isLongPressActive.value = false
+                        selectedItems.clear()
+                    } else {
 
-                  }
-              }
-          }
-          backHandler!!.onBackPressedDispatcher.addCallback(callback)
+                    }
+                }
+            }
+            backHandler!!.onBackPressedDispatcher.addCallback(callback)
 
-          onDispose {
-              callback.remove()
-          }
-      }
+            onDispose {
+                callback.remove()
+            }
+        }
 
-      LaunchedEffect(selectedItems.size, isLongPressActive.value, selectedItems) {
-          isContextualActionModeActive.value = isLongPressActive.value
-          countOfSelectedItems.value = selectedItems.size
-          selectedItems.forEach {
-              selectedImages.add(FavoriteImage(it.Poster))
-          }
-      }
+        LaunchedEffect(selectedItems.size, isLongPressActive.value, selectedItems) {
+            isContextualActionModeActive.value = isLongPressActive.value
+            countOfSelectedItems.value = selectedItems.size
+            selectedItems.forEach {
+                selectedImages.add(FavoriteImage(it.Poster))
+            }
+        }
 
-      val checkList = ArrayList<Search>()
+        val checkList = ArrayList<Search>()
 
-      val key = remember(query) { query }
-      LaunchedEffect(key) {
-          thumbnailViewModel.getImages(query)
-      }
-      locallyObservableData.value?.let {
-          message.value?.let {
-              it.getContentIfNotHandled()?.let {
-                  Toast.makeText(LocalContext.current, it, Toast.LENGTH_LONG).show()
-              }
-          }
-          when (it.status) {
-              Status.LOADING -> {
-                  LoadingUI()
-              }
-              Status.SUCCESS -> {
-                  it.data?.let {
-                      checkList.addAll(it.Search)
-                  }
-                  if (checkList.isEmpty()) {
-                      EmptyResultsUI()
-                  } else {
-                      LazyVerticalStaggeredGrid(
-                          columns = StaggeredGridCells.Fixed(2),
-                          modifier = Modifier
-                              .fillMaxSize()
-                              .background(Color(240, 244, 244)),
-                          contentPadding = PaddingValues(16.dp)
+        val key = remember(query) { query }
+        LaunchedEffect(key) {
+            thumbnailViewModel.getImages(query)
+        }
+        locallyObservableData.value?.let {
+            message.value?.let {
+                it.getContentIfNotHandled()?.let {
+                    Toast.makeText(LocalContext.current, it, Toast.LENGTH_LONG).show()
+                }
+            }
+            when (it.status) {
+                Status.LOADING -> {
+                    LoadingUI()
+                }
+                Status.SUCCESS -> {
+                    it.data?.let {
+                        checkList.addAll(it.Search)
+                    }
+                    if (checkList.isEmpty()) {
+                        EmptyResultsUI()
+                    } else {
+                        LazyVerticalStaggeredGrid(
+                            columns = StaggeredGridCells.Fixed(2),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Color(240, 244, 244)),
+                            contentPadding = PaddingValues(16.dp)
 
-                      ) {
-                          items(it.data!!.Search) { listOfMovies ->
-                              ListItem(
-                                  navController, listOfMovies, selectedItems, isLongPressActive
-                              ) { isSelected ->
-                                  if (isSelected) {
-                                      selectedItems.add(listOfMovies)
-                                  } else {
-                                      selectedItems.remove(listOfMovies)
-                                  }
-                              }
-                          }
-                      }
-                  }
-              }
-              Status.ERROR -> {
-                  Column(
-                      verticalArrangement = Arrangement.Center,
-                      horizontalAlignment = Alignment.CenterHorizontally,
-                      modifier = Modifier
-                          .align(Alignment.CenterVertically)
-                          .fillMaxSize()
-                          .background(Color(240, 244, 244))
-                  ) {
-                      Text(
-                          "Looks like you're offline",
-                          color = Color.Black,
-                          fontWeight = FontWeight.Bold,
-                      )
-                  }
-              }
-          }
-      }
-  } else {
-      val locallyObservableData = thumbnailViewModel.movieData.observeAsState()
-      DisposableEffect(Unit) {
-          val callback = object: OnBackPressedCallback(true) {
-              override fun handleOnBackPressed() {
-                  thumbnailViewModel.updateSearchTextState(newValue = "")
-                  thumbnailViewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED)
-                  if (isContextualActionModeActive.value) {
-                      isContextualActionModeActive.value = false
-                      isLongPressActive.value = false
-                      selectedItems.clear()
-                  } else {
-                      scope.launch {
-                          navController.popBackStack()
-                          drawerState.close()
-                      }
-                  }
-              }
-          }
+                        ) {
+                            items(it.data!!.Search) { listOfMovies ->
+                                ListItem(
+                                    navController, listOfMovies, selectedItems, isLongPressActive
+                                ) { isSelected ->
+                                    if (isSelected) {
+                                        selectedItems.add(listOfMovies)
+                                    } else {
+                                        selectedItems.remove(listOfMovies)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                Status.ERROR -> {
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .fillMaxSize()
+                            .background(Color(240, 244, 244))
+                    ) {
+                        Text(
+                            "Looks like you're offline",
+                            color = Color.Black,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
+                }
+            }
+        }
+    } else {
+        val locallyObservableData = thumbnailViewModel.movieData.observeAsState()
+        DisposableEffect(Unit) {
+            val callback = object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    thumbnailViewModel.updateSearchTextState(newValue = "")
+                    thumbnailViewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED)
+                    if (isContextualActionModeActive.value) {
+                        isContextualActionModeActive.value = false
+                        isLongPressActive.value = false
+                        selectedItems.clear()
+                    } else {
+                        scope.launch {
+                            navController.popBackStack()
+                            drawerState.close()
+                        }
+                    }
+                }
+            }
 
-          backHandler!!.onBackPressedDispatcher.addCallback(callback)
-          onDispose {
-              callback.remove()
-          }
-      }
+            backHandler!!.onBackPressedDispatcher.addCallback(callback)
+            onDispose {
+                callback.remove()
+            }
+        }
 
-      LaunchedEffect(selectedItems.size, isLongPressActive.value, selectedItems) {
-          isContextualActionModeActive.value = isLongPressActive.value
-          localCopyCount.value = selectedItems.size
-          selectedItems.forEach {
-              selectedImages.add(FavoriteImage(it.Poster))
-          }
-      }
+        LaunchedEffect(selectedItems.size, isLongPressActive.value, selectedItems) {
+            isContextualActionModeActive.value = isLongPressActive.value
+            localCopyCount.value = selectedItems.size
+            selectedItems.forEach {
+                selectedImages.add(FavoriteImage(it.Poster))
+            }
+        }
 
-      val checkList = ArrayList<Search>()
-      locallyObservableData.value?.let { list ->
-          list.data?.let { list ->
-              checkList.addAll(list)
-          }
-      }
-      if (checkList.isEmpty()) {
-          Column(
-              verticalArrangement = Arrangement.Center,
-              horizontalAlignment = Alignment.CenterHorizontally,
-              modifier = Modifier
-                  .align(Alignment.CenterVertically)
-                  .fillMaxSize()
-                  .background(Color(240, 244, 244))
-          ) {
-              Text(
-                  "Type in search bar to get movie result",
-                  color = Color.Black,
-                  fontWeight = FontWeight.Bold
-              )
-          }
-      } else {
-          LazyVerticalStaggeredGrid(
-              state = scrollState,
-              columns = StaggeredGridCells.Fixed(2),
-              modifier = Modifier
-                  .fillMaxSize()
-                  .background(Color(240, 244, 244)),
-              contentPadding = PaddingValues(16.dp)
-          ) {
-              locallyObservableData.value?.let {
-                  when (it.status) {
-                      Status.LOADING -> {
+        val checkList = ArrayList<Search>()
+        locallyObservableData.value?.let { list ->
+            list.data?.let { list ->
+                checkList.addAll(list)
+            }
+        }
+        if (checkList.isEmpty()) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .fillMaxSize()
+                    .background(Color(240, 244, 244))
+            ) {
+                Text(
+                    "Type in search bar to get movie result",
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        } else {
+            LazyVerticalStaggeredGrid(
+                state = scrollState,
+                columns = StaggeredGridCells.Fixed(2),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(240, 244, 244)),
+                contentPadding = PaddingValues(16.dp)
+            ) {
+                locallyObservableData.value?.let {
+                    when (it.status) {
+                        Status.LOADING -> {
 
-                      }
-                      Status.SUCCESS -> {
-                          it.data?.let { moviesList ->
-                              items(moviesList) { movie ->
-                                  ListItem(
-                                      navController,
-                                      movie,
-                                      selectedItems,
-                                      isLongPressActive,
-                                  ) { isSelected ->
-                                      if (isSelected) {
-                                          selectedItems.add(movie)
-                                      } else {
-                                          selectedItems.remove(movie)
-                                      }
-                                  }
-                              }
-                          }
-                      }
-                      Status.ERROR -> {
+                        }
+                        Status.SUCCESS -> {
+                            it.data?.let { moviesList ->
+                                items(moviesList) { movie ->
+                                    ListItem(
+                                        navController,
+                                        movie,
+                                        selectedItems,
+                                        isLongPressActive,
+                                    ) { isSelected ->
+                                        if (isSelected) {
+                                            selectedItems.add(movie)
+                                        } else {
+                                            selectedItems.remove(movie)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        Status.ERROR -> {
 
-                      }
-                  }
-              }
-          }
-      }
-      thumbnailViewModel.getDataFromCloud()
-  }
+                        }
+                    }
+                }
+            }
+        }
+        thumbnailViewModel.getDataFromCloud()
+    }
 }
 
 @Composable
