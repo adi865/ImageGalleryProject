@@ -365,7 +365,6 @@ fun DefaultAppBar(
     })
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SearchAppBar(
     text: String,
