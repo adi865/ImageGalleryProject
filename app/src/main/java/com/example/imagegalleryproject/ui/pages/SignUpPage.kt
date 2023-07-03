@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.imagegalleryproject.R
 import com.example.imagegalleryproject.model.User
 import com.example.imagegalleryproject.screens.Pages
@@ -61,12 +62,14 @@ fun SignUpPage(navController: NavController) {
 
     val mContext = LocalContext.current
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally,
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.background(Color(240, 244, 244))
     ) {
         Box {
-            Column(horizontalAlignment = Alignment.CenterHorizontally,
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(10.dp)
             ) {
@@ -79,18 +82,38 @@ fun SignUpPage(navController: NavController) {
                     contentScale = ContentScale.Fit
                 )
 
-                Text(text = "Sign Up", fontWeight = FontWeight.Bold, fontSize = 22.sp, color = Color.Black)
+                Text(
+                    text = "Sign Up",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp,
+                    color = Color.Black
+                )
             }
 
         }
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
-            modifier = Modifier.clip(RoundedCornerShape(32.dp)).background(Color.White).padding(35.dp).wrapContentHeight()
+            modifier = Modifier
+                .clip(RoundedCornerShape(32.dp))
+                .background(Color.White)
+                .padding(35.dp)
+                .wrapContentHeight()
         ) {
-            Text(text = "Username", color = Color.Black, textAlign = TextAlign.Left, fontWeight = FontWeight.SemiBold, modifier = Modifier.align(Alignment.Start))
+            Text(
+                text = "Username",
+                color = Color.Black,
+                textAlign = TextAlign.Left,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.align(Alignment.Start)
+            )
             TextField(
-                colors = TextFieldDefaults.colors(focusedContainerColor = Color(0xFFF9F9FB), unfocusedContainerColor = Color(0xFFF9F9FB), focusedTextColor = Color.Black, unfocusedTextColor = Color.Black),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color(0xFFF9F9FB),
+                    unfocusedContainerColor = Color(0xFFF9F9FB),
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black
+                ),
                 value = userNameState, onValueChange = {
                     userNameState = it
                 },
@@ -106,9 +129,20 @@ fun SignUpPage(navController: NavController) {
                 visualTransformation = VisualTransformation.None
             )
             Spacer(modifier = Modifier.height(25.dp))
-            Text(text = "Email", color = Color.Black, textAlign = TextAlign.Left, fontWeight = FontWeight.SemiBold, modifier = Modifier.align(Alignment.Start))
+            Text(
+                text = "Email",
+                color = Color.Black,
+                textAlign = TextAlign.Left,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.align(Alignment.Start)
+            )
             TextField(
-                colors = TextFieldDefaults.colors(focusedContainerColor = Color(0xFFF9F9FB), unfocusedContainerColor = Color(0xFFF9F9FB), focusedTextColor = Color.Black, unfocusedTextColor = Color.Black),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color(0xFFF9F9FB),
+                    unfocusedContainerColor = Color(0xFFF9F9FB),
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black
+                ),
                 value = emailState, onValueChange = {
                     emailState = it
                 },
@@ -124,9 +158,20 @@ fun SignUpPage(navController: NavController) {
                 visualTransformation = VisualTransformation.None
             )
             Spacer(modifier = Modifier.height(25.dp))
-            Text(text = "Password", color = Color.Black, textAlign = TextAlign.Left, fontWeight = FontWeight.SemiBold, modifier = Modifier.align(Alignment.Start))
+            Text(
+                text = "Password",
+                color = Color.Black,
+                textAlign = TextAlign.Left,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.align(Alignment.Start)
+            )
             TextField(
-                colors = TextFieldDefaults.colors(focusedContainerColor = Color(0xFFF9F9FB), unfocusedContainerColor = Color(0xFFF9F9FB), focusedTextColor = Color.Black, unfocusedTextColor = Color.Black),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color(0xFFF9F9FB),
+                    unfocusedContainerColor = Color(0xFFF9F9FB),
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black
+                ),
                 value = passwordState, onValueChange = {
                     passwordState = it
                 },
@@ -145,9 +190,20 @@ fun SignUpPage(navController: NavController) {
                 visualTransformation = PasswordVisualTransformation()
             )
             Spacer(modifier = Modifier.height(25.dp))
-            Text(text = "Confirm Password", color = Color.Black, textAlign = TextAlign.Left, fontWeight = FontWeight.SemiBold, modifier = Modifier.align(Alignment.Start))
+            Text(
+                text = "Confirm Password",
+                color = Color.Black,
+                textAlign = TextAlign.Left,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.align(Alignment.Start)
+            )
             TextField(
-                colors = TextFieldDefaults.colors(focusedContainerColor = Color(0xFFF9F9FB), unfocusedContainerColor = Color(0xFFF9F9FB), focusedTextColor = Color.Black, unfocusedTextColor = Color.Black),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color(0xFFF9F9FB),
+                    unfocusedContainerColor = Color(0xFFF9F9FB),
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black
+                ),
                 value = confirmPasswordState, onValueChange = {
                     confirmPasswordState = it
                 },
@@ -169,29 +225,33 @@ fun SignUpPage(navController: NavController) {
             Button(
                 onClick = {
                     signUpButtonClicked = true
-                    if (!isTextEmpty(userNameState) && !isTextEmpty(emailState) && !isTextEmpty(passwordState) && !isTextEmpty(confirmPasswordState)) {
-                        if(isValidEmail(emailState)) {
-                            if(passwordState == confirmPasswordState) {
-                                mAuth.createUserWithEmailAndPassword(emailState, passwordState).addOnCompleteListener {
-                                    if (it.isSuccessful) {
-                                        val userId = it.result.user!!.uid
-                                        val account = {userId}
-                                        val user = User(userNameState, emailState, passwordState)
-                                        FirebaseUtils().firebaseStoreDatabase.collection("accounts").document(userId).set(account)
-                                        FirebaseUtils().firebaseStoreDatabase.collection("accounts").document(userId).set(user)
-                                        navController.navigate(Pages.SignIn.route)
+                    if (!isTextEmpty(userNameState) && !isTextEmpty(emailState) && !isTextEmpty(
+                            passwordState
+                        ) && !isTextEmpty(confirmPasswordState)
+                    ) {
+                        if (isValidEmail(emailState)) {
+                            if (passwordState == confirmPasswordState) {
+                                mAuth.createUserWithEmailAndPassword(emailState, passwordState)
+                                    .addOnCompleteListener {
+                                        if (it.isSuccessful) {
+                                            val userId = it.result.user!!.uid
+                                            val account = { userId }
+                                            val user =
+                                                User(userNameState, emailState, passwordState)
+                                            FirebaseUtils().firebaseStoreDatabase.collection("accounts")
+                                                .document(userId).set(account)
+                                            FirebaseUtils().firebaseStoreDatabase.collection("accounts")
+                                                .document(userId).set(user)
+                                            navController.navigate(Pages.SignIn.route)
+                                        } else {
+                                            mToast(mContext, it.exception.toString())
+                                        }
                                     }
-                                    else {
-                                        mToast(mContext, it.exception.toString())
-                                    }
-                                }
+                            } else {
+                                mToast(mContext, "Passwords don't match")
                             }
-                            else {
-                                mToast(mContext,"Passwords don't match")
-                            }
-                        }
-                        else {
-                            mToast(mContext,"Email entered in wrong format")
+                        } else {
+                            mToast(mContext, "Email entered in wrong format")
                         }
                         mAuth.signInWithEmailAndPassword(emailState, passwordState)
                             .addOnCompleteListener {
@@ -219,28 +279,34 @@ fun SignUpPage(navController: NavController) {
             }
             Spacer(modifier = Modifier.height(15.dp))
             Row(
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Already have an account?", fontSize = 12.sp, color = Color(134, 134, 134))
-                Spacer(modifier = Modifier.width(2.dp))
                 Text(
-                    text = "Sign In",
+                    text = "Already have an account?",
                     fontSize = 12.sp,
-                    color = Color.Blue,
-                    modifier = Modifier.clickable {
+                    color = Color(134, 134, 134)
+                )
+                Spacer(modifier = Modifier.width(2.dp))
+                TextButton(
+                    onClick = {
                         navController.navigate(route = Pages.SignIn.route)
                     }
-                )
+                ) {
+                    Text(
+                        text = "Sign In",
+                        fontSize = 12.sp,
+                        color = Color.Blue
+                    )
+                }
             }
         }
     }
-
-    }
-
+}
 
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewSignUpPage() {
-
+    SignUpPage(rememberNavController())
 }
