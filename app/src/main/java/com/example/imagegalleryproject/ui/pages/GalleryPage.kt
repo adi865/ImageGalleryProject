@@ -402,7 +402,8 @@ fun SearchAppBar(
                     onCloseClicked()
                 }
                 true
-            }, color = MaterialTheme.colorScheme.primary
+            },
+        color = MaterialTheme.colorScheme.primary
     ) {
         TextField(
             value = text,
