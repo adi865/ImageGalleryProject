@@ -1,7 +1,5 @@
 package com.example.imagegalleryproject.ui.pages
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,7 +12,6 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,7 +35,6 @@ import com.example.imagegalleryproject.R
 import com.example.imagegalleryproject.screens.Pages
 import com.example.imagegalleryproject.util.mToast
 import com.google.firebase.auth.FirebaseAuth
-import com.google.relay.compose.RowScopeInstanceImpl.align
 
 @Composable
 fun SignInPage(navController: NavController) {

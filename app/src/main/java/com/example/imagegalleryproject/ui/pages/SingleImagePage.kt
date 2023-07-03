@@ -17,26 +17,22 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.example.imagegalleryproject.R
 import com.example.imagegalleryproject.model.FavoriteImage
-import com.example.imagegalleryproject.screens.PagesWithIconAndTitles
+import com.example.imagegalleryproject.screens.Pages
 import com.example.imagegalleryproject.ui.drawerlayout.DrawerBody
 import com.example.imagegalleryproject.ui.drawerlayout.DrawerHeader
 import com.example.imagegalleryproject.viewmodel.FavoriteViewModel
@@ -65,10 +61,10 @@ fun SingleImagePage(navController: NavController, imgId: String) {
                     DrawerHeader()
                     DrawerBody(
                         items = listOf(
-                            PagesWithIconAndTitles.Gallery,
-                            PagesWithIconAndTitles.Favorites,
-                            PagesWithIconAndTitles.ProfileManagement,
-                            PagesWithIconAndTitles.SingleImagePage
+                            Pages.Gallery,
+                            Pages.Favorites,
+                            Pages.ProfileManagement,
+                            Pages.SingleImagePage
                         ),
                         onItemClick = {
                             scope.launch {

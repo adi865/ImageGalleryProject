@@ -12,14 +12,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.FabPosition
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -40,7 +33,7 @@ import coil.compose.rememberImagePainter
 import com.example.imagegalleryproject.BottomBar.BottomBar
 import com.example.imagegalleryproject.R
 import com.example.imagegalleryproject.TopBar
-import com.example.imagegalleryproject.screens.PagesWithIconAndTitles
+import com.example.imagegalleryproject.screens.Pages
 import com.example.imagegalleryproject.ui.drawerlayout.DrawerBody
 import com.example.imagegalleryproject.ui.drawerlayout.DrawerHeader
 import com.example.imagegalleryproject.viewmodel.UserInfoViewModel
@@ -59,7 +52,7 @@ fun ProfileManagement(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val userInfoViewModel = UserInfoViewModel()
-    userInfoViewModel.getUserInfo(navController)
+    userInfoViewModel.getUserInfo()
 
 
     val userDataInfoInterface = userInfoViewModel.userInforDataObserver.observeAsState()
@@ -72,9 +65,9 @@ fun ProfileManagement(
                     DrawerHeader()
                     DrawerBody(
                         items = listOf(
-                            PagesWithIconAndTitles.Gallery,
-                            PagesWithIconAndTitles.Favorites,
-                            PagesWithIconAndTitles.ProfileManagement
+                            Pages.Gallery,
+                            Pages.Favorites,
+                            Pages.ProfileManagement
                         ),
                         onItemClick = {
                             scope.launch {

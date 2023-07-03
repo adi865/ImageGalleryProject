@@ -14,15 +14,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.imagegalleryproject.screens.PagesWithIconAndTitles
+import com.example.imagegalleryproject.screens.Pages
 
 @Composable
 fun BottomBar(navController: NavController) {
     val bottomNavigationItems = listOf(
-        PagesWithIconAndTitles.Gallery,
-        PagesWithIconAndTitles.Favorites,
-        PagesWithIconAndTitles.ProfileEdit,
-        PagesWithIconAndTitles.ProfileManagement
+        Pages.Gallery,
+        Pages.Favorites,
+        Pages.ProfileEdit,
+        Pages.ProfileManagement
     )
     androidx.compose.material.BottomAppBar(
         elevation = 16.dp,
@@ -35,7 +35,7 @@ fun BottomBar(navController: NavController) {
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute =
-            navBackStackEntry?.arguments?.getString(PagesWithIconAndTitles.Gallery.route)
+            navBackStackEntry?.arguments?.getString(Pages.Gallery.route)
         BottomNavigation(
             backgroundColor = Color.Transparent, elevation = 0.dp
         ) {

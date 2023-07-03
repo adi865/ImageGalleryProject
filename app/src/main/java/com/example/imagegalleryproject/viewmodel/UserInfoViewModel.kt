@@ -8,16 +8,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.imagegalleryproject.screens.Pages
-import com.example.imagegalleryproject.util.Event
 import com.example.imagegalleryproject.util.FirebaseUtils
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 
 class UserInfoViewModel: ViewModel() {
@@ -32,9 +29,7 @@ class UserInfoViewModel: ViewModel() {
     private val storageRef = storage!!.reference
 
     @SuppressLint("SuspiciousIndentation")
-    fun getUserInfo(navController: NavController) = viewModelScope.launch {
-        val currentUser = mAuth.currentUser
-        if (currentUser != null) {
+    fun getUserInfo() = viewModelScope.launch {
             FirebaseUtils().firebaseStoreDatabase.collection("accounts").document(mAuth.currentUser!!.uid).get().addOnCompleteListener {
                 if(it.isSuccessful) {
                     _userInfoDataObserver.postValue(it)
@@ -46,8 +41,6 @@ class UserInfoViewModel: ViewModel() {
                     _userProfilePic.postValue(uri!!.toString())
                 }
             })
-        } else {
-            navController.navigate(Pages.SignIn.route)
-        }
+
     }
 }

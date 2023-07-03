@@ -8,14 +8,10 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ContentAlpha
@@ -51,7 +47,6 @@ import com.example.imagegalleryproject.BottomBar.BottomBar
 import com.example.imagegalleryproject.model.FavoriteImage
 import com.example.imagegalleryproject.model.Search
 import com.example.imagegalleryproject.screens.Pages
-import com.example.imagegalleryproject.screens.PagesWithIconAndTitles
 import com.example.imagegalleryproject.ui.AppBar.ContextualTopBar
 import com.example.imagegalleryproject.ui.drawerlayout.DrawerBody
 import com.example.imagegalleryproject.ui.drawerlayout.DrawerHeader
@@ -214,9 +209,9 @@ fun DefaultAppBar(
             Column {
                 DrawerHeader()
                 DrawerBody(items = listOf(
-                    PagesWithIconAndTitles.Gallery,
-                    PagesWithIconAndTitles.Favorites,
-                    PagesWithIconAndTitles.ProfileManagement
+                    Pages.Gallery,
+                    Pages.Favorites,
+                    Pages.ProfileManagement
                 ), onItemClick = {
                     scope.launch {
                         navController.navigate(it.route) {
@@ -744,7 +739,7 @@ fun ListItem(
                         search.Poster, StandardCharsets.UTF_8.toString()
                     )
                     navController.navigate(
-                        route = PagesWithIconAndTitles.SingleImagePage.passImgId(encodedUrl)
+                        route = Pages.SingleImagePage.passImgId(encodedUrl)
                     )
                 }
             }, onLongPress = {

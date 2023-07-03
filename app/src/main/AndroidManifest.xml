@@ -33,14 +33,6 @@
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
         <activity
-            android:name=".ui.SignUpActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.SignInActivity"
-            android:exported="false">
-        </activity>
-
-        <activity
             android:name=".ui.MainActivity"
             android:configChanges="orientation|screenSize|screenLayout"
             android:exported="true">

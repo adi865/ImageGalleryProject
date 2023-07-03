@@ -1,26 +1,18 @@
 package com.example.imagegalleryproject.ui.pages
 
 import android.annotation.SuppressLint
-import android.app.Application
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.FabPosition
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -31,30 +23,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.imagegalleryproject.BottomBar.BottomBar
-import com.example.imagegalleryproject.R
 import com.example.imagegalleryproject.TopBar
 import com.example.imagegalleryproject.model.FavoriteImage
 import com.example.imagegalleryproject.screens.Pages
-import com.example.imagegalleryproject.screens.PagesWithIconAndTitles
 import com.example.imagegalleryproject.ui.AppBar.ContextualTopBar
-import com.example.imagegalleryproject.ui.MainActivity
 import com.example.imagegalleryproject.ui.drawerlayout.DrawerBody
 import com.example.imagegalleryproject.ui.drawerlayout.DrawerHeader
-import com.example.imagegalleryproject.util.DataStatus
 import com.example.imagegalleryproject.util.Status
 import com.example.imagegalleryproject.viewmodel.FavoriteViewModel
 import com.example.imagegalleryproject.widgets.FAB
-import com.google.firebase.auth.FirebaseAuth
 import com.google.relay.compose.RowScopeInstanceImpl.align
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -86,9 +71,9 @@ fun FavoriteImagesPage(
                     DrawerHeader()
                     DrawerBody(
                         items = listOf(
-                            PagesWithIconAndTitles.Gallery,
-                            PagesWithIconAndTitles.Favorites,
-                            PagesWithIconAndTitles.ProfileManagement
+                            Pages.Gallery,
+                            Pages.Favorites,
+                            Pages.ProfileManagement
                         ),
                         onItemClick = {
                             scope.launch {
@@ -292,7 +277,7 @@ fun FavItem(
                             StandardCharsets.UTF_8.toString()
                         )
                         navController.navigate(
-                            route = PagesWithIconAndTitles.SingleImagePage.passImgId(encodedUrl)
+                            route = Pages.SingleImagePage.passImgId(encodedUrl)
                         )
                     }
                 },

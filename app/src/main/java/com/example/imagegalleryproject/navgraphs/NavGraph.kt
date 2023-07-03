@@ -1,19 +1,14 @@
 package com.example.imagegalleryproject.navgraphs
 
 import android.util.Log
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.imagegalleryproject.screens.Pages
-import com.example.imagegalleryproject.screens.PagesWithIconAndTitles
 import com.example.imagegalleryproject.screens.SINGLE_IMAGE_PAGE_ARG
 import com.example.imagegalleryproject.ui.pages.*
 import com.google.firebase.auth.FirebaseAuth
@@ -25,16 +20,16 @@ fun SetupNavGraph(navController: NavHostController) {
     if (mAuth.currentUser != null) {
         NavHost(
             navController = navController,
-            startDestination = PagesWithIconAndTitles.Gallery.route
+            startDestination = Pages.Gallery.route
         ) {
             composable(Pages.Gallery.route) {
                 GalleryPage(navController = navController, scrollState = scrollState)
             }
-            composable(PagesWithIconAndTitles.Favorites.route) {
+            composable(Pages.Favorites.route) {
                 FavoriteImagesPage(navController = navController, scrollState = scrollState)
             }
 
-            composable(PagesWithIconAndTitles.ProfileManagement.route) {
+            composable(Pages.ProfileManagement.route) {
                 ProfileManagement(navController = navController)
             }
 
@@ -42,7 +37,7 @@ fun SetupNavGraph(navController: NavHostController) {
                 SignInPage(navController = navController)
             }
 
-            composable(PagesWithIconAndTitles.SingleImagePage.route,
+            composable(Pages.SingleImagePage.route,
                     arguments = listOf(navArgument(SINGLE_IMAGE_PAGE_ARG){
                         type = NavType.StringType
                     })) {
