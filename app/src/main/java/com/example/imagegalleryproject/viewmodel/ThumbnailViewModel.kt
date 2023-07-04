@@ -45,6 +45,18 @@ class ThumbnailViewModel : ViewModel() {
     val message : LiveData<Event<String>>
         get() = statusMessage
 
+    /* parameters to manage scroll behaviour of topbar in the gallery page */
+    private var lastScrollIndex  = 0
+    private val _scrollUp = MutableLiveData(false)
+    val scrollUp: LiveData<Boolean>
+        get() = _scrollUp
+
+    fun updateScrollPosition(newScrollIndex: Int) {
+        if (newScrollIndex == lastScrollIndex) return
+        _scrollUp.value = newScrollIndex > lastScrollIndex
+        lastScrollIndex = newScrollIndex
+    }
+
     fun getImages(searchParamter: String?) {
         val databaseRef = FirebaseDatabase.getInstance().getReference("movies_list")
         viewModelScope.launch {
