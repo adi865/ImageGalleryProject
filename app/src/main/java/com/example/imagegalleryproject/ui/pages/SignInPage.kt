@@ -1,9 +1,6 @@
 package com.example.imagegalleryproject.ui.pages
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -12,7 +9,6 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,12 +47,16 @@ fun SignInPage(navController: NavController) {
         mutableStateOf("")
     }
 
+    val scrollState = rememberScrollState()
+
     val mContext = LocalContext.current
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier.background(Color(240, 244, 244))
+        modifier = Modifier
+            .background(Color(240, 244, 244))
+            .verticalScroll(scrollState)
     ) {
         if (openDialog.value) {
             ResetPassword()
