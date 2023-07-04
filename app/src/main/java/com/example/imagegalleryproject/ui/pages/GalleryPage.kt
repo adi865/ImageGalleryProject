@@ -10,27 +10,25 @@ import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.FabPosition
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
@@ -93,30 +91,30 @@ fun GalleryPage(
         androidx.compose.material.Scaffold(
             backgroundColor = Color(240, 244, 244),
             topBar = {
-            MainAppBar(
-                navController = navController,
-                searchWidgetState = searchWidgetState,
-                searchTextState = searchTextState,
-                onTextChange = { thumbnailViewModel.updateSearchTextState(newValue = it) },
-                onCloseClicked = {
-                    thumbnailViewModel.updateSearchTextState(newValue = "")
-                    thumbnailViewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED)
-                },
-                onSearchClicked = {
-                    Log.d("Searched Text", it)
-                    movieTitleQuery = it
-                    stateOfOnSearchClicked = true
-                },
-                onSearchTriggered = {
-                    thumbnailViewModel.updateSearchWidgetState(newValue = SearchWidgetState.OPENED)
-                },
-                thumbnailViewModel = thumbnailViewModel,
-                mAuth = mAuth,
-                query = movieTitleQuery,
-                scrollState = scrollState
-            )
-        }, content = {
-            if (mAuth.currentUser != null) {
+                MainAppBar(
+                    navController = navController,
+                    searchWidgetState = searchWidgetState,
+                    searchTextState = searchTextState,
+                    onTextChange = { thumbnailViewModel.updateSearchTextState(newValue = it) },
+                    onCloseClicked = {
+                        thumbnailViewModel.updateSearchTextState(newValue = "")
+                        thumbnailViewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED)
+                    },
+                    onSearchClicked = {
+                        Log.d("Searched Text", it)
+                        movieTitleQuery = it
+                        stateOfOnSearchClicked = true
+                    },
+                    onSearchTriggered = {
+                        thumbnailViewModel.updateSearchWidgetState(newValue = SearchWidgetState.OPENED)
+                    },
+                    thumbnailViewModel = thumbnailViewModel,
+                    mAuth = mAuth,
+                    query = movieTitleQuery,
+                    scrollState = scrollState
+                )
+            },
+            content = {
                 PopulateView(
                     stateOfOnSearchClicked = stateOfOnSearchClicked,
                     navController = navController,
@@ -127,10 +125,8 @@ fun GalleryPage(
                     selectedImages = selectedImages,
                     scrollState = scrollState
                 )
-            } else {
-                navController.navigate(Pages.SignIn.route)
             }
-        })
+        )
     } else {
         navController.navigate(Pages.SignIn.route)
     }
@@ -196,127 +192,142 @@ fun DefaultAppBar(
 
     var localMenu by remember { mutableStateOf(false) }
 
-    ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
-        ModalDrawerSheet {
-            Column {
-                DrawerHeader()
-                DrawerBody(items = listOf(
-                    Pages.Gallery, Pages.Favorites, Pages.ProfileManagement
-                ), onItemClick = {
-                    scope.launch {
-                        navController.navigate(it.route) {
-                            popUpTo = navController.graph.getStartDestination()
-                            launchSingleTop = true
-                        }
-                        drawerState.close()
-                    }
-                })
-            }
-        }
-    }, content = {
-        androidx.compose.material.Scaffold(topBar = {
-            if (isContextualActionModeActive.value) {
-                ContextualTopBar(countOfSelectedItems = countOfItemsSelected,
-                    imageVector = Icons.Default.Favorite,
-                    performAction = { favoriteViewModel.addFavorites(selectedImages) })
-            } else {
-                Surface(
-                    modifier = Modifier
-                        .padding(vertical = 12.dp, horizontal = 12.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    color = MaterialTheme.colorScheme.primary
-                ) {
-                    TextField(value = "", onValueChange = {
-
-                    }, placeholder = {
-                        Text(
-                            text = "Click on the search bar to begin",
-                            modifier = Modifier.alpha(ContentAlpha.medium),
-                            color = Color.White,
-                        )
-                    }, modifier = Modifier
-                        .fillMaxWidth()
-                        .onFocusChanged {
-                            if (it.isFocused) {
-                                onSearchClicked()
-                            }
-                        }, leadingIcon = {
-                        Row {
-                            IconButton(onClick = {
-                                scope.launch {
-                                    drawerState.open()
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet {
+                Column {
+                    DrawerHeader()
+                    DrawerBody(
+                        items = listOf(
+                            Pages.Gallery, Pages.Favorites, Pages.ProfileManagement
+                        ),
+                        onItemClick = {
+                            scope.launch {
+                                navController.navigate(it.route) {
+                                    popUpTo = navController.graph.getStartDestination()
+                                    launchSingleTop = true
                                 }
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Default.Menu,
-                                    contentDescription = "Toggle DrawerLayout",
-                                    tint = Color.White
-                                )
-                            }
-                            IconButton(
-                                onClick = {
-                                    onSearchClicked()
-                                }, modifier = Modifier.alpha(ContentAlpha.medium)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Search,
-                                    contentDescription = "Search for movies",
-                                    tint = Color.White
-                                )
+                                drawerState.close()
                             }
                         }
-                    }, trailingIcon = {
-                        IconButton(onClick = {
-                            localMenu = !localMenu
-                        }) {
-                            Icon(
-                                imageVector = Icons.Default.MoreVert,
-                                contentDescription = "More Options",
-                                tint = Color.White
-                            )
-                        }
-                        DropdownMenu(expanded = localMenu,
-                            onDismissRequest = { localMenu = false }) {
-                            DropdownMenuItem(text = {
-                                Text(text = "Sign Out", color = Color.White)
-                            }, onClick = {
-                                if (mAuth.currentUser != null) {
-                                    mAuth.signOut()
-                                    navController.navigate(Pages.SignIn.route)
-                                }
-                            })
-                        }
-                    })
+                    )
                 }
             }
         },
-            floatingActionButton = {
-                if (scrollState.firstVisibleItemIndex == 0) {
-                    FAB()
+        content = {
+            androidx.compose.material.Scaffold(
+                topBar = {
+                    if (isContextualActionModeActive.value) {
+                        ContextualTopBar(
+                            countOfSelectedItems = countOfItemsSelected,
+                            imageVector = Icons.Default.Favorite,
+                            performAction = { favoriteViewModel.addFavorites(selectedImages) }
+                        )
+                    } else {
+                        Surface(
+                            modifier = Modifier
+                                .padding(vertical = 12.dp, horizontal = 12.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .wrapContentWidth()
+                                .height(56.dp),
+                            color = MaterialTheme.colorScheme.primary,
+                        ) {
+                            TextField(value = "", onValueChange = {
+
+                            },
+                                placeholder = {
+                                Text(
+                                    text = "Click on the search bar to begin",
+                                    modifier = Modifier.alpha(ContentAlpha.medium),
+                                    color = Color.White,
+                                )
+                            },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .onFocusChanged {
+                                        if (it.isFocused) {
+                                            onSearchClicked()
+                                        }
+                                    },
+                                leadingIcon = {
+                                Row {
+                                    IconButton(onClick = {
+                                        scope.launch {
+                                            drawerState.open()
+                                        }
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Default.Menu,
+                                            contentDescription = "Toggle DrawerLayout",
+                                            tint = Color.White
+                                        )
+                                    }
+                                    IconButton(
+                                        onClick = {
+                                            onSearchClicked()
+                                        }, modifier = Modifier.alpha(ContentAlpha.medium)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Search,
+                                            contentDescription = "Search for movies",
+                                            tint = Color.White
+                                        )
+                                    }
+                                }
+                            },
+                                trailingIcon = {
+                                IconButton(onClick = {
+                                    localMenu = !localMenu
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.MoreVert,
+                                        contentDescription = "More Options",
+                                        tint = Color.White
+                                    )
+                                }
+                                DropdownMenu(expanded = localMenu,
+                                    onDismissRequest = { localMenu = false }) {
+                                    DropdownMenuItem(text = {
+                                        Text(text = "Sign Out", color = Color.White)
+                                    }, onClick = {
+                                        if (mAuth.currentUser != null) {
+                                            mAuth.signOut()
+                                            navController.navigate(Pages.SignIn.route)
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    }
+                },
+                floatingActionButton = {
+                    if (scrollState.firstVisibleItemIndex == 0) {
+                        FAB()
+                    }
+                },
+                isFloatingActionButtonDocked = true,
+                floatingActionButtonPosition = FabPosition.Center,
+                bottomBar = {
+                    if (scrollState.firstVisibleItemIndex == 0) {
+                        BottomBar(navController)
+                    }
+                },
+                content = {
+                        PopulateView(
+                            stateOfOnSearchClicked = false,
+                            navController = navController,
+                            thumbnailViewModel = thumbnailViewModel,
+                            isContextualActionModeActive = isContextualActionModeActive,
+                            countOfSelectedItems = countOfItemsSelected,
+                            query = movieTitleQuery,
+                            selectedImages = selectedImages,
+                            scrollState = scrollState
+                        )
                 }
-            },
-            isFloatingActionButtonDocked = true,
-            floatingActionButtonPosition = FabPosition.Center,
-            bottomBar = {
-                if (scrollState.firstVisibleItemIndex == 0) {
-                    BottomBar(navController)
-                }
-            },
-            content = {
-                PopulateView(
-                    stateOfOnSearchClicked = false,
-                    navController = navController,
-                    thumbnailViewModel = thumbnailViewModel,
-                    isContextualActionModeActive = isContextualActionModeActive,
-                    countOfSelectedItems = countOfItemsSelected,
-                    query = movieTitleQuery,
-                    selectedImages = selectedImages,
-                    scrollState = scrollState
-                )
-            })
-    })
+            )
+        }
+    )
 }
 
 @Composable
@@ -333,7 +344,7 @@ fun SearchAppBar(
         modifier = Modifier
             .padding(vertical = 12.dp, horizontal = 12.dp)
             .clip(RoundedCornerShape(12.dp))
-            .fillMaxWidth()
+            .wrapContentWidth()
             .height(56.dp)
             .onKeyEvent {
                 if (it.key == Key.Back) {
@@ -344,13 +355,15 @@ fun SearchAppBar(
     ) {
         TextField(value = text, onValueChange = {
             onTextChange(it)
-        }, modifier = Modifier.fillMaxWidth(), placeholder = {
+        },
+            modifier = Modifier.fillMaxWidth(), placeholder = {
             Text(
                 text = "Search the movie title here",
                 modifier = Modifier.alpha(ContentAlpha.medium),
                 color = Color.White
             )
-        }, leadingIcon = {
+        },
+            leadingIcon = {
             IconButton(
                 onClick = {
                     if (text.isNotEmpty()) {
@@ -366,7 +379,8 @@ fun SearchAppBar(
                     tint = Color.White
                 )
             }
-        }, trailingIcon = {
+        },
+            trailingIcon = {
             IconButton(onClick = {
                 localMenu = !localMenu
             }) {
@@ -391,13 +405,12 @@ fun SearchAppBar(
             imeAction = ImeAction.Search
         ), keyboardActions = KeyboardActions(
             onSearch = {
-            onSearchClicked(text)
-        }
+                onSearchClicked(text)
+            }
         )
         )
     }
 }
-
 
 @Composable
 fun PopulateView(
@@ -425,14 +438,18 @@ fun PopulateView(
         val message = thumbnailViewModel.message.observeAsState()
 
         DisposableEffect(Unit) {
-            val callback = object : OnBackPressedCallback(true) {
+            val callback = object: OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     if (isContextualActionModeActive.value) {
                         isContextualActionModeActive.value = false
                         isLongPressActive.value = false
                         selectedItems.clear()
-                    } else {
-                        activity?.finish()
+                    }
+                    else {
+                        scope.launch {
+                            thumbnailViewModel.updateSearchTextState(newValue = "")
+                            thumbnailViewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED)
+                        }
                     }
                 }
             }
@@ -454,6 +471,7 @@ fun PopulateView(
         val checkList = ArrayList<Search>()
 
         val key = remember(query) { query }
+
         LaunchedEffect(key) {
             thumbnailViewModel.getImages(query)
         }
@@ -503,7 +521,7 @@ fun PopulateView(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .align(Alignment.CenterVertically)
-                            .fillMaxSize()
+                            .wrapContentSize()
                             .background(Color(240, 244, 244))
                     ) {
                         Text(
@@ -518,7 +536,7 @@ fun PopulateView(
     } else {
         val locallyObservableData = thumbnailViewModel.movieData.observeAsState()
         DisposableEffect(Unit) {
-            val callback = object : OnBackPressedCallback(true) {
+            val callback = object: OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     thumbnailViewModel.updateSearchTextState(newValue = "")
                     thumbnailViewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED)
@@ -528,8 +546,13 @@ fun PopulateView(
                         selectedItems.clear()
                     } else {
                         scope.launch {
-                            activity?.finish()
-                            drawerState.close()
+                            if(stateOfOnSearchClicked) {
+                                thumbnailViewModel.updateSearchTextState(newValue = "")
+                                thumbnailViewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED)
+                            } else {
+                                activity?.finish()
+                                drawerState.close()
+                            }
                         }
                     }
                 }
@@ -561,7 +584,7 @@ fun PopulateView(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
-                    .fillMaxSize()
+                    .wrapContentSize()
                     .background(Color(240, 244, 244))
             ) {
                 Text(
@@ -620,7 +643,7 @@ fun LoadingUI() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .fillMaxSize()
+            .wrapContentSize()
             .background(Color(240, 244, 244))
     ) {
         Text(
@@ -638,7 +661,7 @@ fun EmptyResultsUI() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .fillMaxSize()
+            .wrapContentSize()
             .background(Color(240, 244, 244))
     ) {
         Text(
@@ -665,7 +688,7 @@ fun ListItem(
     var longPressJob: Job? by remember { mutableStateOf(null) }
     Box(modifier = Modifier
         .padding(15.dp)
-        .fillMaxSize()
+        .wrapContentSize()
         .pointerInput(Unit) {
             detectTapGestures(onTap = {
                 if (isLongPressActive.value) {
