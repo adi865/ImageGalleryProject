@@ -2,11 +2,17 @@ package com.example.imagegalleryproject.ui.pages
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.graphics.drawable.Animatable
 import android.hardware.camera2.*
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.compose.animation.*
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -197,6 +203,10 @@ fun DefaultAppBar(
 
     var localMenu by remember { mutableStateOf(false) }
 
+    val appBarOffset = animateFloatAsState(
+        targetValue = if (scrollState.firstVisibleItemScrollOffset > 0) -56f else 0f,
+        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
+    )
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -231,82 +241,87 @@ fun DefaultAppBar(
                             performAction = { favoriteViewModel.addFavorites(selectedImages) }
                         )
                     } else {
-                        TopAppBar(
-                            title = {  },
-                                    modifier = Modifier
-                                        .padding(vertical = 12.dp, horizontal = 12.dp)
-                                        .clip(RoundedCornerShape(12.dp))
-                                        .wrapContentWidth()
-                                        .height(56.dp),
-                            actions = {
-                                TextField(value = "", onValueChange = {
+                        AnimatedVisibility(
+                            visible = appBarOffset.value >= 0f,
+                            enter = fadeIn(),
+                            exit = fadeOut()) {
+                            TopAppBar(
+                                title = {  },
+                                modifier = Modifier
+                                    .padding(vertical = 12.dp, horizontal = 12.dp)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .wrapContentWidth()
+                                    .height(56.dp),
+                                actions = {
+                                    TextField(value = "", onValueChange = {
 
-                                },
-                                    placeholder = {
-                                        Text(
-                                            text = "Click on the search bar to begin",
-                                            modifier = Modifier.alpha(ContentAlpha.medium),
-                                            color = Color.White,
-                                        )
                                     },
-                                    modifier = Modifier
-                                        .padding(horizontal = 0.dp)
-                                        .fillMaxWidth()
-                                        .onFocusChanged {
-                                            if (it.isFocused) {
-                                                onSearchClicked()
+                                        placeholder = {
+                                            Text(
+                                                text = "Click on the search bar to begin",
+                                                modifier = Modifier.alpha(ContentAlpha.medium),
+                                                color = Color.White,
+                                            )
+                                        },
+                                        modifier = Modifier
+                                            .padding(horizontal = 0.dp)
+                                            .fillMaxWidth()
+                                            .onFocusChanged {
+                                                if (it.isFocused) {
+                                                    onSearchClicked()
+                                                }
+                                            },
+                                        leadingIcon = {
+                                            Row {
+                                                IconButton(onClick = {
+                                                    scope.launch {
+                                                        drawerState.open()
+                                                    }
+                                                }) {
+                                                    Icon(
+                                                        imageVector = Icons.Default.Menu,
+                                                        contentDescription = "Toggle DrawerLayout",
+                                                        tint = Color.White
+                                                    )
+                                                }
+                                                IconButton(
+                                                    onClick = {
+                                                        onSearchClicked()
+                                                    }, modifier = Modifier.alpha(ContentAlpha.medium)
+                                                ) {
+                                                    Icon(
+                                                        imageVector = Icons.Default.Search,
+                                                        contentDescription = "Search for movies",
+                                                        tint = Color.White
+                                                    )
+                                                }
                                             }
                                         },
-                                    leadingIcon = {
-                                        Row {
+                                        trailingIcon = {
                                             IconButton(onClick = {
-                                                scope.launch {
-                                                    drawerState.open()
-                                                }
+                                                localMenu = !localMenu
                                             }) {
                                                 Icon(
-                                                    imageVector = Icons.Default.Menu,
-                                                    contentDescription = "Toggle DrawerLayout",
+                                                    imageVector = Icons.Default.MoreVert,
+                                                    contentDescription = "More Options",
                                                     tint = Color.White
                                                 )
                                             }
-                                            IconButton(
-                                                onClick = {
-                                                    onSearchClicked()
-                                                }, modifier = Modifier.alpha(ContentAlpha.medium)
-                                            ) {
-                                                Icon(
-                                                    imageVector = Icons.Default.Search,
-                                                    contentDescription = "Search for movies",
-                                                    tint = Color.White
-                                                )
+                                            DropdownMenu(expanded = localMenu,
+                                                onDismissRequest = { localMenu = false }) {
+                                                DropdownMenuItem(text = {
+                                                    Text(text = "Sign Out", color = Color.White)
+                                                }, onClick = {
+                                                    if (mAuth.currentUser != null) {
+                                                        mAuth.signOut()
+                                                        navController.navigate(Pages.SignIn.route)
+                                                    }
+                                                })
                                             }
-                                        }
-                                    },
-                                    trailingIcon = {
-                                        IconButton(onClick = {
-                                            localMenu = !localMenu
-                                        }) {
-                                            Icon(
-                                                imageVector = Icons.Default.MoreVert,
-                                                contentDescription = "More Options",
-                                                tint = Color.White
-                                            )
-                                        }
-                                        DropdownMenu(expanded = localMenu,
-                                            onDismissRequest = { localMenu = false }) {
-                                            DropdownMenuItem(text = {
-                                                Text(text = "Sign Out", color = Color.White)
-                                            }, onClick = {
-                                                if (mAuth.currentUser != null) {
-                                                    mAuth.signOut()
-                                                    navController.navigate(Pages.SignIn.route)
-                                                }
-                                            })
-                                        }
-                                    })
-                            }
-                        )
+                                        })
+                                }
+                            )
+                        }
                     }
                 },
                 floatingActionButton = {
@@ -739,7 +754,6 @@ fun ListItem(
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewGalleryPage() {
